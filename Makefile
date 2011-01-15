@@ -12,16 +12,19 @@ build:
 		mkdir -p $(BUILD);
 		mkdir -p $(BUILD)/math
 
-compile: build Vector3f.o Vector4f.o BadIndexException.o
+compile: build
 
-Vector3f.o: $(SRC)/math/Vector3f.cpp $(HEADER)/math/Vector3f.h
-	$(GPP) -o $(BUILD)/math/$@ -c $<
+v3f = $(BUILD)/math/Vector3f.o
+$(v3f): $(SRC)/math/Vector3f.cpp $(HEADER)/math/Vector3f.h
+	$(GPP) -o $@ -c $<
 
-Vector4f.o: $(SRC)/math/Vector4f.cpp $(HEADER)/math/Vector4f.h
-	$(GPP) -o $(BUILD)/math/$@ -c $<
+v4f = $(BUILD)/math/Vector4f.o
+$(v4f): $(SRC)/math/Vector4f.cpp $(HEADER)/math/Vector4f.h
+	$(GPP) -o $@ -c $<
 
-BadIndexException.o: $(SRC)/BadIndexException.cpp $(HEADER)/BadIndexException.h
-	$(GPP) -o $(BUILD)/$@ -c $<
+bie = $(BUILD)/BadIndexException.o
+$(bie): $(SRC)/BadIndexException.cpp $(HEADER)/BadIndexException.h
+	$(GPP) -o $@ -c $<
 
 test: compile testVector3f testVector4f
 
@@ -29,10 +32,10 @@ run-test: test
 	$(BUILD)/testVector3f
 	$(BUILD)/testVector4f
 
-testVector3f: $(TEST)/Vector3f.cpp $(BUILD)/math/Vector3f.o $(BUILD)/BadIndexException.o
+testVector3f: $(TEST)/Vector3f.cpp $(v3f) $(bie)
 	$(GPP) -o $(BUILD)/$@ $+
 
-testVector4f: $(TEST)/Vector4f.cpp $(BUILD)/math/Vector3f.o $(BUILD)/math/Vector4f.o $(BUILD)/BadIndexException.o
+testVector4f: $(TEST)/Vector4f.cpp $(v3f) $(v4f) $(bie)
 	$(GPP) -o $(BUILD)/$@ $+
 
 .PHONY: clear

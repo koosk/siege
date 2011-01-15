@@ -11,8 +11,7 @@ ALL: compile
 build:
 		mkdir -p $(BUILD);
 		mkdir -p $(BUILD)/math
-
-compile: build
+		mkdir -p $(BUILD)/gunit
 
 v3f = $(BUILD)/math/Vector3f.o
 $(v3f): $(SRC)/math/Vector3f.cpp $(HEADER)/math/Vector3f.h
@@ -26,17 +25,30 @@ bie = $(BUILD)/BadIndexException.o
 $(bie): $(SRC)/BadIndexException.cpp $(HEADER)/BadIndexException.h
 	$(GPP) -o $@ -c $<
 
-test: compile testVector3f testVector4f
+msstruct = $(BUILD)/gunit/MS3DStruct.o
+$(msstruct): $(SRC)/gunit/MS3DStruct.cpp $(HEADER)/gunit/MS3DStruct.h $(v3f) $(v4f) $(bie)
+	$(GPP) -o $@ -c $<
+
+compile: build
+
+tv3f = $(BUILD)/testVector3f
+$(tv3f): $(TEST)/Vector3f.cpp $(v3f) $(bie)
+	$(GPP) -o $@ $+
+
+tv4f = $(BUILD)/testVector4f
+$(tv4f): $(TEST)/Vector4f.cpp $(v3f) $(v4f) $(bie)
+	$(GPP) -o $@ $+
+
+tmsstruct = $(BUILD)/testMSStruct
+$(tmsstruct): $(TEST)/MS3DStruct.cpp $(msstruct) $(v3f) $(v4f) $(bie)
+	$(GPP) -o $@ $+
+
+test: compile $(tv3f) $(tv4f) $(tmsstruct)
 
 run-test: test
-	$(BUILD)/testVector3f
-	$(BUILD)/testVector4f
-
-testVector3f: $(TEST)/Vector3f.cpp $(v3f) $(bie)
-	$(GPP) -o $(BUILD)/$@ $+
-
-testVector4f: $(TEST)/Vector4f.cpp $(v3f) $(v4f) $(bie)
-	$(GPP) -o $(BUILD)/$@ $+
+	$(tv3f)
+	$(tv4f)
+	$(tmsstruct)
 
 .PHONY: clear
 clear:

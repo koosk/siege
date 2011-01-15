@@ -21,7 +21,7 @@ namespace siege{
 				void setX(float);
 				void setY(float);
 				void setZ(float);
-				float& operator[](const int);
+				virtual float& operator[](const int);
 				virtual float* get(float*);
 				virtual void set(float*);
 				friend  std::ostream& siege::math::operator<<(std::ostream&, Vector3f&);

@@ -37,8 +37,7 @@ void Vector4f::setA(float f){
 float& Vector4f::operator[](int i){
 	if(i == 3)
 		return a;
-	Vector3f* v = this;
-	return (*v)[i];
+	return Vector3f::operator[](i);
 }
 
 float* Vector4f::get(float* f){

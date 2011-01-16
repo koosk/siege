@@ -25,8 +25,12 @@ bie = $(BUILD)/BadIndexException.o
 $(bie): $(SRC)/BadIndexException.cpp $(HEADER)/BadIndexException.h
 	$(GPP) -o $@ -c $<
 
+mse = $(BUILD)/gunit/MS3DException.o
+$(mse): $(SRC)/gunit/MS3DException.cpp $(HEADER)/gunit/MS3DException.h
+	$(GPP) -o $@ -c $<
+
 msstruct = $(BUILD)/gunit/MS3DStruct.o
-$(msstruct): $(SRC)/gunit/MS3DStruct.cpp $(HEADER)/gunit/MS3DStruct.h $(v3f) $(v4f) $(bie)
+$(msstruct): $(SRC)/gunit/MS3DStruct.cpp $(HEADER)/gunit/MS3DStruct.h $(v3f) $(v4f) $(bie) $(mse)
 	$(GPP) -o $@ -c $<
 
 compile: build
@@ -40,7 +44,7 @@ $(tv4f): $(TEST)/Vector4f.cpp $(v3f) $(v4f) $(bie)
 	$(GPP) -o $@ $+
 
 tmsstruct = $(BUILD)/testMSStruct
-$(tmsstruct): $(TEST)/MS3DStruct.cpp $(msstruct) $(v3f) $(v4f) $(bie)
+$(tmsstruct): $(TEST)/MS3DStruct.cpp $(msstruct) $(v3f) $(v4f) $(bie) $(mse)
 	$(GPP) -o $@ $+
 
 test: compile $(tv3f) $(tv4f) $(tmsstruct)

@@ -182,7 +182,8 @@ namespace siege{
 		}
 
 		MS3DGroup::~MS3DGroup(){
-			delete[] triangleIndices;
+			if(triangleIndices != NULL)
+				delete[] triangleIndices;
 		}
 
 		byte MS3DGroup::getFlags(){
@@ -205,6 +206,10 @@ namespace siege{
 
 		char MS3DGroup::getMaterialIndex(){
 			return materialIndex;
+		}
+
+		bool MS3DGroup::hasTriangles(){
+			return numTriangles > 0;
 		}
 
 		bool MS3DGroup::hasMaterial(){
@@ -396,8 +401,10 @@ namespace siege{
 		}
 
 		MS3DJoint::~MS3DJoint(){
-			delete[] rotKeyFrames;
-			delete[] transKeyFrames;
+			if(rotKeyFrames != NULL)
+				delete[] rotKeyFrames;
+			if(transKeyFrames != NULL)
+				delete[] transKeyFrames;
 		}
 
 		byte MS3DJoint::getFlags(){
@@ -429,15 +436,23 @@ namespace siege{
 		}
 		
 		MS3DKeyFrame MS3DJoint::getRotationKeyFrame(word i){
-			if(i<0 || i>numRotKeyFrames)
+			if(i<0 || i>=numRotKeyFrames)
 				throw siege::BadIndexException();
 			return rotKeyFrames[i];
 		}
 		
 		MS3DKeyFrame MS3DJoint::getTranslationKeyFrame(word i){
-			if(i<0 || i>numTransKeyFrames)
+			if(i<0 || i>=numTransKeyFrames)
 				throw siege::BadIndexException();
 			return transKeyFrames[i];
+		}
+
+		bool MS3DJoint::hasRotationKeyFrames(){
+			return rotKeyFrames > 0;
+		}
+
+		bool MS3DJoint::hasTranslationKeyFrames(){
+			return transKeyFrames > 0;
 		}
 
 		bool MS3DJoint::hasParent(){

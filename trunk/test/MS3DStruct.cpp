@@ -17,6 +17,10 @@ int main(){
 	cout << "tri 1 normal: "  << v << endl;
 
 	MS3DGroup g;
+
+	try{
+		g[0];
+	}catch(exception &e){cout << e.what() << endl;}
 	
 	word tr[5] = {1,2,3,4,5};
 	g.setTriangles(tr, 5);
@@ -25,6 +29,7 @@ int main(){
 	g.setTriangles(tr, 3);
 	a = g.getNumberOfTriangles();
 	cout << "Group numtri: " << a << endl;
+	g.setTriangles(NULL, 0);
 
 	return 0;
 }

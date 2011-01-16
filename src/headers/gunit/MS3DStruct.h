@@ -10,12 +10,11 @@ namespace siege{
 
 		using namespace siege::math;
 
-/*FIXME tobbszor is definialodik ha tobbszor van includeolva
-		byte SELECTED = 1;
-		byte SELECTED2 = 2;
-		byte HIDDEN = 4;
-		byte DIRTY = 8;
-*/
+		const byte SELECTED = 1;
+		const byte SELECTED2 = 2;
+		const byte HIDDEN = 4;
+		const byte DIRTY = 8;
+
 
 ///////////// MS3DVertex //////////////////////////////
 ///////////////////////////////////////////////////////

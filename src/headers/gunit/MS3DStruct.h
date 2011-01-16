@@ -92,6 +92,7 @@ namespace siege{
 				word getNumberOfTriangles();
 				word operator[](int); //getTriangleindex
 				char getMaterialIndex();
+				bool hasTriangles();
 				bool hasMaterial();
 				void setFlags(byte);
 				void setName(char*);
@@ -183,6 +184,8 @@ namespace siege{
 				word getNumberOfTranslationKeyFrames();
 				MS3DKeyFrame getRotationKeyFrame(word);
 				MS3DKeyFrame getTranslationKeyFrame(word);
+				bool hasRotationKeyFrames();
+				bool hasTranslationKeyFrames();
 				bool hasParent();
 				void setFlags(byte);
 				void setName(char*);

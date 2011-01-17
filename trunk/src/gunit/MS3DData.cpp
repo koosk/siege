@@ -175,7 +175,7 @@ namespace siege{
 		}
 
 		MS3DData::~MS3DData(){
-			//free(); FIXME tobbszoros felszabaditas
+			free();
 		}
 
 		int MS3DData::getVersion(){

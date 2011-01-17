@@ -84,6 +84,7 @@ namespace siege{
 				char materialIndex; //-1 = no material
 			public:
 				MS3DGroup();
+				MS3DGroup(MS3DGroup&);
 				MS3DGroup(byte, char*, word, word*, char);
 				~MS3DGroup();
 				byte getFlags();
@@ -135,7 +136,7 @@ namespace siege{
 				void setShininess(float);
 				void setTransparency(float);
 				void setMode(char);
-				void setTexture(char*);
+				void setTexture(char*); //TODO texturak tarolasa
 				void setAlphamap(char*);
 		}; //MS3DMaterial
 
@@ -172,6 +173,7 @@ namespace siege{
 				MS3DKeyFrame* transKeyFrames;
 			public:
 				MS3DJoint();
+				MS3DJoint(MS3DJoint&);
 				MS3DJoint(byte, char*, MS3DJoint*, Vector3f&, Vector3f&, word, word, MS3DKeyFrame*, MS3DKeyFrame*);
 				~MS3DJoint();
 				byte getFlags();

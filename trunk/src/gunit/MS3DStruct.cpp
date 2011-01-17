@@ -102,13 +102,13 @@ namespace siege{
 
 		word MS3DTriangle::getVertexIndex(byte i){
 			if(i<0 || i>2)
-				throw siege::BadIndexException();
+				throw siege::BadIndexException("Bad vertex index at MS3DTriangle!");
 			return vertexIndices[i];
 		}
 
 		Vector3f MS3DTriangle::getVertexNormal(byte i){
 			if(i<0 || i>2)
-				throw siege::BadIndexException();
+				throw siege::BadIndexException("Bad vertex normal index at MS3DTriangle!");
 			return vertexNormals[i];
 		}
 
@@ -134,13 +134,13 @@ namespace siege{
 
 		void MS3DTriangle::setVertexIndex(word a, byte i){
 			if(i<0 || i>2)
-				throw siege::BadIndexException();
+				throw siege::BadIndexException("Bad vertex index at MS3DTriangle");
 			vertexIndices[i] = a;
 		}
 
 		void MS3DTriangle::setVertexNormal(Vector3f& v, byte i){
 			if(i<0 || i>2)
-				throw siege::BadIndexException();
+				throw siege::BadIndexException("Bad vertex normal index at MS3DTriangle!");
 			vertexNormals[i] = v;
 		}
 
@@ -154,7 +154,7 @@ namespace siege{
 
 		void MS3DTriangle::setSmoothingGroup(byte i){
 			if(i<1 || i>32)
-				throw siege::BadIndexException();
+				throw siege::BadIndexException("Wrong smoothing group at MS3DTrinagle!");
 			smoothingGroup = i;
 		}
 
@@ -173,6 +173,14 @@ namespace siege{
 			materialIndex = -1;
 		}
 
+		MS3DGroup::MS3DGroup(MS3DGroup& g){
+			flags = g.flags;
+			strcpy(name, g.name);
+			triangleIndices = NULL;
+			setTriangles(g.triangleIndices, g.numTriangles);
+			materialIndex = g.materialIndex;
+		}
+
 		MS3DGroup::MS3DGroup(byte fl, char* nm, word ct, word* ind, char mi){
 			flags = fl;
 			strcpy(name, nm);
@@ -182,7 +190,7 @@ namespace siege{
 		}
 
 		MS3DGroup::~MS3DGroup(){
-			if(triangleIndices != NULL)
+			if(triangleIndices != NULL) 
 				delete[] triangleIndices;
 		}
 
@@ -200,7 +208,7 @@ namespace siege{
 
 		word MS3DGroup::operator[](int i){
 			if(i<0 || i>=numTriangles)
-				throw BadIndexException();
+				throw BadIndexException("Bad triangle index at MS3DGroup!");
 			return triangleIndices[i];
 		}
 
@@ -225,17 +233,18 @@ namespace siege{
 		}
 
 		void MS3DGroup::setTriangles(word* ind, word ct){
-			if(triangleIndices != NULL)
+			if(triangleIndices != NULL){
 				delete[] triangleIndices;
-			if(ind == NULL){
+				triangleIndices = NULL;
+			}
+			if(ind == NULL || ct == 0){
 				triangleIndices = NULL;
 				numTriangles = 0;
 				return;
 			}
 			numTriangles = ct;
 			triangleIndices = new word[numTriangles];
-			for(int i=0; i<numTriangles; i++)
-				triangleIndices[i] = ind[i];
+			memcpy(triangleIndices, ind, ct);
 		}
 
 		void MS3DGroup::setMaterialIndex(char i){
@@ -388,6 +397,18 @@ namespace siege{
 			transKeyFrames = NULL;
 		}
 	
+		MS3DJoint::MS3DJoint(MS3DJoint& j){
+			flags = j.flags;
+			strcpy(name, j.name);
+			parent = j.parent;
+			rotation = j.rotation;
+			position = j.position;
+			rotKeyFrames = NULL;
+			setRotationKeyFrames(j.rotKeyFrames, j.numRotKeyFrames);
+			transKeyFrames = NULL;
+			setTranslationKeyFrames(j.transKeyFrames, j.numTransKeyFrames);
+		}
+
 		MS3DJoint::MS3DJoint(byte f, char* nm, MS3DJoint* pa, Vector3f& r, Vector3f& p, word nr, word nt, MS3DKeyFrame* rot, MS3DKeyFrame* trans){
 			flags = f;
 			strcpy(name, nm);
@@ -437,13 +458,13 @@ namespace siege{
 		
 		MS3DKeyFrame MS3DJoint::getRotationKeyFrame(word i){
 			if(i<0 || i>=numRotKeyFrames)
-				throw siege::BadIndexException();
+				throw siege::BadIndexException("Bad rotation key frame index at MS3DJoint!");
 			return rotKeyFrames[i];
 		}
 		
 		MS3DKeyFrame MS3DJoint::getTranslationKeyFrame(word i){
 			if(i<0 || i>=numTransKeyFrames)
-				throw siege::BadIndexException();
+				throw siege::BadIndexException("Bad translation key frame index at MS3DJoint!");
 			return transKeyFrames[i];
 		}
 

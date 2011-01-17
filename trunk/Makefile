@@ -33,6 +33,10 @@ msstruct = $(BUILD)/gunit/MS3DStruct.o
 $(msstruct): $(SRC)/gunit/MS3DStruct.cpp $(HEADER)/gunit/MS3DStruct.h $(v3f) $(v4f) $(bie) $(mse)
 	$(GPP) -o $@ -c $<
 
+msdata = $(BUILD)/gunit/MS3DData.o
+$(msdata): $(SRC)/gunit/MS3DData.cpp $(HEADER)/gunit/MS3DData.h $(msstruct)
+	$(GPP) -o $@ -c $<
+
 compile: build
 
 tv3f = $(BUILD)/testVector3f
@@ -44,15 +48,20 @@ $(tv4f): $(TEST)/Vector4f.cpp $(v3f) $(v4f) $(bie)
 	$(GPP) -o $@ $+
 
 tmsstruct = $(BUILD)/testMSStruct
-$(tmsstruct): $(TEST)/MS3DStruct.cpp $(msstruct) $(v3f) $(v4f) $(bie) $(mse)
+$(tmsstruct): $(TEST)/MS3DStruct.cpp $(msstruct) $(v3f) $(v4f) $(bie)
 	$(GPP) -o $@ $+
 
-test: compile $(tv3f) $(tv4f) $(tmsstruct)
+tmsdata = $(BUILD)/testMSData
+$(tmsdata): $(TEST)/MS3DData.cpp $(msdata) $(msstruct) $(v3f) $(v4f) $(bie) $(mse)
+	$(GPP) -o $@ $+
+
+test: compile $(tv3f) $(tv4f) $(tmsstruct) $(tmsdata)
 
 run-test: test
 	$(tv3f)
 	$(tv4f)
 	$(tmsstruct)
+	$(tmsdata)
 
 .PHONY: clear
 clear:

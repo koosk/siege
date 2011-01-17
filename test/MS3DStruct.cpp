@@ -31,5 +31,11 @@ int main(){
 	cout << "Group numtri: " << a << endl;
 	g.setTriangles(NULL, 0);
 
+	MS3DGroup g1;
+	MS3DGroup g2;
+	word asd[3] = {1,2,3};
+	g2.setTriangles(asd, 3);
+	g1 = MS3DGroup(g2);
+
 	return 0;
 }

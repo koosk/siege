@@ -1,13 +1,16 @@
 #include "math/Vector3f.h"
 #include "BadIndexException.h"
-
+#include "math/Vector4f.h"
+#include "math/Matrix16f.h"
 
 namespace siege{
 	namespace math{
 
-		Vector3f::Vector3f():x(0.0),y(0.0),z(0.0){};
+		Vector3f::Vector3f():x(0.0),y(0.0),z(0.0){
+		}
 
-		Vector3f::Vector3f(float a, float b, float c):x(a),y(b),z(c){}
+		Vector3f::Vector3f(float a, float b, float c):x(a),y(b),z(c){
+		}
 
 		Vector3f::Vector3f(float* a){
 			x = a[0];	
@@ -72,5 +75,14 @@ namespace siege{
 			out << "Vector3f(" << v[0] << ", " << v[1] << ", " << v[2] << ")";
 			return out;
 		}
-	}; //math
-}; //siege
+		
+		Vector4f& Vector3f::operator*(const Matrix16f &m) const{
+			float r[4];
+			r[0] = x*m.data[0]  + y*m.data[1]  + z*m.data[2]  + m.data[3];
+			r[1] = x*m.data[4]  + y*m.data[5]  + z*m.data[6]  + m.data[7];
+			r[2] = x*m.data[8]  + y*m.data[9]  + z*m.data[10] + m.data[11];
+			r[3] = x*m.data[12] + y*m.data[13] + z*m.data[14] + m.data[15];
+			return *(new Vector4f(r));
+		}
+	};//math
+};//siege

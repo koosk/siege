@@ -7,6 +7,9 @@ namespace siege{
 
 	namespace math{
 	
+		class Vector4f;
+		class Matrix16f;
+		
 		class Vector3f{
 			private:
 				float x, y, z;
@@ -25,10 +28,11 @@ namespace siege{
 				virtual float* get(float*);
 				virtual void set(float*);
 				friend  std::ostream& siege::math::operator<<(std::ostream&, Vector3f&);
-		}; //Vector3f
+				Vector4f& operator*(const Matrix16f &) const;
+		};//Vector3f
 
-	}; //math
+	};//math
 
-}; //siege
+};//siege
 
 #endif //VECTOR3F_H

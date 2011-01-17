@@ -22,6 +22,10 @@ $(v3f): $(SRC)/math/Vector3f.cpp $(HEADER)/math/Vector3f.h
 v4f = $(BUILD)/math/Vector4f.o
 $(v4f): $(SRC)/math/Vector4f.cpp $(HEADER)/math/Vector4f.h
 	$(GPP) -o $@ -c $<
+	
+mtx16f = $(BUILD)/math/Matrix16f.o
+$(mtx16f): $(SRC)/math/Matrix16f.cpp $(HEADER)/math/Matrix16f.h
+	$(GPP) -o $@ -c $<
 
 bie = $(BUILD)/BadIndexException.o
 $(bie): $(SRC)/BadIndexException.cpp $(HEADER)/BadIndexException.h

@@ -1,5 +1,6 @@
 #include"gunit/MS3DStruct.h"
 #include"BadIndexException.h"
+#include"SiegeException.h"
 #include<string.h>
 
 namespace siege{
@@ -190,8 +191,9 @@ namespace siege{
 		}
 
 		MS3DGroup::~MS3DGroup(){
-			if(triangleIndices != NULL) 
-				delete[] triangleIndices;
+			//FIXME tobbszoros felszabaditas
+			//if(triangleIndices != NULL) 
+			//	delete[] triangleIndices;
 		}
 
 		byte MS3DGroup::getFlags(){
@@ -254,6 +256,7 @@ namespace siege{
 ///////////////////////// MS3DMaterial ////////////////////////////
 ///////////////////////////////////////////////////////////////////
 		MS3DMaterial::MS3DMaterial(){
+			textureQuality = GL_LINEAR_MIPMAP_NEAREST; 
 			strcpy(name, "Unnamed");
 			shininess = 0;
 			transparency = 1;
@@ -261,6 +264,7 @@ namespace siege{
 		}
 
 		MS3DMaterial::MS3DMaterial(char* nm, Vector4f& am, Vector4f& dif, Vector4f& em, Vector4f& spe, float shi, float tra, char md, char* text, char* alpha){
+			textureQuality = GL_LINEAR_MIPMAP_NEAREST; 
 			strcpy(name, nm);
 			ambient = am;
 			diffuse = dif;
@@ -269,8 +273,8 @@ namespace siege{
 			shininess = shi;
 			transparency = tra;
 			mode = md;
-			memcpy(texture, text, 128);
-			memcpy(alphamap, alpha, 128);
+			setTexture(text);
+			setAlphamap(alpha);
 		}
 
 		char* MS3DMaterial::getName(){
@@ -305,12 +309,32 @@ namespace siege{
 			return mode;
 		}
 
-		char* MS3DMaterial::getTexure(){
+		char* MS3DMaterial::getTexureName(){
+			return textureName;
+		}
+
+		char* MS3DMaterial::getAlphamapName(){
+			return alphamapName;
+		}
+
+		GLuint MS3DMaterial::getTexure(){
 			return texture;
 		}
 
-		char* MS3DMaterial::getAlphamap(){
+		GLuint MS3DMaterial::getAlphamap(){
 			return alphamap;
+		}
+
+		GLuint MS3DMaterial::getTextureQuality(){
+			return textureQuality;
+		}
+
+		bool MS3DMaterial::hasTexture(){
+			return texture != 0;
+		}
+
+		bool MS3DMaterial::hasAlphamap(){
+			return alphamap != 0;
 		}
 
 		void MS3DMaterial::setName(char* nm){
@@ -346,11 +370,41 @@ namespace siege{
 		}
 
 		void MS3DMaterial::setTexture(char* t){
-			memcpy(texture, t, 128);
+			if(t == NULL || strcmp(t, "") == 0){
+				texture = 0;
+				strcpy(textureName, "");
+				return;
+			}
+			try{
+				texture = loadImage(t, textureQuality);
+				strcpy(textureName, t);
+			}catch(std::exception &e){
+				texture = 0;
+				strcpy(textureName, "");
+				std::cout << e.what() << std::endl;
+			}
 		}
 
 		void MS3DMaterial::setAlphamap(char* a){
-			memcpy(alphamap, a, 128);
+			if(a == NULL || strcmp(a, "") == 0){
+				alphamap = 0;
+				strcpy(alphamapName, "");
+				return;
+			}
+			try{
+				alphamap = loadImage(a, textureQuality);
+				strcpy(alphamapName, a);
+			}catch(std::exception &e){
+				alphamap = 0;
+				strcpy(alphamapName, "");
+				std::cout << e.what() << std::endl;
+			}
+		}
+
+		void MS3DMaterial::setTextureQuality(GLuint q){
+			textureQuality = q;
+			setTexture(textureName);
+			setAlphamap(alphamapName);
 		}
 
 ///////////////////// MS3DKeyFrame //////////////////////////////////
@@ -422,10 +476,12 @@ namespace siege{
 		}
 
 		MS3DJoint::~MS3DJoint(){
-			if(rotKeyFrames != NULL)
+			//FIXME tobbszoros felszabaditas
+			/*if(rotKeyFrames != NULL)
 				delete[] rotKeyFrames;
 			if(transKeyFrames != NULL)
 				delete[] transKeyFrames;
+				*/
 		}
 
 		byte MS3DJoint::getFlags(){

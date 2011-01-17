@@ -4,7 +4,9 @@ BUILD = ./build
 TEST = ./test
 
 OPT = -Wall
-GPP = g++ -I$(HEADER) $(OPT)
+LIBS=-lGL -lGLU -lSDL -lSDL_image -lm
+GPP = g++ -I$(HEADER) $(LIBS) $(OPT)
+
 
 ALL: compile
 
@@ -25,16 +27,24 @@ bie = $(BUILD)/BadIndexException.o
 $(bie): $(SRC)/BadIndexException.cpp $(HEADER)/BadIndexException.h
 	$(GPP) -o $@ -c $<
 
+sie = $(BUILD)/SiegeException.o
+$(sie): $(SRC)/SiegeException.cpp $(HEADER)/SiegeException.h
+	$(GPP) -o $@ -c $<
+
 mse = $(BUILD)/gunit/MS3DException.o
 $(mse): $(SRC)/gunit/MS3DException.cpp $(HEADER)/gunit/MS3DException.h
 	$(GPP) -o $@ -c $<
 
 msstruct = $(BUILD)/gunit/MS3DStruct.o
-$(msstruct): $(SRC)/gunit/MS3DStruct.cpp $(HEADER)/gunit/MS3DStruct.h $(v3f) $(v4f) $(bie) $(mse)
+$(msstruct): $(SRC)/gunit/MS3DStruct.cpp $(HEADER)/gunit/MS3DStruct.h $(v3f) $(v4f) $(bie) $(mse) $(util)
 	$(GPP) -o $@ -c $<
 
 msdata = $(BUILD)/gunit/MS3DData.o
 $(msdata): $(SRC)/gunit/MS3DData.cpp $(HEADER)/gunit/MS3DData.h $(msstruct)
+	$(GPP) -o $@ -c $<
+
+util = $(BUILD)/utils.o
+$(util):$(SRC)/utils.cpp $(HEADER)/utils.h
 	$(GPP) -o $@ -c $<
 
 compile: build
@@ -48,11 +58,11 @@ $(tv4f): $(TEST)/Vector4f.cpp $(v3f) $(v4f) $(bie)
 	$(GPP) -o $@ $+
 
 tmsstruct = $(BUILD)/testMSStruct
-$(tmsstruct): $(TEST)/MS3DStruct.cpp $(msstruct) $(v3f) $(v4f) $(bie)
+$(tmsstruct): $(TEST)/MS3DStruct.cpp $(msstruct) $(v3f) $(v4f) $(bie) $(util) $(sie)
 	$(GPP) -o $@ $+
 
 tmsdata = $(BUILD)/testMSData
-$(tmsdata): $(TEST)/MS3DData.cpp $(msdata) $(msstruct) $(v3f) $(v4f) $(bie) $(mse)
+$(tmsdata): $(TEST)/MS3DData.cpp $(msdata) $(msstruct) $(v3f) $(v4f) $(bie) $(mse) $(util) $(sie)
 	$(GPP) -o $@ $+
 
 test: compile $(tv3f) $(tv4f) $(tmsstruct) $(tmsdata)

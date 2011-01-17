@@ -105,6 +105,7 @@ namespace siege{
 
 		class MS3DMaterial{
 			private:
+				GLuint textureQuality; // GL_LINEAR || GL_NEAREST || GL_LINEAR_MIPMAP_NEAREST
 				char name[32];
 				Vector4f ambient;
 				Vector4f diffuse;
@@ -113,8 +114,10 @@ namespace siege{
 				float shininess; //0.0 - 128.0
 				float transparency; //0.0 - 1.0
 				char mode;
-				char texture[128];
-				char alphamap[128];
+				char textureName[128];
+				char alphamapName[128];
+				GLuint texture;
+				GLuint alphamap;
 			public:
 				MS3DMaterial();
 				MS3DMaterial(char*, Vector4f&, Vector4f&, Vector4f&, Vector4f&, float, float, char ,char*, char*);
@@ -126,8 +129,13 @@ namespace siege{
 				float getShininess();
 				float getTransparency();
 				char getMode();
-				char* getTexure();
-				char* getAlphamap();
+				char* getTexureName();
+				char* getAlphamapName();
+				GLuint getTexure();
+				GLuint getAlphamap();
+				GLuint getTextureQuality();
+				bool hasTexture();
+				bool hasAlphamap();
 				void setName(char*);
 				void setAmbient(Vector4f&);
 				void setDiffuse(Vector4f&);
@@ -136,8 +144,9 @@ namespace siege{
 				void setShininess(float);
 				void setTransparency(float);
 				void setMode(char);
-				void setTexture(char*); //TODO texturak tarolasa
+				void setTexture(char*);
 				void setAlphamap(char*);
+				void setTextureQuality(GLuint);
 		}; //MS3DMaterial
 
 ///////////// MS3DKeyFrame ///////////////////////////////////

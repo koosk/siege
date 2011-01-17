@@ -37,5 +37,10 @@ int main(){
 	g2.setTriangles(asd, 3);
 	g1 = MS3DGroup(g2);
 
+	MS3DJoint j;
+	MS3DJoint j1;
+
+	j= MS3DJoint(j1);
+
 	return 0;
 }

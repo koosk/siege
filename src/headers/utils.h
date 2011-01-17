@@ -1,6 +1,8 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include<GL/gl.h>
+
 #ifndef byte
 	typedef unsigned char byte;
 #endif //byte
@@ -10,6 +12,8 @@
 #endif //word
 
 namespace siege{
+
+	GLuint loadImage(char*, GLuint);	
 
 }; //siege
 

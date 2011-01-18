@@ -57,7 +57,7 @@ namespace siege{
 				MS3DJoint* getJoint(word);
 				float getFPS();
 				int getTotalFrames();
-				friend  std::ifstream& operator>>(std::ifstream&, MS3DData&);
+				void load(char*);
 		}; //MS3DData
 
 	}; //gunit

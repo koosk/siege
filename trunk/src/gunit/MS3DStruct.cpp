@@ -246,7 +246,9 @@ namespace siege{
 			}
 			numTriangles = ct;
 			triangleIndices = new word[numTriangles];
-			memcpy(triangleIndices, ind, ct);
+			for(int i=0; i<ct; i++)
+				triangleIndices[i] = ind[i];
+			//memcpy(triangleIndices, ind, ct);
 		}
 
 		void MS3DGroup::setMaterialIndex(char i){

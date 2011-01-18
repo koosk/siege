@@ -51,14 +51,18 @@ util = $(BUILD)/utils.o
 $(util):$(SRC)/utils.cpp $(HEADER)/utils.h
 	$(GPP) -o $@ -c $<
 
-model = $(BUILD)/Model.o
+model = $(BUILD)/gunit/Model.o
 $(model): $(SRC)/gunit/Model.cpp $(HEADER)/gunit/Model.h
+	$(GPP) -o $@ -c $<
+
+msmodel = $(BUILD)/gunit/MS3DModel.o
+$(msmodel): $(SRC)/gunit/MS3DModel.cpp $(HEADER)/gunit/MS3DModel.h $(model)
 	$(GPP) -o $@ -c $<
 
 compile: build
 
 tv3f = $(BUILD)/testVector3f
-$(tv3f): $(TEST)/Vector3f.cpp $(v3f) $(bie)
+$(tv3f): $(TEST)/Vector3f.cpp $(v3f) $(bie) $(v4f)
 	$(GPP) -o $@ $+
 
 tv4f = $(BUILD)/testVector4f
@@ -74,8 +78,11 @@ $(tmsdata): $(TEST)/MS3DData.cpp $(msdata) $(msstruct) $(v3f) $(v4f) $(bie) $(ms
 	$(GPP) -o $@ $+
 
 tmodel = $(BUILD)/testMSmodel
-$(tmodel): $(TEST)/MSModel.cpp $(msdata) $(msstruct) $(v3f) $(v4f) $(bie) $(mse) $(util) $(sie) $(model)
+$(tmodel): $(TEST)/MSModel.cpp $(msdata) $(msstruct) $(v3f) $(v4f) $(bie) $(mse) $(util) $(sie) $(model) $(msmodel)
 	$(GPP) -o $(tmodel) $+
+
+run-model: compile $(tmodel)
+	$(tmodel)
 
 test: compile $(tv3f) $(tv4f) $(tmsstruct) $(tmsdata) $(tmodel)
 

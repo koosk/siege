@@ -2,6 +2,8 @@
 #include"BadIndexException.h"
 #include"gunit/MS3DException.h"
 #include<string.h>
+#include<string>
+#include<fstream>
 
 namespace siege{
 	namespace gunit{
@@ -164,13 +166,21 @@ namespace siege{
 			materials = NULL;
 			joints = NULL;
 			init(md.numVertices, md.numTriangles, md.numGroups, md.numMaterials, md.numJoints);
-			memcpy(vertices, md.vertices, numVertices);
-			memcpy(triangles, md.triangles, numTriangles);
-			memcpy(groups, md.groups, numGroups);
-			memcpy(materials, md.materials, numMaterials);
+			//memcpy(vertices, md.vertices, numVertices);
+			//memcpy(triangles, md.triangles, numTriangles);
+			//memcpy(groups, md.groups, numGroups);
+			//memcpy(materials, md.materials, numMaterials);
+			for(int i=0; i<numVertices; i++)
+				vertices[i] = md.vertices[i];
+			for(int i=0; i<numTriangles; i++)
+				triangles[i] = md.triangles[i];
+			for(int i=0; i<numGroups; i++)
+				groups[i] = md.groups[i];
+			for(int i=0; i<numMaterials; i++)
+				materials[i] = md.materials[i];
 			for(int i=0; i<numJoints; i++){
 				joints[i] = md.joints[i];
-				joints[i].setParent(getJointParent(md.joints[i]));
+				joints[i].setParent(getJointParent(joints[i]));
 			}
 		}
 
@@ -204,31 +214,31 @@ namespace siege{
 
 		MS3DVertex* MS3DData::getVertex(word i){
 			if(i<0 || i>=numVertices)
-				throw BadIndexException();
+				throw BadIndexException("Wrong index in MS3DData while getting vertex!");
 			return &vertices[i];
 		}
 
 		MS3DTriangle* MS3DData::getTriangle(word i){
 			if(i<0 || i>=numTriangles)
-				throw BadIndexException();
+				throw BadIndexException("Wrong index in MS3DData while getting triangle!");
 			return &triangles[i];
 		}
 
 		MS3DGroup* MS3DData::getGroup(word i){
 			if(i<0 || i>=numGroups)
-				throw BadIndexException();
+				throw BadIndexException("Wrong index in MS3DData while getting group!");
 			return &groups[i];
 		}
 
 		MS3DMaterial* MS3DData::getMaterial(word i){
 			if(i<0 || i>=numMaterials)
-				throw BadIndexException();
+				throw BadIndexException("Wrong index in MS3DData while getting material!");
 			return &materials[i];
 		}
 
 		MS3DJoint* MS3DData::getJoint(word i){
 			if(i<0 || i>=numJoints)
-				throw BadIndexException();
+				throw BadIndexException("Wrong index in MS3DData while getting joint!");
 			return &joints[i];
 		}
 
@@ -240,10 +250,13 @@ namespace siege{
 			return totalFrames;
 		}
 
-		std::ifstream& operator>>(std::ifstream& in, MS3DData& md){
-			//TODO ellenorizni hogy a stream binaris e
-			//if((in.flags() & std::ios::binary) != std::ios::binary)
-			//	throw MS3DException("The given stream is not binary!");
+		void MS3DData::load(char* file ){
+			std::ifstream in(file, std::ios::in | std::ios::binary);
+			if(!in.is_open()){
+				std::string ms("The file cannot be opened or the path is not valid: ");
+				ms.append(file);
+				throw MS3DException(ms);
+			}
 
 			in.seekg(0, std::ios::end);
 			long size = in.tellg();
@@ -252,6 +265,7 @@ namespace siege{
 			char* buffer = new char[size];
 			in.read(buffer, size);
 			char* ptr = buffer;
+			in.close();
 
 			/////////////HEADER/////////////////////////
 			char mid[10];
@@ -259,17 +273,17 @@ namespace siege{
 			ptr += sizeof(mid);
 			if(strncmp(mid, "MS3D000000", 10) != 0)
 				throw MS3DException("Not a valid Milkshape model data!");
-			memcpy(&md.version, ptr, sizeof(md.version));
-			ptr += sizeof(md.version);
-			if(md.version < 3 || md.version > 4){
+			memcpy(&version, ptr, sizeof(version));
+			ptr += sizeof(version);
+			if(version < 3 || version > 4){
 				throw MS3DException("Unhandled version!");
 			}
 			
 			////////////VERTICES//////////////////////
-			memcpy(&md.numVertices, ptr, sizeof(md.numVertices));
-			ptr += sizeof(md.numVertices);
-			md.initVertices(md.numVertices);
-			for(int i=0; i<md.numVertices; i++){
+			memcpy(&numVertices, ptr, sizeof(numVertices));
+			ptr += sizeof(numVertices);
+			initVertices(numVertices);
+			for(int i=0; i<numVertices; i++){
 				byte btmp;
 				memcpy(&btmp, ptr, sizeof(byte));
 				ptr += sizeof(byte);
@@ -283,13 +297,13 @@ namespace siege{
 				memcpy(&refc, ptr, sizeof(refc));
 				ptr += sizeof(refc);
 				Vector3f v(ftmp);
-				md.vertices[i] = MS3DVertex(btmp, v, ctmp, refc);
+				vertices[i] = MS3DVertex(btmp, v, ctmp, refc);
 			}
 			//////////////TRIANGLES////////////////////
-			memcpy(&md.numTriangles, ptr, sizeof(md.numTriangles));
-			ptr += sizeof(md.numTriangles);
-			md.initTriangles(md.numTriangles);
-			for(int i=0; i<md.numTriangles; i++){
+			memcpy(&numTriangles, ptr, sizeof(numTriangles));
+			ptr += sizeof(numTriangles);
+			initTriangles(numTriangles);
+			for(int i=0; i<numTriangles; i++){
 				word flag;
 				memcpy(&flag, ptr, sizeof(flag));
 				ptr += sizeof(flag);
@@ -309,9 +323,6 @@ namespace siege{
 				Vector3f s(f);
 				memcpy(f, ptr, sizeof(f));
 				ptr += sizeof(f);
-				f[0] = 1.0 - f[0];
-				f[1] = 1.0 - f[1];
-				f[2] = 1.0 - f[2];
 				Vector3f t(f);
 				byte sg;
 				memcpy(&sg, ptr, sizeof(sg));
@@ -320,13 +331,13 @@ namespace siege{
 				memcpy(&gr, ptr, sizeof(gr));
 				ptr += sizeof(gr);
 				MS3DTriangle tri(flag, vi, vec, s, t, sg, gr);
-				md.triangles[i] = tri;
+				triangles[i] = tri;
 			}
 			///////////////////GROUPS/////////////////
-			memcpy(&md.numGroups, ptr, sizeof(md.numGroups));
-			ptr += sizeof(md.numGroups);
-			md.initGroups(md.numGroups);
-			for(int i=0; i<md.numGroups; i++){
+			memcpy(&numGroups, ptr, sizeof(numGroups));
+			ptr += sizeof(numGroups);
+			initGroups(numGroups);
+			for(int i=0; i<numGroups; i++){
 				byte flag;
 				memcpy(&flag, ptr, sizeof(flag));
 				ptr += sizeof(flag);
@@ -344,13 +355,15 @@ namespace siege{
 				char mi;
 				memcpy(&mi, ptr, sizeof(mi));
 				ptr += sizeof(mi);
-				md.groups[i] =  MS3DGroup(flag, name, nt, ti ,mi);
+				groups[i] =  MS3DGroup(flag, name, nt, ti ,mi);
 			}
 			///////////////////////MATERIAL////////////
-			memcpy(&md.numMaterials, ptr, sizeof(md.numMaterials));
-			ptr += sizeof(md.numMaterials);
-			md.initMaterials(md.numMaterials);
-			for(int i=0; i<md.numMaterials; i++){
+			memcpy(&numMaterials, ptr, sizeof(numMaterials));
+			ptr += sizeof(numMaterials);
+			initMaterials(numMaterials);
+			std::string dpath(file);
+			dpath = dpath.substr(0, dpath.find_last_of("/\\")+1);
+			for(int i=0; i<numMaterials; i++){
 				char name[32];
 				memcpy(name, ptr, sizeof(name));
 				ptr += sizeof(name);
@@ -382,20 +395,46 @@ namespace siege{
 				char al[128];
 				memcpy(al, ptr, sizeof(al));
 				ptr += sizeof(al);
-				MS3DMaterial mt(name, amb, dif, spe, emi, sh, tr, mod, tx, al);
-				md.materials[i] = mt;
+				std::string s(tx);
+				std::string fname = s.substr(s.find_last_of("/\\")+1);
+				char *tph = new char[1];
+				strcpy(tph, "");
+				if(!s.empty()){
+					s = dpath;
+					s+= fname;
+					delete[] tph;
+					tph = new char[s.size()+1];
+					s.copy(tph, s.size());
+					tph[s.size()] = 0;
+				}
+				s = std::string(al);
+				char *aph = new char[1];
+				strcpy(aph, "");
+				if(!s.empty()){
+					fname = s.substr(s.find_last_of("/\\")+1);
+					s = dpath;
+					s+= fname;
+					delete[] aph;
+					aph = new char[s.size()+1];
+					s.copy(aph, s.size());
+					aph[s.size()] = 0;
+				}
+				MS3DMaterial mt(name, amb, dif, spe, emi, sh, tr, mod, tph, aph);
+				delete[] tph;
+				delete[] aph;
+				materials[i] = mt;
 			}
 			////////////////INFOS/////////////////////
-			memcpy(&md.fps, ptr, sizeof(md.fps));
-			ptr += sizeof(md.fps);
+			memcpy(&fps, ptr, sizeof(fps));
+			ptr += sizeof(fps);
 			ptr += sizeof(float); //currentTime not needed
-			memcpy(&md.totalFrames, ptr, sizeof(md.totalFrames));
-			ptr += sizeof(md.totalFrames);
+			memcpy(&totalFrames, ptr, sizeof(totalFrames));
+			ptr += sizeof(totalFrames);
 			///////////////JOINTS/////////////////////////
-			memcpy(&md.numJoints, ptr, sizeof(md.numJoints));
-			ptr += sizeof(md.numJoints);
-			md.initJoints(md.numJoints);
-			for(int i=0; i<md.numJoints; i++){
+			memcpy(&numJoints, ptr, sizeof(numJoints));
+			ptr += sizeof(numJoints);
+			initJoints(numJoints);
+			for(int i=0; i<numJoints; i++){
 				byte fl;
 				memcpy(&fl, ptr, sizeof(fl));
 				ptr += sizeof(fl);
@@ -405,7 +444,7 @@ namespace siege{
 				char pn[32];
 				memcpy(pn, ptr, sizeof(pn));
 				ptr += sizeof(pn);
-				MS3DJoint* par = md.getJointParent(pn);
+				MS3DJoint* par = getJointParent(pn);
 				float f[3];
 				memcpy(f, ptr, sizeof(f));
 				ptr += sizeof(f);
@@ -444,11 +483,10 @@ namespace siege{
 					trakf[k] = kf;
 				}
 				MS3DJoint jo(fl, nm, par, rot, pos, rkf, tkf, rotkf, trakf);
-				md.joints[i] = jo;
+				joints[i] = jo;
 			}
 
 			delete[] buffer;
-			return in;
 		}
 
 	}; //gunit

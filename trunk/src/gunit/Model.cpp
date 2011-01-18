@@ -2,6 +2,7 @@
 #include"SiegeException.h"
 #include<string.h>
 
+
 namespace siege{
 	namespace gunit{
 
@@ -36,7 +37,7 @@ namespace siege{
 			animEnd = 0;
 			animOn = false;
 			modelPath = NULL;
-			load(f);
+			setModelPath(f);
 		}
 
 		Model::Model(Model& m){
@@ -44,7 +45,7 @@ namespace siege{
 			animEnd = m.animEnd;
 			animOn = m.animOn;
 			modelPath = NULL;
-			load(m.modelPath);
+			setModelPath(m.modelPath);
 		}
 
 		Model::~Model(){
@@ -52,18 +53,28 @@ namespace siege{
 				delete[] modelPath;
 		}
 
-		void Model::load(char* f){
+		void Model::setModelPath(char* f){
 			if(modelPath != NULL){
 				delete[] modelPath;
 				modelPath = NULL;
 			}
 			modelPath = new char[strlen(f)];
 			strcpy(modelPath, f);
+		}
+
+		void Model::load(){
+			load(modelPath);
+		}
+
+		void Model::load(char* f){
+			if(strcmp(modelPath, f) != 0)
+				setModelPath(f);
 			loadModel(f);
 		}	
 
 		void Model::start(){
-			animOn = true;
+			if(animBegin != animEnd)
+				animOn = true;
 		}
 
 		void Model::pause(){

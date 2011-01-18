@@ -44,6 +44,7 @@ namespace siege{
 				MS3DData();
 				MS3DData(MS3DData&);
 				~MS3DData();
+				MS3DData& operator=(MS3DData&);
 				int getVersion();
 				word getNumberOfVertices();
 				word getNumberOfTriangles();

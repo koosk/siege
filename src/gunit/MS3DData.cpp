@@ -188,6 +188,28 @@ namespace siege{
 			free();
 		}
 
+		MS3DData& MS3DData::operator=(MS3DData& md){
+			vertices = NULL;
+			triangles = NULL;
+			groups = NULL;
+			materials = NULL;
+			joints = NULL;
+			init(md.numVertices, md.numTriangles, md.numGroups, md.numMaterials, md.numJoints);
+			for(int i=0; i<numVertices; i++)
+				vertices[i] = md.vertices[i];
+			for(int i=0; i<numTriangles; i++)
+				triangles[i] = md.triangles[i];
+			for(int i=0; i<numGroups; i++)
+				groups[i] = md.groups[i];
+			for(int i=0; i<numMaterials; i++)
+				materials[i] = md.materials[i];
+			for(int i=0; i<numJoints; i++){
+				joints[i] = md.joints[i];
+				joints[i].setParent(getJointParent(joints[i]));
+			}
+			return *this;
+		}
+
 		int MS3DData::getVersion(){
 			return version;
 		}
@@ -355,7 +377,8 @@ namespace siege{
 				char mi;
 				memcpy(&mi, ptr, sizeof(mi));
 				ptr += sizeof(mi);
-				groups[i] =  MS3DGroup(flag, name, nt, ti ,mi);
+				MS3DGroup gr(flag, name, nt, ti ,mi);
+				groups[i] = gr; 
 			}
 			///////////////////////MATERIAL////////////
 			memcpy(&numMaterials, ptr, sizeof(numMaterials));

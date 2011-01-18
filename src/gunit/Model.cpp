@@ -53,6 +53,15 @@ namespace siege{
 				delete[] modelPath;
 		}
 
+		Model& Model::operator=(Model& m){
+			animBegin = m.animBegin;
+			animEnd = m.animEnd;
+			animOn = m.animOn;
+			modelPath = NULL;
+			setModelPath(m.modelPath);
+			return *this;
+		}
+
 		void Model::setModelPath(char* f){
 			if(modelPath != NULL){
 				delete[] modelPath;
@@ -73,7 +82,7 @@ namespace siege{
 		}	
 
 		void Model::start(){
-			if(animBegin != animEnd)
+			if(animBegin < animEnd)
 				animOn = true;
 		}
 

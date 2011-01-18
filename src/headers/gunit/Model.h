@@ -6,7 +6,7 @@ namespace siege{
 
 		class Model{
 			private:
-				//TODO posintin matrix
+				//TODO position matrix
 				int animBegin;
 				int animEnd;
 				char* modelPath;
@@ -23,6 +23,7 @@ namespace siege{
 				Model(char*);
 				Model(Model&);
 				~Model();
+				Model& operator=(Model&);
 				void load();
 				void load(char*);
 				virtual void start();

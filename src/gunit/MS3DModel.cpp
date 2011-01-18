@@ -22,6 +22,10 @@ namespace siege{
 
 		}
 
+		MS3DModel& MS3DModel::operator=(MS3DModel& m){
+			return *this;
+		}
+
 		void MS3DModel::reset(){
 			//TODO az idot megcsinalni
 		}

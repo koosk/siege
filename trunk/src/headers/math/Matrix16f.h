@@ -27,6 +27,8 @@ namespace siege{
 				Matrix16f translate(const Vector3f &) const;
 				Matrix16f rotate(const Vector3f &) const;
 				Matrix16f scale(const Vector3f &) const;
+				static float determinant3(const float*);
+				float determinant() const;
 		};
 	};
 };

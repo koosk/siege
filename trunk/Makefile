@@ -88,7 +88,7 @@ $(tmatrix): $(TEST)/Matrix16f.cpp $(v3f) $(v4f) $(bie) $(mtx16f)
 run-model: compile $(tmodel)
 	$(tmodel)
 
-test: compile $(tv3f) $(tv4f) $(tmsstruct) $(tmsdata) $(tmodel) $(tmatrix)
+test: compile $(tv3f) $(tv4f) $(tmsstruct) $(tmsdata) $(tmodel)
 
 run-test: test
 	$(tv3f)

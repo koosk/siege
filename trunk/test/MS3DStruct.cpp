@@ -45,12 +45,12 @@ int main(){
 	MS3DGroup g2;
 	word asd[3] = {1,2,3};
 	g2.setTriangles(asd, 3);
-	g1 = MS3DGroup(g2);
+	g1 = g2;
 
 	MS3DJoint j;
 	MS3DJoint j1;
 
-	j= MS3DJoint(j1);
+	j= j1;
 
 	return 0;
 }

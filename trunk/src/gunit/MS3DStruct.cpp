@@ -191,9 +191,17 @@ namespace siege{
 		}
 
 		MS3DGroup::~MS3DGroup(){
-			//FIXME tobbszoros felszabaditas
-			//if(triangleIndices != NULL) 
-			//	delete[] triangleIndices;
+			if(triangleIndices != NULL) 
+				delete[] triangleIndices;
+		}
+
+		MS3DGroup& MS3DGroup::operator=(MS3DGroup& g){
+			flags = g.flags;
+			strcpy(name, g.name);
+			triangleIndices = NULL;
+			setTriangles(g.triangleIndices, g.numTriangles);
+			materialIndex = g.materialIndex;
+			return *this;
 		}
 
 		byte MS3DGroup::getFlags(){
@@ -478,12 +486,23 @@ namespace siege{
 		}
 
 		MS3DJoint::~MS3DJoint(){
-			//FIXME tobbszoros felszabaditas
-			/*if(rotKeyFrames != NULL)
+			if(rotKeyFrames != NULL)
 				delete[] rotKeyFrames;
 			if(transKeyFrames != NULL)
 				delete[] transKeyFrames;
-				*/
+		}
+
+		MS3DJoint& MS3DJoint::operator=(MS3DJoint& j){
+			flags = j.flags;
+			strcpy(name, j.name);
+			parent = j.parent;
+			rotation = j.rotation;
+			position = j.position;
+			rotKeyFrames = NULL;
+			setRotationKeyFrames(j.rotKeyFrames, j.numRotKeyFrames);
+			transKeyFrames = NULL;
+			setTranslationKeyFrames(j.transKeyFrames, j.numTransKeyFrames);
+			return *this;
 		}
 
 		byte MS3DJoint::getFlags(){

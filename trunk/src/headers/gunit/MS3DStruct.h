@@ -87,6 +87,7 @@ namespace siege{
 				MS3DGroup(MS3DGroup&);
 				MS3DGroup(byte, char*, word, word*, char);
 				~MS3DGroup();
+				MS3DGroup& operator=(MS3DGroup&);
 				byte getFlags();
 				char* getName();
 				word getNumberOfTriangles();
@@ -185,6 +186,7 @@ namespace siege{
 				MS3DJoint(MS3DJoint&);
 				MS3DJoint(byte, char*, MS3DJoint*, Vector3f&, Vector3f&, word, word, MS3DKeyFrame*, MS3DKeyFrame*);
 				~MS3DJoint();
+				MS3DJoint& operator=(MS3DJoint&);
 				byte getFlags();
 				char* getName();
 				MS3DJoint* getParent();

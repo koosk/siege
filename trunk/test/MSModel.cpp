@@ -17,7 +17,8 @@ Model* model;
 
 // Kill program
 void endProgram(int code) {
-//	delete [] model;
+	//TODO hiba javitasa
+	//delete [] model;
 	SDL_Quit();
 	exit(code);
 	}

@@ -3,6 +3,7 @@
 
 #include"Model.h"
 #include"MS3DData.h"
+#include"math/Matrix16f.h"
 
 namespace siege{
 	namespace gunit{
@@ -10,14 +11,20 @@ namespace siege{
 		class MS3DModel : public Model{
 			private:
 				MS3DData model;
+				Matrix16f* absMatrices;
+				Matrix16f* relMatrices;
+				Matrix16f* finMatrices;
 			protected:
 				void loadModel(char*);
 				void drawModel();
+				virtual void setupMatrices();
+				virtual void setupVertices();
 			public:
 				MS3DModel();
 				MS3DModel(char*);
 				MS3DModel(MS3DModel&);
 				~MS3DModel();
+				MS3DModel& operator=(MS3DModel&);
 				void reset();
 				void setAnimationInterval(int, int);
 		}; //MS3DModel

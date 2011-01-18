@@ -27,7 +27,7 @@ namespace siege{
 			a = 0.0;
 		}
 
-		float Vector4f::getA(){
+		float Vector4f::getA() const{
 			return a;
 		}
 

@@ -15,7 +15,7 @@ namespace siege{
 				Vector4f(float*);
 				Vector4f(Vector4f&);
 				Vector4f(Vector3f&);
-				float getA();
+				float getA() const;
 				void setA(float);
 				float& operator[](const int);
 				float* get(float*);

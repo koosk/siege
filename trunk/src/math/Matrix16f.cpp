@@ -1,15 +1,16 @@
 #include "math/Matrix16f.h"
 #include "BadIndexException.h"
 #include <string.h>
+#include <cmath>
 
 namespace siege{
 	namespace math{
 		Matrix16f::Matrix16f(){
 			for(int i=0; i<16; i++){
-				data[i] = 0.0f;
+				data[i] = 0.f;
 			}
-			this->data[0] = this->data[5] = 1;
-			this->data[10] = this->data[15] = 1;
+			this->data[0] = this->data[5] = 1.f;
+			this->data[10] = this->data[15] = 1.f;
 		}
 		
 		Matrix16f::Matrix16f(const Matrix16f &m){
@@ -71,15 +72,15 @@ namespace siege{
 			return *res;
 		}
 
-		void Matrix16f::transpose(){
-			/*float res[16];
+		Matrix16f& Matrix16f::transpose() const{
+			float res[16];
 			for(int i=0; i<4; i++){
 				for(int j=0; j<4; j++){
 					res[4*j+i] = data[4*i+j];
 				}
 			}
-			return *(new Matrix16f(res));*/
-			int tmp;
+			return *(new Matrix16f(res));
+			/*int tmp;
 			for(int i=0; i<3; i++){
 				for(int j=i+1; j<4; j++){
 					tmp = data[i*4+j];
@@ -87,6 +88,77 @@ namespace siege{
 					data[j*4+i] = tmp;
 				}
 			}
+			return *this;*/
 		}
-	};
-};
+
+		std::ostream& operator<<(std::ostream &out,const Matrix16f &m){
+			for(int i=0; i<4; i++){
+				int j;
+				for(j=0; j<3; j++){
+					out << m.data[i*4+j] << " ";
+				}
+				out << m.data[i*4+j] << std::endl;
+			}
+			return out;
+		}
+		
+		Matrix16f& Matrix16f::translate(const Vector3f &v) const{
+			float r[16];
+			float x = v.getX();
+			float y = v.getY();
+			float z = v.getZ();
+			r[0]  = data[0]+data[3]*x;
+			r[1]  = data[1]+data[3]*y;
+			r[2]  = data[2]+data[3]*z;
+			r[3]  = data[3];
+			r[4]  = data[4]+data[7]*x;
+			r[5]  = data[5]+data[7]*y;
+			r[6]  = data[6]+data[7]*z;
+			r[7]  = data[7];
+			r[8]  = data[8]+data[11]*x;
+			r[9]  = data[9]+data[11]*y;
+			r[10] = data[10]+data[11]*z;
+			r[11] = data[11];
+			r[12] = data[12]+data[15]*x;
+			r[13] = data[13]+data[15]*y;
+			r[14] = data[14]+data[15]*z;
+			r[15] = data[15];
+			return *(new Matrix16f(r));
+		}
+
+		Matrix16f& Matrix16f::rotate(const Vector3f &v) const{
+			float phi = v.getX();
+			float theta = v.getY();
+			float psi = v.getZ();
+
+			float cphi = cos(phi);
+			float sphi = sin(phi);
+			float ctheta = cos(theta);
+			float stheta = sin(theta);
+			float cpsi = cos(psi);
+			float spsi = sin(psi);
+			/*
+            |cos(phi)cos(psi)-sin(phi)cos(theta)sin(psi)      cos(phi)*sin(psi)+sin(phi)*cos(theta)*cos(psi)   sin(phi)*sin(theta)|
+			|-sin(phi)*cos(psi)-cos(phi)*cos(theta)*sin(psi)  -sin(phi)*sin(psi)+cos(phi)*cos(theta)*cos(psi)  cos(phi)*sin(theta)|
+			|sin(theta)*sin(psi)                              -sin(theta)*cos(psi)                             cos(theta)         |
+			*/
+
+			float r[16] = {cphi*cpsi-sphi*ctheta*spsi, -sphi*cpsi-cphi*ctheta*spsi, stheta*spsi , 0.f,
+			               cphi*spsi+sphi*ctheta*cpsi, -sphi*spsi+cphi*ctheta*cpsi, -stheta*cpsi, 0.f,
+			               sphi*stheta               , cphi*stheta                , ctheta      , 0.f,
+			               0.f                       , 0.f                       , 0.f         , 1.f
+			};
+			return *(new Matrix16f(r));
+		}
+		
+		Matrix16f& Matrix16f::scale(const Vector3f &v) const{
+			float r[16] = {v.getX(),0.f,     0.f,     0.f,
+			               0.f,     v.getY(),0.f,     0.f,
+			               0.f,     0.f,     v.getZ(),0.f,
+			               0.f,     0.f,     0.f,     1.f
+			};
+			return *(new Matrix16f(r));
+		}
+
+	};//math
+};//siege

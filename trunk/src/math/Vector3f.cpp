@@ -24,15 +24,15 @@ namespace siege{
 			z = v.z;
 		}
 
-		float Vector3f::getX(){
+		float Vector3f::getX() const{
 			return x;
 		}
 
-		float Vector3f::getY(){
+		float Vector3f::getY() const{
 			return y;
 		}
 
-		float Vector3f::getZ(){
+		float Vector3f::getZ() const{
 			return z;
 		}
 

@@ -1,6 +1,7 @@
 #ifndef MATRIX16F_H
 #define MATRIX16F_H
 
+#include <iostream>
 #include "Vector3f.h"
 #include "Vector4f.h"
 
@@ -20,7 +21,11 @@ namespace siege{
 				float operator[](int) const;
 				Matrix16f& operator*(const Matrix16f &) const;
 				friend Vector4f& Vector3f::operator*(const Matrix16f &) const;
-				void transpose();
+				Matrix16f& transpose() const;
+				friend std::ostream& operator<<(std::ostream&,const Matrix16f &);
+				Matrix16f& translate(const Vector3f &) const;
+				Matrix16f& rotate(const Vector3f &) const;
+				Matrix16f& scale(const Vector3f &) const;
 		};
 	};
 };

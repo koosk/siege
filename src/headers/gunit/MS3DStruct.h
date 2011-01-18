@@ -49,7 +49,7 @@ namespace siege{
 				word vertexIndices[3];
 				Vector3f vertexNormals[3];
 				Vector3f s; // texture coordinate
-				Vector3f t;	// texture coordinate 1.0-t!!!!!
+				Vector3f t;	// texture coordinate
 				byte smoothingGroup;
 				byte groupIndex;
 			public:

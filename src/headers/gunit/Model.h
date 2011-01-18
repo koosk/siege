@@ -17,11 +17,13 @@ namespace siege{
 				bool isAnimationOn();
 				virtual void setAnimationBegin(int);
 				virtual void setAnimationEnd(int);
+				void setModelPath(char*);
 			public:
 				Model();
 				Model(char*);
 				Model(Model&);
 				~Model();
+				void load();
 				void load(char*);
 				virtual void start();
 				virtual void pause();

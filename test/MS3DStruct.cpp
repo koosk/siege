@@ -7,6 +7,12 @@ using namespace std;
 using namespace siege::gunit;
 
 int main(){
+	MS3DVertex ver;
+	Vector3f vec(1,2,3);
+	MS3DVertex ver2;
+	ver2 = MS3DVertex(ver);
+	ver.setVertex(vec);
+
 	MS3DTriangle t;
 	int a = t.getFlags();
 	cout << "tri flag: "  << a << endl;
@@ -15,6 +21,10 @@ int main(){
 	siege::math::Vector3f v;
 	v = t.getVertexNormal(1);
 	cout << "tri 1 normal: "  << v << endl;
+
+	MS3DMaterial mat;
+	mat.setTexture((char*)"data/beast1.png");
+	MS3DMaterial mat2 = mat;
 
 	MS3DGroup g;
 

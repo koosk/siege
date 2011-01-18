@@ -9,21 +9,21 @@ namespace siege{
 			a = e;
 		}
 
-		Vector4f::Vector4f(float* f):Vector3f(f){
+		Vector4f::Vector4f(const float* f):Vector3f(f){
 			a = f[3];
 		}
 
-		Vector4f::Vector4f(Vector4f& v){
-			(*this)[0] = v[0];
-			(*this)[1] = v[1];
-			(*this)[2] = v[2];
+		Vector4f::Vector4f(const Vector4f& v){
+			setX(v.getX());
+			setY(v.getY());
+			setZ(v.getZ());
 			a = v.a;
 		}
 
-		Vector4f::Vector4f(Vector3f& v){
-			(*this)[0] = v[0];
-			(*this)[1] = v[1];
-			(*this)[2] = v[2];
+		Vector4f::Vector4f(const Vector3f& v){
+			setX(v.getX());
+			setY(v.getY());
+			setZ(v.getZ());
 			a = 0.0;
 		}
 

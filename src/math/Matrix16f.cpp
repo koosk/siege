@@ -160,5 +160,32 @@ namespace siege{
 			return Matrix16f(r);
 		}
 
+		//A matrix and its transpose have the same determinant.
+		//Using rule of Sarrus.
+		float Matrix16f::determinant3(const float *f){
+			return (f[0]*f[4]*f[8] + f[1]*f[5]*f[6] + f[2]*f[3]*f[7]
+				  - f[2]*f[4]*f[6] - f[1]*f[3]*f[8] - f[0]*f[5]*f[7]);
+		}
+		
+		float Matrix16f::determinant() const{
+			float tmp1[9] = {data[1],data[2],data[3],
+			                 data[5],data[6],data[7],
+			                 data[9],data[10],data[11]};
+
+			float tmp2[9] = {data[0],data[2],data[3],
+			                 data[4],data[6],data[7],
+			                 data[8],data[10],data[11]};
+
+			float tmp3[9] = {data[0],data[1],data[3],
+			                 data[4],data[5],data[7],
+			                 data[8],data[9],data[11]};
+
+			float tmp4[9] = {data[0],data[1],data[2],
+			                 data[4],data[5],data[6],
+			                 data[8],data[9],data[10]};
+			return (data[12]*determinant3(tmp1) - data[13]*determinant3(tmp2)
+				  + data[14]*determinant3(tmp3) - data[15]*determinant3(tmp4));
+		}
+
 	};//math
 };//siege

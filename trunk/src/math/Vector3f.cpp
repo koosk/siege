@@ -9,16 +9,16 @@ namespace siege{
 		Vector3f::Vector3f():x(0.0),y(0.0),z(0.0){
 		}
 
-		Vector3f::Vector3f(float a, float b, float c):x(a),y(b),z(c){
+		Vector3f::Vector3f(const float a, const float b, const float c):x(a),y(b),z(c){
 		}
 
-		Vector3f::Vector3f(float* a){
+		Vector3f::Vector3f(const float* a){
 			x = a[0];	
 			y = a[1];	
 			z = a[2];	
 		}
 
-		Vector3f::Vector3f(Vector3f &v){
+		Vector3f::Vector3f(const Vector3f &v){
 			x = v.x;
 			y = v.y;
 			z = v.z;
@@ -59,6 +59,7 @@ namespace siege{
 			throw siege::BadIndexException();
 		}
 
+		//TODO ez nem lehetne const metodus?
 		float* Vector3f::get(float* f){
 			f[0] = x;
 			f[1] = y;
@@ -66,7 +67,7 @@ namespace siege{
 			return f;
 		}
 
-		void Vector3f::set(float* f){
+		void Vector3f::set(const float* f){
 			x = f[0];	
 			y = f[1];	
 			z = f[2];	
@@ -76,13 +77,14 @@ namespace siege{
 			return out;
 		}
 		
-		Vector4f& Vector3f::operator*(const Matrix16f &m) const{
+		Vector4f Vector3f::operator*(const Matrix16f &m) const{
 			float r[4];
 			r[0] = x*m.data[0]  + y*m.data[1]  + z*m.data[2]  + m.data[3];
 			r[1] = x*m.data[4]  + y*m.data[5]  + z*m.data[6]  + m.data[7];
 			r[2] = x*m.data[8]  + y*m.data[9]  + z*m.data[10] + m.data[11];
 			r[3] = x*m.data[12] + y*m.data[13] + z*m.data[14] + m.data[15];
-			return *(new Vector4f(r));
+			Vector4f v(r);
+			return v;
 		}
 	};//math
 };//siege

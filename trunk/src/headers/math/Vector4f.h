@@ -12,9 +12,9 @@ namespace siege{
 			public:
 				Vector4f();
 				Vector4f(float, float, float, float);
-				Vector4f(float*);
-				Vector4f(Vector4f&);
-				Vector4f(Vector3f&);
+				Vector4f(const float*);
+				Vector4f(const Vector4f&);
+				Vector4f(const Vector3f&);
 				float getA() const;
 				void setA(float);
 				float& operator[](const int);

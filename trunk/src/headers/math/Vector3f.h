@@ -15,9 +15,9 @@ namespace siege{
 				float x, y, z;
 			public:
 				Vector3f();
-				Vector3f(float, float, float);
-				Vector3f(float*);
-				Vector3f(Vector3f&);
+				Vector3f(const float, const float, const float);
+				Vector3f(const float*);
+				Vector3f(const Vector3f&);
 				float getX() const;
 				float getY() const;
 				float getZ() const;
@@ -26,9 +26,9 @@ namespace siege{
 				void setZ(float);
 				virtual float& operator[](const int);
 				virtual float* get(float*);
-				virtual void set(float*);
+				virtual void set(const float*);
 				friend  std::ostream& siege::math::operator<<(std::ostream&, Vector3f&);
-				Vector4f& operator*(const Matrix16f &) const;
+				Vector4f operator*(const Matrix16f &) const;
 		};//Vector3f
 
 	};//math

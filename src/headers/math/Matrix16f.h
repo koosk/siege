@@ -22,6 +22,7 @@ namespace siege{
 				void set(int, float);
 				float operator[](int) const;
 				Matrix16f operator*(const Matrix16f &) const;
+				Matrix16f operator*=(const Matrix16f &);
 				friend Vector4f Vector3f::operator*(const Matrix16f &) const;
 				Matrix16f transpose() const;
 				friend std::ostream& operator<<(std::ostream&,const Matrix16f &);
@@ -32,6 +33,10 @@ namespace siege{
 				float determinant() const;
 				Matrix16f invert() const throw(MathException);
 				friend Matrix16f operator*(float,const Matrix16f &);
+				Matrix16f operator+(const Matrix16f &) const;
+				Matrix16f operator-(const Matrix16f &) const;
+				Matrix16f operator+=(const Matrix16f &);
+				Matrix16f operator-=(const Matrix16f &);
 		};
 	};
 };

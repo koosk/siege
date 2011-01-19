@@ -17,7 +17,7 @@ namespace siege{
 				Matrix16f* relMatrices;
 				Matrix16f* finMatrices;
 				void init();
-				Vector3f& getKeyFrameVector(MS3DKeyFrame*, word, float);
+				Vector3f getKeyFrameVector(MS3DKeyFrame*, word, float);
 			protected:
 				void loadModel(char*);
 				void drawModel();
@@ -36,6 +36,7 @@ namespace siege{
 				void setAnimationInterval(int, int);
 				void start();
 				int getMaxFrames();
+				void drawSkeleton();
 		}; //MS3DModel
 
 	}; //gunit

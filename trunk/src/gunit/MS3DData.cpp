@@ -505,6 +505,7 @@ namespace siege{
 					MS3DKeyFrame kf(ti, v);
 					trakf[k] = kf;
 				}
+
 				MS3DJoint jo(i, fl, nm, par, rot, pos, rkf, tkf, rotkf, trakf);
 				joints[i] = jo;
 			}

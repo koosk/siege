@@ -367,5 +367,20 @@ namespace siege{
 			return *this;
 		}
 
+		float Matrix16f::getNormaF(){
+			float f = 0;
+			for(int i=0; i<16; i++)
+				f += data[i]*data[i];
+			return sqrt(f);
+		}
+
+		Matrix16f Matrix16f::normalize(){
+			Matrix16f m = *this;
+			float norm = m.getNormaF();
+			for(int i=0; i<16; i++)
+				m.data[i] = m.data[i]/norm;
+			return m;
+		}
+
 	};//math
 };//siege

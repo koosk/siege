@@ -10,10 +10,11 @@ using namespace siege::gunit;
 GLuint width = 800;
 GLuint height = 800;
 float trans = -300.0;
+float transup = -50.0;
 float rotfact;
 
 Model* model;
- 
+bool mode = true; 
 
 // Kill program
 void endProgram(int code) {
@@ -29,11 +30,14 @@ void handleKeys(SDL_keysym* keysym, bool state) {
         case SDLK_ESCAPE:    endProgram(0); break;
         case SDLK_DOWN:    trans -= 50; break;
         case SDLK_UP:    trans += 50; break;
+        case SDLK_PAGEDOWN:    transup -= 10; break;
+        case SDLK_PAGEUP:    transup += 10; break;
         case SDLK_RIGHT:    rotfact += .5; break;
         case SDLK_LEFT:    rotfact -= .5; break;
         case SDLK_s:    model->start(); break;
         case SDLK_a:    model->stop(); break;
         case SDLK_d:    model->pause(); break;
+        case SDLK_q:    mode = !mode; break;
         default: break;
     }
 }
@@ -56,10 +60,13 @@ void mainLoop() {
  
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         glLoadIdentity();
-		glTranslatef(0.0, -50.0, trans);
+		glTranslatef(0.0, transup, trans);
 		glRotatef(rotfact, 0,1,0);
 
-		model->draw();
+		if(mode)
+			model->draw();
+		else
+			((MS3DModel*)model)->drawSkeleton();
 
         SDL_GL_SwapBuffers();
     }
@@ -69,7 +76,7 @@ void setupOpengl() {
     //glMatrixMode(GL_MODELVIEW);
     glMatrixMode(GL_PROJECTION);
     glEnable(GL_DEPTH_TEST);
-    gluPerspective(45, (float)width/height, .1, 1000);
+    gluPerspective(45, (float)width/height, .1, 100000);
 	glMatrixMode(GL_MODELVIEW);
 	glShadeModel(GL_SMOOTH);
 	
@@ -85,6 +92,7 @@ void setupOpengl() {
 	glEnable(GL_LIGHTING);
 
     glEnable( GL_TEXTURE_2D );
+    glEnable( GL_BLEND );
 	SDL_EnableKeyRepeat( 100, SDL_DEFAULT_REPEAT_INTERVAL );
 
 }
@@ -100,8 +108,8 @@ int main(int argc, char* argv[]) {
 	//model = new MS3DModel((char*)"data/model.ms3d");
 	//model = new MS3DModel((char*)"data/fighter/fighter1.ms3d");
 	model->load();
-	//model->setAnimationInterval(0, model->getMaxFrames());
-	model->setAnimationInterval(0, 24);
+	model->setAnimationInterval(0, model->getMaxFrames());
+	//model->setAnimationInterval(0, 24);
 
     mainLoop();
     return 0;

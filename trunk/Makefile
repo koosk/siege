@@ -74,7 +74,7 @@ $(tv4f): $(TEST)/Vector4f.cpp $(v3f) $(v4f) $(bie)
 	$(GPP) -o $@ $+
 
 tmsstruct = $(BUILD)/testMSStruct
-$(tmsstruct): $(TEST)/MS3DStruct.cpp $(msstruct) $(v3f) $(v4f) $(bie) $(util) $(sie)
+$(tmsstruct): $(TEST)/MS3DStruct.cpp $(msstruct) $(v3f) $(v4f) $(bie) $(util) $(sie) $(mse)
 	$(GPP) -o $@ $+
 
 tmsdata = $(BUILD)/testMSData
@@ -82,11 +82,16 @@ $(tmsdata): $(TEST)/MS3DData.cpp $(msdata) $(msstruct) $(v3f) $(v4f) $(bie) $(ms
 	$(GPP) -o $@ $+
 
 tmodel = $(BUILD)/testMSmodel
-$(tmodel): $(TEST)/MSModel.cpp $(msdata) $(msstruct) $(v3f) $(v4f) $(bie) $(mse) $(util) $(sie) $(model) $(msmodel) $(mtx16f) $(mathex)
+$(tmodel): $(TEST)/MSModel.cpp $(msdata) $(msstruct) $(v3f) $(v4f) $(bie) $(mse) $(util) $(sie) $(model) $(msmodel) $(mtx16f) $(mathex) 
 	$(GPP) -o $(tmodel) $+
 
-tmatrix = $(BUILD)/testMatrix16f 
-$(tmatrix): $(TEST)/Matrix16f.cpp $(v3f) $(v4f) $(bie) $(mtx16f) $(mathex)
+tmat = $(BUILD)/Rottest.o
+mattest: $(TEST)/Rottest.cpp $(msdata) $(msstruct) $(v3f) $(v4f) $(bie) $(mse) $(util) $(sie) $(mtx16f) $(mathex)
+	$(GPP) -o $(tmat) $+
+	$(tmat)
+
+tmatrix = $(BUILD)/testMatrix16f
+$(tmatrix): $(TEST)/Matrix16f.cpp $(v3f) $(v4f) $(bie) $(mtx16f)
 	$(GPP) -o $@ $+
 
 run-model: compile $(tmodel)

@@ -106,6 +106,7 @@ namespace siege{
 					Matrix16f m = absMatrices[(word)v->getBoneId()];
 					try{
 						m = m.invert();
+						//m = m.normalize();
 					}catch(MathException &e){std::cout << e.what() << std::endl;}
 					Vector3f vec = v->operator()();
 					vec = vec * m;
@@ -114,7 +115,7 @@ namespace siege{
 			}
 		}
 
-		Vector3f& MS3DModel::getKeyFrameVector(MS3DKeyFrame* kf, word num, float time){
+		Vector3f MS3DModel::getKeyFrameVector(MS3DKeyFrame* kf, word num, float time){
 			word fi = 0;
 			while(fi < num && kf[fi].getTime() < time)
 				fi++;
@@ -133,11 +134,11 @@ namespace siege{
 
 		void MS3DModel::animate(){
 			unsigned int sdltic = SDL_GetTicks();
-			currentTime += ((sdltic - startTime) / 10000.0) * (model.getTotalFrames()/model.getFPS());
+			currentTime += ((sdltic - startTime) / 50000.0) * (model.getTotalFrames()/model.getFPS());
 			startTime = sdltic;
 			float end = (float)getAnimationEnd()/model.getFPS();
 			if(currentTime > end)
-				currentTime = (float)getAnimationBegin();// + (currentTime - end);
+				currentTime = (float)getAnimationBegin() + (currentTime - end);
 
 
 			for(int i=0; i<model.getNumberOfJoints(); i++){
@@ -147,8 +148,8 @@ namespace siege{
 					continue;
 				}
 				Matrix16f m;
-				m = m.rotate(getKeyFrameVector(j->getRotationKeyFrames(), j->getNumberOfRotationKeyFrames(), currentTime));
 				m = m.translate(getKeyFrameVector(j->getTranslationKeyFrames(), j->getNumberOfTranslationKeyFrames(), currentTime));
+				m = m.rotate(getKeyFrameVector(j->getRotationKeyFrames(), j->getNumberOfRotationKeyFrames(), currentTime));
 
 				m = m * relMatrices[i];
 
@@ -161,6 +162,8 @@ namespace siege{
 
 		void MS3DModel::drawModel(){
 			bool glText = glIsEnabled(GL_TEXTURE_2D);
+			bool glBlend = glIsEnabled(GL_BLEND);
+			bool glDepth = glIsEnabled(GL_DEPTH_TEST);
 			for(int gi=0; gi<model.getNumberOfGroups(); gi++){
 				char mindex = model.getGroup(gi)->getMaterialIndex();
 				if(mindex >= 0){
@@ -177,9 +180,23 @@ namespace siege{
 					float shi = mat->getShininess();
 					glMaterialfv(GL_FRONT, GL_SHININESS, &shi);
 
-					if(mat->hasTexture() && glText){
-						glBindTexture(GL_TEXTURE_2D, mat->getTexure());
+					//TODO alpha
+					/*if(mat->hasAlphamap() && glBlend){
+						glEnable(GL_BLEND);
+						glDisable(GL_DEPTH_TEST);
 						glEnable(GL_TEXTURE_2D);
+						glBlendFunc(GL_DST_COLOR, GL_ZERO);
+						glBindTexture(GL_TEXTURE_2D, mat->getAlphamap());
+					}else{
+						glDisable(GL_BLEND);
+						glDisable(GL_TEXTURE_2D);
+					}*/
+
+					if(mat->hasTexture() && glText){
+						//glBlendFunc(GL_ONE, GL_ONE);
+						//glDisable(GL_BLEND);
+						glEnable(GL_TEXTURE_2D);
+						glBindTexture(GL_TEXTURE_2D, mat->getTexure());
 					}else
 						glDisable(GL_TEXTURE_2D);
 
@@ -200,7 +217,6 @@ namespace siege{
 							bool b = false;
 							if(ver->hasBone()){
 								m = finMatrices[(word)ver->getBoneId()];
-								m= m.invert();
 								b = true;
 							}
 							Vector3f v = ver->operator()();
@@ -226,6 +242,14 @@ namespace siege{
 				glEnable(GL_TEXTURE_2D);
 			else
 				glDisable(GL_TEXTURE_2D);
+			if(glBlend)
+				glEnable(GL_BLEND);
+			else
+				glDisable(GL_BLEND);
+			if(glDepth)
+				glEnable(GL_DEPTH_TEST);
+			else
+				glDisable(GL_DEPTH_TEST);
 
 			if(isAnimationOn())
 				animate();
@@ -233,6 +257,36 @@ namespace siege{
 
 		int MS3DModel::getMaxFrames(){
 			return model.getTotalFrames();
+		}
+
+		void MS3DModel::drawSkeleton(){
+			glBegin(GL_LINES);
+				for(int i=0; i<model.getNumberOfJoints(); i++){
+					MS3DJoint* joint = model.getJoint(i);
+					if(!joint->hasParent())
+						continue;
+					Vector3f pv = joint->getParent()->getPositionVector();
+					Matrix16f m;
+					m = m.rotate(joint->getParent()->getRotationVector());
+					pv = pv*m;
+					m = finMatrices[joint->getParent()->getIndex()];
+					pv = pv*m;
+					m = Matrix16f();
+					Vector3f v = joint->getPositionVector();
+					m = m.rotate(joint->getRotationVector());
+					v = v*m;
+					m = finMatrices[i];
+					v = v*m;
+					float f[3];
+					pv.get(f);
+					glVertex3fv(f);
+					v.get(f);
+					glVertex3fv(f);
+				}
+			glEnd();
+
+			if(isAnimationOn())
+				animate();
 		}
 
 	}; //gunit

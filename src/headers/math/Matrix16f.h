@@ -37,6 +37,8 @@ namespace siege{
 				Matrix16f operator-(const Matrix16f &) const;
 				Matrix16f operator+=(const Matrix16f &);
 				Matrix16f operator-=(const Matrix16f &);
+				float getNormaF();
+				Matrix16f normalize();
 		};
 	};
 };

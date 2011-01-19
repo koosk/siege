@@ -59,6 +59,10 @@ msmodel = $(BUILD)/gunit/MS3DModel.o
 $(msmodel): $(SRC)/gunit/MS3DModel.cpp $(HEADER)/gunit/MS3DModel.h $(model)
 	$(GPP) -o $@ -c $<
 
+mathex = $(BUILD)/math/MathException.o
+$(mathex): $(SRC)/math/MathException.cpp $(HEADER)/math/MathException.h
+	$(GPP) -o $@ -c $<
+
 compile: build
 
 tv3f = $(BUILD)/testVector3f

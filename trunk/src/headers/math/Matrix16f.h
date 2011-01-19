@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Vector3f.h"
 #include "Vector4f.h"
+#include "MathException.h"
 
 namespace siege{
 	namespace math{
@@ -29,6 +30,8 @@ namespace siege{
 				Matrix16f scale(const Vector3f &) const;
 				static float determinant3(const float*);
 				float determinant() const;
+				Matrix16f invert() const throw(MathException);
+				friend Matrix16f operator*(float,const Matrix16f &);
 		};
 	};
 };

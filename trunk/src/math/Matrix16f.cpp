@@ -142,21 +142,25 @@ namespace siege{
 			|-sin(phi)*cos(psi)-cos(phi)*cos(theta)*sin(psi)  -sin(phi)*sin(psi)+cos(phi)*cos(theta)*cos(psi)  cos(phi)*sin(theta)|
 			|sin(theta)*sin(psi)                              -sin(theta)*cos(psi)                             cos(theta)         |
 			*/
-
 			float r[16] = {cphi*cpsi-sphi*ctheta*spsi, -sphi*cpsi-cphi*ctheta*spsi, stheta*spsi , 0.f,
 			               cphi*spsi+sphi*ctheta*cpsi, -sphi*spsi+cphi*ctheta*cpsi, -stheta*cpsi, 0.f,
 			               sphi*stheta               , cphi*stheta                , ctheta      , 0.f,
 			               0.f                       , 0.f                       , 0.f         , 1.f
 			};
-			return Matrix16f(r);
+			return ((*this)*Matrix16f(r));
 		}
 		
 		Matrix16f Matrix16f::scale(const Vector3f &v) const{
-			float r[16] = {v.getX(),0.f,     0.f,     0.f,
+			/*float r[16] = {v.getX(),0.f,     0.f,     0.f,
 			               0.f,     v.getY(),0.f,     0.f,
 			               0.f,     0.f,     v.getZ(),0.f,
 			               0.f,     0.f,     0.f,     1.f
-			};
+			};*/
+			float *r = new float[16];
+			memcpy(r,data,sizeof(float[16]));
+			r[0]  *= v.getX();
+			r[5]  *= v.getY();
+			r[10] *= v.getZ();
 			return Matrix16f(r);
 		}
 
@@ -185,6 +189,124 @@ namespace siege{
 			                 data[8],data[9],data[10]};
 			return (data[12]*determinant3(tmp1) - data[13]*determinant3(tmp2)
 				  + data[14]*determinant3(tmp3) - data[15]*determinant3(tmp4));
+		}
+		
+		Matrix16f Matrix16f::invert() const throw(MathException){
+			float det = determinant();
+			if(0==det){
+				throw MathException("Singular matrix does not have determinant and inverse.");
+			}
+			float r[16];
+			//1. sor
+			{
+				float c[9] = {data[5],data[6],data[7],
+				              data[9],data[10],data[11],
+				              data[13],data[14],data[15]};
+				r[0] = determinant3(c);
+			}
+			{
+				float c[9] = {data[4],data[6],data[7],
+				              data[8],data[10],data[11],
+				              data[12],data[14],data[15]};
+				r[1] = determinant3(c);
+			}
+			{
+				float c[9] = {data[4],data[5],data[7],
+				              data[8],data[9],data[11],
+				              data[12],data[13],data[15]};
+				r[2] = determinant3(c);
+			}
+			{
+				float c[9] = {data[4],data[5],data[6],
+				              data[8],data[9],data[10],
+				              data[12],data[13],data[14]};
+				r[3] = determinant3(c);
+			}
+			//2. sor
+			{
+				float c[9] = {data[1],data[2],data[3],
+				              data[9],data[10],data[11],
+				              data[13],data[14],data[15]};
+				r[4] = determinant3(c);
+			}
+			{
+				float c[9] = {data[0],data[2],data[3],
+				              data[8],data[10],data[11],
+				              data[12],data[14],data[15]};
+				r[5] = determinant3(c);
+			}
+			{
+				float c[9] = {data[0],data[1],data[3],
+				              data[8],data[9],data[11],
+				              data[12],data[13],data[15]};
+				r[6] = determinant3(c);
+			}
+			{
+				float c[9] = {data[0],data[1],data[2],
+				              data[8],data[9],data[10],
+				              data[12],data[13],data[14]};
+				r[7] = determinant3(c);
+			}
+			//3. sor
+			{
+				float c[9] = {data[1],data[2],data[3],
+				              data[5],data[6],data[7],
+				              data[13],data[14],data[15]};
+				r[8] = determinant3(c);
+			}
+			{
+				float c[9] = {data[0],data[2],data[3],
+				              data[4],data[6],data[7],
+				              data[12],data[14],data[15]};
+				r[9] = determinant3(c);
+			}
+			{
+				float c[9] = {data[0],data[1],data[3],
+				              data[4],data[5],data[7],
+				              data[12],data[13],data[15]};
+				r[10] = determinant3(c);
+			}
+			{
+				float c[9] = {data[0],data[1],data[2],
+				              data[4],data[5],data[6],
+				              data[12],data[13],data[14]};
+				r[11] = determinant3(c);
+			}
+			//4. sor
+			{
+				float c[9] = {data[1],data[2],data[3],
+				              data[5],data[6],data[7],
+				              data[9],data[10],data[11]};
+				r[12] = determinant3(c);
+			}
+			{
+				float c[9] = {data[0],data[2],data[3],
+				              data[4],data[6],data[7],
+				              data[8],data[10],data[11]};
+				r[13] = determinant3(c);
+			}
+			{
+				float c[9] = {data[0],data[1],data[3],
+				              data[4],data[5],data[7],
+				              data[8],data[9],data[11]};
+				r[14] = determinant3(c);
+			}
+			{
+				float c[9] = {data[0],data[1],data[2],
+				              data[4],data[5],data[6],
+				              data[8],data[9],data[10]};
+				r[15] = determinant3(c);
+			}
+
+			return (1./det)*Matrix16f(r);
+		}
+		
+		Matrix16f operator*(float c,const Matrix16f &m){
+			float r[16];
+			for(int i=0; i<16; i++){
+				r[i] = c*m.data[i];
+			}
+			return Matrix16f(r);
 		}
 
 	};//math

@@ -132,27 +132,54 @@ namespace siege{
 		}
 
 		Matrix16f Matrix16f::rotate(const Vector3f &v) const{
-			float phi = v.getX();
+			/*float phi = v.getX();
 			float theta = v.getY();
-			float psi = v.getZ();
+			float psi = v.getZ();*/
+			/*float phi = v.getZ();
+			float theta = v.getX();
+			float psi = v.getY();
 
 			float cphi = cos(phi);
 			float sphi = sin(phi);
 			float ctheta = cos(theta);
 			float stheta = sin(theta);
 			float cpsi = cos(psi);
-			float spsi = sin(psi);
+			float spsi = sin(psi);*/
 			/* http://www.ibrtses.com/opengl/matrices.html   
             |cos(phi)cos(psi)-sin(phi)cos(theta)sin(psi)      cos(phi)*sin(psi)+sin(phi)*cos(theta)*cos(psi)   sin(phi)*sin(theta)|
 			|-sin(phi)*cos(psi)-cos(phi)*cos(theta)*sin(psi)  -sin(phi)*sin(psi)+cos(phi)*cos(theta)*cos(psi)  cos(phi)*sin(theta)|
 			|sin(theta)*sin(psi)                              -sin(theta)*cos(psi)                             cos(theta)         |
 			*/
-			float r[16] = {cphi*cpsi-sphi*ctheta*spsi, -sphi*cpsi-cphi*ctheta*spsi, stheta*spsi , 0.f,
+			/*float r[16] = {cphi*cpsi-sphi*ctheta*spsi, -sphi*cpsi-cphi*ctheta*spsi, stheta*spsi , 0.f,
 			               cphi*spsi+sphi*ctheta*cpsi, -sphi*spsi+cphi*ctheta*cpsi, -stheta*cpsi, 0.f,
 			               sphi*stheta               , cphi*stheta                , ctheta      , 0.f,
 			               0.f                       , 0.f                       , 0.f         , 1.f
+			};*/
+			float xRot = v.getX();
+			float yRot = v.getY();
+			float zRot = v.getZ();
+			float cx = cos(xRot);
+			float sx = sin(xRot);
+			float cy = cos(yRot);
+			float sy = sin(yRot);
+			float cz = cos(zRot);
+			float sz = sin(zRot);
+			/*float r[16] = {cy*cz-sz*sy*sx, -sz*cx, sy*cz+sx*cy   , 0.,
+			               cy*sz+sy*sx*cz, cx*cz , sy*sz-sx*cy*cz, 0.,
+			               -sy*cx        , sx    , cy*cx         , 0.,
+			               0.            , 0.    , 0.            , 1.};*/
+			/*float r[16] = {cz*cy          , -sz*cy         , sy    , 0.,
+			               cz*sy*sx+sz*cx , -sz*sy*sx+cz*cx, -sy*cy, 0.,
+			               -cz*sy*cx+sz*sx, sz*sy*cx+cz*sx , cy*cx , 0.,
+			               0.             , 0.             , 0.    , 1.
+			};*/
+			float r[16] = {cz*cy+sz*sx*sy , -sz*cy+cz*sx*sy, cx*sy , 0.,
+			               sz*cx          , cz*cx          , -sx   , 0.,
+			               -cz*sy+sz*sx*cy, sz*sy+cz*sx*cy , cx*cy , 0.,
+			               0.             , 0.             , 0.    , 1.
 			};
-			return ((*this)*Matrix16f(r));
+			//return ((*this)*Matrix16f(r));
+			return (Matrix16f(r)*(*this));
 		}
 		
 		Matrix16f Matrix16f::scale(const Vector3f &v) const{

@@ -45,16 +45,23 @@ void processEvents() {
 }
  
 void mainLoop() {
-	Vector3f v1(8, 3, 0);
-	Vector3f v2(6, 0, 0);
-	Vector3f v3(10, 0, 0);
-	Vector3f vr(0, 0.001, 0);
+	//Vector3f v1(8, 3, 0);
+	//Vector3f v2(6, 0, 0);
+	//Vector3f v3(10, 0, 0);
+	Vector3f v1(0, 3, 0);
+	Vector3f v2(-2, 0, 0);
+	Vector3f v3(2, 0, 0);
+
+	Vector3f vr(0., 0., 0.01);
 	float f1[3];
 	float f2[3];
 	float f3[3];
 	Matrix16f m;
 	m = m.rotate(vr);
-	cout << m << endl;
+	cout << m << endl << endl;
+	Vector4f vres = v1*m;
+	cout << vres << endl;
+	//cout << v3*m << endl;
 
    	while(true) {
         processEvents();

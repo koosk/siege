@@ -23,7 +23,7 @@ namespace siege{
 		}
 
 		Matrix16f::~Matrix16f(){
-			std::cout << "Matrix16f destruktor" << std::endl;
+			//std::cout << "Matrix16f destruktor" << std::endl;
 		};
 		
 		Matrix16f& Matrix16f::operator=(const Matrix16f &m){

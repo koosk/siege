@@ -165,6 +165,7 @@ namespace siege{
 				Vector3f operator()(); //getVector
 				void setTime(float);
 				void setVector(Vector3f&);
+				Vector3f& interpolate(MS3DKeyFrame&, float);
 		}; //MS3DKeyFrame
 
 ///////////// MS3DJoint //////////////////////////////////////
@@ -172,6 +173,7 @@ namespace siege{
 
 		class MS3DJoint{
 			private:
+				int index;
 				byte flags; // SELECTED | DIRTY
 				char name[32];
 				MS3DJoint* parent; //char parentName[32]
@@ -184,21 +186,25 @@ namespace siege{
 			public:
 				MS3DJoint();
 				MS3DJoint(MS3DJoint&);
-				MS3DJoint(byte, char*, MS3DJoint*, Vector3f&, Vector3f&, word, word, MS3DKeyFrame*, MS3DKeyFrame*);
+				MS3DJoint(word, byte, char*, MS3DJoint*, Vector3f&, Vector3f&, word, word, MS3DKeyFrame*, MS3DKeyFrame*);
 				~MS3DJoint();
 				MS3DJoint& operator=(MS3DJoint&);
 				byte getFlags();
 				char* getName();
+				int getIndex();
 				MS3DJoint* getParent();
 				Vector3f getRotationVector();
 				Vector3f getPositionVector();
 				word getNumberOfRotationKeyFrames();
 				word getNumberOfTranslationKeyFrames();
+				MS3DKeyFrame* getRotationKeyFrames();
+				MS3DKeyFrame* getTranslationKeyFrames();
 				MS3DKeyFrame getRotationKeyFrame(word);
 				MS3DKeyFrame getTranslationKeyFrame(word);
 				bool hasRotationKeyFrames();
 				bool hasTranslationKeyFrames();
 				bool hasParent();
+				void setIndex(word);
 				void setFlags(byte);
 				void setName(char*);
 				void setParent(MS3DJoint*);

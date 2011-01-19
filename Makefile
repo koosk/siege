@@ -82,7 +82,7 @@ $(tmsdata): $(TEST)/MS3DData.cpp $(msdata) $(msstruct) $(v3f) $(v4f) $(bie) $(ms
 	$(GPP) -o $@ $+
 
 tmodel = $(BUILD)/testMSmodel
-$(tmodel): $(TEST)/MSModel.cpp $(msdata) $(msstruct) $(v3f) $(v4f) $(bie) $(mse) $(util) $(sie) $(model) $(msmodel)
+$(tmodel): $(TEST)/MSModel.cpp $(msdata) $(msstruct) $(v3f) $(v4f) $(bie) $(mse) $(util) $(sie) $(model) $(msmodel) $(mtx16f) $(mathex)
 	$(GPP) -o $(tmodel) $+
 
 tmatrix = $(BUILD)/testMatrix16f

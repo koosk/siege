@@ -91,19 +91,20 @@ mattest: $(TEST)/Rottest.cpp $(msdata) $(msstruct) $(v3f) $(v4f) $(bie) $(mse) $
 	$(tmat)
 
 tmatrix = $(BUILD)/testMatrix16f
-$(tmatrix): $(TEST)/Matrix16f.cpp $(v3f) $(v4f) $(bie) $(mtx16f)
+$(tmatrix): $(TEST)/Matrix16f.cpp $(v3f) $(v4f) $(bie) $(mtx16f) $(mathex)
 	$(GPP) -o $@ $+
 
 run-model: compile $(tmodel)
 	$(tmodel)
 
-test: compile $(tv3f) $(tv4f) $(tmsstruct) $(tmsdata) $(tmodel)
+test: compile $(tv3f) $(tv4f) $(tmsstruct) $(tmsdata) $(tmodel) $(tmatrix)
 
 run-test: test
 	$(tv3f)
 	$(tv4f)
 	$(tmsstruct)
 	$(tmsdata)
+	$(tmatrix)
 
 .PHONY: clear
 clear:

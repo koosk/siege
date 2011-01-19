@@ -173,13 +173,18 @@ namespace siege{
 			               -cz*sy*cx+sz*sx, sz*sy*cx+cz*sx , cy*cx , 0.,
 			               0.             , 0.             , 0.    , 1.
 			};*/
+			/*float r[16] = {cz*cy,-sz*cy,sy,0,
+			               cz*sy*sx+sz*cx,-sz*sy*sx+cz*cx,-sx*cy,0,
+						   -cz*sy*cx+sz*sx,sz*sy*cx+cz*sx,cy*cx,0,
+						   0,0,0,1
+			};*/
 			float r[16] = {cz*cy+sz*sx*sy , -sz*cy+cz*sx*sy, cx*sy , 0.,
 			               sz*cx          , cz*cx          , -sx   , 0.,
 			               -cz*sy+sz*sx*cy, sz*sy+cz*sx*cy , cx*cy , 0.,
 			               0.             , 0.             , 0.    , 1.
 			};
-			//return ((*this)*Matrix16f(r));
-			return (Matrix16f(r)*(*this));
+			return ((*this)*Matrix16f(r));
+		//	return (Matrix16f(r)*(*this));
 		}
 		
 		Matrix16f Matrix16f::scale(const Vector3f &v) const{
@@ -235,7 +240,7 @@ namespace siege{
 				float c[9] = {data[4],data[6],data[7],
 				              data[8],data[10],data[11],
 				              data[12],data[14],data[15]};
-				r[1] = determinant3(c);
+				r[1] = -determinant3(c);
 			}
 			{
 				float c[9] = {data[4],data[5],data[7],
@@ -247,14 +252,14 @@ namespace siege{
 				float c[9] = {data[4],data[5],data[6],
 				              data[8],data[9],data[10],
 				              data[12],data[13],data[14]};
-				r[3] = determinant3(c);
+				r[3] = -determinant3(c);
 			}
 			//2. sor
 			{
 				float c[9] = {data[1],data[2],data[3],
 				              data[9],data[10],data[11],
 				              data[13],data[14],data[15]};
-				r[4] = determinant3(c);
+				r[4] = -determinant3(c);
 			}
 			{
 				float c[9] = {data[0],data[2],data[3],
@@ -266,7 +271,7 @@ namespace siege{
 				float c[9] = {data[0],data[1],data[3],
 				              data[8],data[9],data[11],
 				              data[12],data[13],data[15]};
-				r[6] = determinant3(c);
+				r[6] = -determinant3(c);
 			}
 			{
 				float c[9] = {data[0],data[1],data[2],
@@ -285,7 +290,7 @@ namespace siege{
 				float c[9] = {data[0],data[2],data[3],
 				              data[4],data[6],data[7],
 				              data[12],data[14],data[15]};
-				r[9] = determinant3(c);
+				r[9] = -determinant3(c);
 			}
 			{
 				float c[9] = {data[0],data[1],data[3],
@@ -297,14 +302,14 @@ namespace siege{
 				float c[9] = {data[0],data[1],data[2],
 				              data[4],data[5],data[6],
 				              data[12],data[13],data[14]};
-				r[11] = determinant3(c);
+				r[11] = -determinant3(c);
 			}
 			//4. sor
 			{
 				float c[9] = {data[1],data[2],data[3],
 				              data[5],data[6],data[7],
 				              data[9],data[10],data[11]};
-				r[12] = determinant3(c);
+				r[12] = -determinant3(c);
 			}
 			{
 				float c[9] = {data[0],data[2],data[3],
@@ -316,7 +321,7 @@ namespace siege{
 				float c[9] = {data[0],data[1],data[3],
 				              data[4],data[5],data[7],
 				              data[8],data[9],data[11]};
-				r[14] = determinant3(c);
+				r[14] = -determinant3(c);
 			}
 			{
 				float c[9] = {data[0],data[1],data[2],
@@ -325,7 +330,7 @@ namespace siege{
 				r[15] = determinant3(c);
 			}
 
-			return (1./det)*Matrix16f(r);
+			return fabs(1./det)*Matrix16f(r);
 		}
 		
 		Matrix16f operator*(float c,const Matrix16f &m){

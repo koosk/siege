@@ -5,7 +5,11 @@ using namespace std;
 using namespace siege::math;
 
 int main(){
-	Matrix16f mtx;
+	float mdata[16] = {1,0,0,0,0,1,-0.9,0,0,0.9,1,0,0,0,0,1};
+	Matrix16f m(mdata);
+	cout << m << endl;
+	cout << m.invert() << endl;
+	/*Matrix16f mtx;
 	cout << mtx << endl;
 	float vd[3] = {1.f,2.f,3.f};
 	Vector3f v(vd);
@@ -14,12 +18,12 @@ int main(){
 	cout << "transzponalt:" << endl;
 	cout << mtx.transpose() << endl;
 	//float md[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
-	float md[16] = {1,5,9,13,2,6,10,14,3,7,11,15,4,8,12,16};
+	float md[16] = {1,5,9,13,2,6,10,14,3,7,11,15,4,8,12,16};*/
 	/*float md[16] = {1,0,0,4,
 		            0,1,0,5,
 	                0,0,1,6,
 	                0,0,0,1};*/
-	mtx.loadTranspose(md);
+	/*mtx.loadTranspose(md);
 	cout << "transzponalt betoltes:" << endl;
 	cout << mtx << endl;
 	mtx.load(md);
@@ -39,7 +43,7 @@ int main(){
 	Matrix16f m3;
 	cout << m3*mtx2 << endl;
 	//cout << "vektor*matrix:" << endl;
-	//Vector4f v2 = v*mtx2;
+	//Vector4f v2 = v*mtx2;*/
 	
 
 	return 0;

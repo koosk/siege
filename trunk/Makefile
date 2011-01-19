@@ -24,7 +24,7 @@ $(v4f): $(SRC)/math/Vector4f.cpp $(HEADER)/math/Vector4f.h
 	$(GPP) -o $@ -c $<
 	
 mtx16f = $(BUILD)/math/Matrix16f.o
-$(mtx16f): $(SRC)/math/Matrix16f.cpp $(HEADER)/math/Matrix16f.h $(bie) $(v3f) $(v4f)
+$(mtx16f): $(SRC)/math/Matrix16f.cpp $(HEADER)/math/Matrix16f.h $(bie) $(v3f) $(v4f) $(mathex)
 	$(GPP) -o $@ -c $<
 
 bie = $(BUILD)/BadIndexException.o
@@ -85,8 +85,8 @@ tmodel = $(BUILD)/testMSmodel
 $(tmodel): $(TEST)/MSModel.cpp $(msdata) $(msstruct) $(v3f) $(v4f) $(bie) $(mse) $(util) $(sie) $(model) $(msmodel) $(mtx16f) $(mathex)
 	$(GPP) -o $(tmodel) $+
 
-tmatrix = $(BUILD)/testMatrix16f
-$(tmatrix): $(TEST)/Matrix16f.cpp $(v3f) $(v4f) $(bie) $(mtx16f)
+tmatrix = $(BUILD)/testMatrix16f 
+$(tmatrix): $(TEST)/Matrix16f.cpp $(v3f) $(v4f) $(bie) $(mtx16f) $(mathex)
 	$(GPP) -o $@ $+
 
 run-model: compile $(tmodel)

@@ -80,6 +80,11 @@ namespace siege{
 			r[15] = data[3]*m.data[12] + data[6]*m.data[13] + data[11]*m.data[14] + data[15]*m.data[15];
 			return Matrix16f(r);
 		}
+		
+		Matrix16f Matrix16f::operator*=(const Matrix16f &m){
+			*this = (*this) * m;
+			return *this;
+		}
 
 		Matrix16f Matrix16f::transpose() const{
 			float res[16];
@@ -137,7 +142,7 @@ namespace siege{
 			float stheta = sin(theta);
 			float cpsi = cos(psi);
 			float spsi = sin(psi);
-			/*
+			/* http://www.ibrtses.com/opengl/matrices.html   
             |cos(phi)cos(psi)-sin(phi)cos(theta)sin(psi)      cos(phi)*sin(psi)+sin(phi)*cos(theta)*cos(psi)   sin(phi)*sin(theta)|
 			|-sin(phi)*cos(psi)-cos(phi)*cos(theta)*sin(psi)  -sin(phi)*sin(psi)+cos(phi)*cos(theta)*cos(psi)  cos(phi)*sin(theta)|
 			|sin(theta)*sin(psi)                              -sin(theta)*cos(psi)                             cos(theta)         |
@@ -151,11 +156,6 @@ namespace siege{
 		}
 		
 		Matrix16f Matrix16f::scale(const Vector3f &v) const{
-			/*float r[16] = {v.getX(),0.f,     0.f,     0.f,
-			               0.f,     v.getY(),0.f,     0.f,
-			               0.f,     0.f,     v.getZ(),0.f,
-			               0.f,     0.f,     0.f,     1.f
-			};*/
 			float *r = new float[16];
 			memcpy(r,data,sizeof(float[16]));
 			r[0]  *= v.getX();
@@ -307,6 +307,32 @@ namespace siege{
 				r[i] = c*m.data[i];
 			}
 			return Matrix16f(r);
+		}
+
+		Matrix16f Matrix16f::operator+(const Matrix16f &m) const{
+			float r[16];
+			for(int i=0; i<16; i++){
+				r[i] = data[i] + m.data[i];
+			}
+			return Matrix16f(r);
+		}
+		
+		Matrix16f Matrix16f::operator-(const Matrix16f &m) const{
+			float r[16];
+			for(int i=0; i<16; i++){
+				r[i] = data[i] - m.data[i];
+			}
+			return Matrix16f(r);
+		}
+
+		Matrix16f Matrix16f::operator+=(const Matrix16f &m){
+			*this = (*this) + m;
+			return *this;
+		}
+		
+		Matrix16f Matrix16f::operator-=(const Matrix16f &m){
+			*this = (*this) - m;
+			return *this;
 		}
 
 	};//math

@@ -231,7 +231,7 @@ namespace siege{
 		}
 
 		word MS3DData::getNumberOfJoints(){
-			return numVertices;
+			return numJoints;
 		}
 
 		MS3DVertex* MS3DData::getVertex(word i){
@@ -505,7 +505,7 @@ namespace siege{
 					MS3DKeyFrame kf(ti, v);
 					trakf[k] = kf;
 				}
-				MS3DJoint jo(fl, nm, par, rot, pos, rkf, tkf, rotkf, trakf);
+				MS3DJoint jo(i, fl, nm, par, rot, pos, rkf, tkf, rotkf, trakf);
 				joints[i] = jo;
 			}
 

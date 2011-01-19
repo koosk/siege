@@ -33,6 +33,7 @@ namespace siege{
 				virtual void setAnimationInterval(int, int);
 				int getAnimationBegin();
 				int getAnimationEnd();
+				virtual int getMaxFrames() = 0;
 				void draw();
 		}; //Model
 

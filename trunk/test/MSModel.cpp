@@ -31,6 +31,9 @@ void handleKeys(SDL_keysym* keysym, bool state) {
         case SDLK_UP:    trans += 50; break;
         case SDLK_RIGHT:    rotfact += .5; break;
         case SDLK_LEFT:    rotfact -= .5; break;
+        case SDLK_s:    model->start(); break;
+        case SDLK_a:    model->stop(); break;
+        case SDLK_d:    model->pause(); break;
         default: break;
     }
 }
@@ -93,7 +96,12 @@ int main(int argc, char* argv[]) {
     setupOpengl();
 
 	model = new MS3DModel((char*)"data/beast.ms3d");
+	//model = new MS3DModel((char*)"data/cat.ms3d");
+	//model = new MS3DModel((char*)"data/model.ms3d");
+	//model = new MS3DModel((char*)"data/fighter/fighter1.ms3d");
 	model->load();
+	//model->setAnimationInterval(0, model->getMaxFrames());
+	model->setAnimationInterval(0, 24);
 
     mainLoop();
     return 0;

@@ -1,6 +1,6 @@
 #include"gunit/MS3DStruct.h"
 #include"BadIndexException.h"
-#include"SiegeException.h"
+#include"gunit/MS3DException.h"
 #include<string.h>
 
 namespace siege{
@@ -448,10 +448,27 @@ namespace siege{
 			vector = v;
 		}
 
+		Vector3f& MS3DKeyFrame::interpolate(MS3DKeyFrame& kf, float t){
+			if(time > kf.time)
+				throw MS3DException("The given keyframe's time must be bigger!");
+			if(t < time || t > kf.time)
+				throw MS3DException("The given time is not in the appropriet time interval!");
+			if(time == kf.time)
+				return vector;
+			float td = kf.time - time;
+			float intpol = (t - time) / td;
+			float x = vector[0] + (kf.vector[0] - vector[0]) * intpol;
+			float y = vector[1] + (kf.vector[1] - vector[1]) * intpol;
+			float z = vector[2] + (kf.vector[2] - vector[2]) * intpol;
+			Vector3f v(x, y, z);
+			return v;
+		}
+
 /////////////////////// MS3DJoint ///////////////////////////////////
 /////////////////////////////////////////////////////////////////////
 
 		MS3DJoint::MS3DJoint(){
+			index = -1;
 			flags = 0;
 			strcpy(name, "Unnamed");
 			parent = NULL;
@@ -462,6 +479,7 @@ namespace siege{
 		}
 	
 		MS3DJoint::MS3DJoint(MS3DJoint& j){
+			index = j.index;
 			flags = j.flags;
 			strcpy(name, j.name);
 			parent = j.parent;
@@ -473,7 +491,8 @@ namespace siege{
 			setTranslationKeyFrames(j.transKeyFrames, j.numTransKeyFrames);
 		}
 
-		MS3DJoint::MS3DJoint(byte f, char* nm, MS3DJoint* pa, Vector3f& r, Vector3f& p, word nr, word nt, MS3DKeyFrame* rot, MS3DKeyFrame* trans){
+		MS3DJoint::MS3DJoint(word i, byte f, char* nm, MS3DJoint* pa, Vector3f& r, Vector3f& p, word nr, word nt, MS3DKeyFrame* rot, MS3DKeyFrame* trans){
+			index = i;
 			flags = f;
 			strcpy(name, nm);
 			parent = pa;
@@ -493,6 +512,7 @@ namespace siege{
 		}
 
 		MS3DJoint& MS3DJoint::operator=(MS3DJoint& j){
+			index = j.index;
 			flags = j.flags;
 			strcpy(name, j.name);
 			parent = j.parent;
@@ -511,6 +531,10 @@ namespace siege{
 
 		char* MS3DJoint::getName(){
 			return name;
+		}
+
+		int MS3DJoint::getIndex(){
+			return index;
 		}
 
 		MS3DJoint* MS3DJoint::getParent(){
@@ -533,6 +557,14 @@ namespace siege{
 			return numTransKeyFrames;
 		}
 		
+		MS3DKeyFrame* MS3DJoint::getRotationKeyFrames(){
+			return rotKeyFrames;
+		}
+		
+		MS3DKeyFrame* MS3DJoint::getTranslationKeyFrames(){
+			return transKeyFrames;
+		}
+
 		MS3DKeyFrame MS3DJoint::getRotationKeyFrame(word i){
 			if(i<0 || i>=numRotKeyFrames)
 				throw siege::BadIndexException("Bad rotation key frame index at MS3DJoint!");
@@ -555,6 +587,10 @@ namespace siege{
 
 		bool MS3DJoint::hasParent(){
 			return parent != NULL;
+		}
+
+		void MS3DJoint::setIndex(word i){
+			index = i;
 		}
 
 		void MS3DJoint::setFlags(byte f){

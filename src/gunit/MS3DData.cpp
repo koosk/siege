@@ -409,6 +409,10 @@ namespace siege{
 				float tr;
 				memcpy(&tr, ptr, sizeof(tr));
 				ptr += sizeof(tr);
+				amb[3] = tr;
+				dif[3] = tr;
+				spe[3] = tr;
+				emi[3] = tr;
 				char mod;
 				memcpy(&mod, ptr, sizeof(mod));
 				ptr += sizeof(mod);

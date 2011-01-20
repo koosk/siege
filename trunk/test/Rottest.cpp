@@ -45,23 +45,40 @@ void processEvents() {
 }
  
 void mainLoop() {
-	//Vector3f v1(8, 3, 0);
-	//Vector3f v2(6, 0, 0);
-	//Vector3f v3(10, 0, 0);
 	Vector3f v1(0, 3, 0);
-	Vector3f v2(-2, 0, 0);
-	Vector3f v3(2, 0, 0);
+	Vector3f v2(-3, 0, 0);
+	Vector3f v3(3, 0, 0);
 
-	Vector3f vr(0., 0., 0.01);
+	Vector3f v4(-1, 0, 0);
+	Vector3f v5(0, 1, 0);
+	Vector3f v6(1, 0, 0);
+
+	Vector3f vr(0., 0.001, 0.001);
+	Vector3f vr2(0.0, 0.01, 0);
+	Vector3f vt(3, 0., 0);
+	Vector3f vt2(0, 4, 0);
 	float f1[3];
 	float f2[3];
 	float f3[3];
-	Matrix16f m;
+	Matrix16f m, m2;
+	cout << m << endl;
+	m = m.translate(vt);
+	cout << m << endl;
+	cout<<"Elott1:" << v1 << endl;
+	cout<<"Elott2:" << v2 << endl;
+	cout<<"Elott3:" << v3 << endl;
+	v1 = v1*m;
+	v2 = v2*m;
+	v3 = v3*m;
+	cout<<"Utan1:" << v1 << endl;
+	cout<<"Utan2:" << v2 << endl;
+	cout<<"Utan3:" << v3 << endl;
+	m = Matrix16f();
 	m = m.rotate(vr);
-	cout << m << endl << endl;
-	Vector4f vres = v1*m;
-	cout << vres << endl;
-	//cout << v3*m << endl;
+	m2 = m2.rotate(vr2);
+
+	Matrix16f m3;
+
 
    	while(true) {
         processEvents();
@@ -71,12 +88,36 @@ void mainLoop() {
 		glTranslatef(0.0, 0.0, trans);
 		glRotatef(rotfact, 0,1,0);
 
+		Vector3f vv1 = v4, vv2 = v5, vv3 = v6;
+		Matrix16f m4;
+		m4 = m4.translate(v1);
+		m3 = m3*m2;
 
-		v1.get(f1);
-		v2.get(f2);
-		v3.get(f3);
+
+		vv1 = vv1*m4;
+		vv2 = vv2*m4;
+		vv3 = vv2*m4;
+
+		vv1 = vv1*m3;
+		vv2 = vv2*m3;
+		vv3 = vv2*m3;
+
+		float tmp[4] = {.5, .5, .5, 1};
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, tmp);
 
 		glBegin(GL_TRIANGLES);
+			glColor3f(1, 0, 0);
+			v1.get(f1);
+			v2.get(f2);
+			v3.get(f3);
+			glVertex3fv(f1);
+			glVertex3fv(f2);
+			glVertex3fv(f3);
+
+			glColor3f(0, 0, 1);
+			vv1.get(f1);
+			vv2.get(f2);
+			vv3.get(f3);
 			glVertex3fv(f1);
 			glVertex3fv(f2);
 			glVertex3fv(f3);

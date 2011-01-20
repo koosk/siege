@@ -32,8 +32,8 @@ void handleKeys(SDL_keysym* keysym, bool state) {
         case SDLK_UP:    trans += 50; break;
         case SDLK_PAGEDOWN:    transup -= 10; break;
         case SDLK_PAGEUP:    transup += 10; break;
-        case SDLK_RIGHT:    rotfact += .5; break;
-        case SDLK_LEFT:    rotfact -= .5; break;
+        case SDLK_RIGHT:    rotfact += 1; break;
+        case SDLK_LEFT:    rotfact -= 1; break;
         case SDLK_s:    model->start(); break;
         case SDLK_a:    model->stop(); break;
         case SDLK_d:    model->pause(); break;

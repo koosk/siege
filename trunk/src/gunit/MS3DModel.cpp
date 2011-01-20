@@ -88,12 +88,14 @@ namespace siege{
 			for(int i=0; i<model.getNumberOfJoints(); i++){
 				MS3DJoint* joint = model.getJoint(i);	
 				Matrix16f mat;
-				mat = mat.rotate(joint->getRotationVector());
 				mat = mat.translate(joint->getPositionVector());
-				if(joint->hasParent())
+				mat = mat.rotate(joint->getRotationVector());
+				if(joint->hasParent()){
 					absMatrices[i] = absMatrices[joint->getParent()->getIndex()] * mat;
-				else
+				}
+				else{
 					absMatrices[i] = mat;
+				}
 				relMatrices[i] = mat;
 				finMatrices[i] = absMatrices[i];
 			}
@@ -134,7 +136,8 @@ namespace siege{
 
 		void MS3DModel::animate(){
 			unsigned int sdltic = SDL_GetTicks();
-			currentTime += ((sdltic - startTime) / 50000.0) * (model.getTotalFrames()/model.getFPS());
+			//TODO idozites
+			currentTime += ((sdltic - startTime) / 20000.0) * (model.getTotalFrames()/model.getFPS());
 			startTime = sdltic;
 			float end = (float)getAnimationEnd()/model.getFPS();
 			if(currentTime > end)
@@ -260,11 +263,35 @@ namespace siege{
 		}
 
 		void MS3DModel::drawSkeleton(){
-			glBegin(GL_LINES);
-				for(int i=0; i<model.getNumberOfJoints(); i++){
-					MS3DJoint* joint = model.getJoint(i);
-					if(!joint->hasParent())
-						continue;
+			bool glDepth = glIsEnabled(GL_DEPTH_TEST);
+			bool glLight = glIsEnabled(GL_LIGHTING);
+			bool glText = glIsEnabled(GL_TEXTURE_2D);
+			if(glDepth)
+				glDisable(GL_DEPTH_TEST);
+			if(glLight)
+				glDisable(GL_LIGHTING);
+			if(glText)
+				glDisable(GL_TEXTURE_2D);
+			glPointSize(6.0);
+			glLineWidth(2.0);
+			for(int i=0; i<model.getNumberOfJoints(); i++){
+				MS3DJoint* joint = model.getJoint(i);
+				glColor3f(1,1,0);
+				glBegin(GL_POINTS);
+					Matrix16f m2;
+					Vector3f v2 = joint->getPositionVector();
+					m2 = m2.rotate(joint->getRotationVector());
+					v2 = v2*m2;
+					m2 = finMatrices[i];
+					v2 = v2*m2;
+					float f2[3];
+					v2.get(f2);
+					glVertex3fv(f2);
+				glEnd();
+				if(!joint->hasParent())
+					continue;
+				glColor3f(0,1,0);
+				glBegin(GL_LINES);
 					Vector3f pv = joint->getParent()->getPositionVector();
 					Matrix16f m;
 					m = m.rotate(joint->getParent()->getRotationVector());
@@ -282,8 +309,18 @@ namespace siege{
 					glVertex3fv(f);
 					v.get(f);
 					glVertex3fv(f);
-				}
-			glEnd();
+				glEnd();
+				glColor3f(1,1,1);
+			}
+			glLineWidth(1.0f);
+			glPointSize(1.0f);
+
+			if(glDepth)
+				glEnable(GL_DEPTH_TEST);
+			if(glLight)
+				glEnable(GL_LIGHTING);
+			if(glText)
+				glEnable(GL_TEXTURE_2D);
 
 			if(isAnimationOn())
 				animate();

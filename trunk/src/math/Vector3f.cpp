@@ -59,7 +59,6 @@ namespace siege{
 			throw siege::BadIndexException();
 		}
 
-		//TODO ez nem lehetne const metodus?
 		float* Vector3f::get(float* f){
 			f[0] = x;
 			f[1] = y;

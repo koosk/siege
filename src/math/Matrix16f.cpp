@@ -219,8 +219,8 @@ namespace siege{
 			float tmp4[9] = {data[0],data[1],data[2],
 			                 data[4],data[5],data[6],
 			                 data[8],data[9],data[10]};
-			return (data[12]*determinant3(tmp1) - data[13]*determinant3(tmp2)
-				  + data[14]*determinant3(tmp3) - data[15]*determinant3(tmp4));
+			return (- data[12]*determinant3(tmp1) + data[13]*determinant3(tmp2)
+				    - data[14]*determinant3(tmp3) + data[15]*determinant3(tmp4));
 		}
 		
 		Matrix16f Matrix16f::invert() const throw(MathException){
@@ -330,7 +330,7 @@ namespace siege{
 				r[15] = determinant3(c);
 			}
 
-			return fabs(1./det)*Matrix16f(r);
+			return fabs(1./det)*Matrix16f(r).transpose();
 		}
 		
 		Matrix16f operator*(float c,const Matrix16f &m){

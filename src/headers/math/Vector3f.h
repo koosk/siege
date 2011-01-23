@@ -29,6 +29,7 @@ namespace siege{
 				virtual void set(const float*);
 				friend  std::ostream& siege::math::operator<<(std::ostream&, Vector3f&);
 				Vector4f operator*(const Matrix16f &) const;
+				Vector3f& operator=(const Vector4f &);
 		};//Vector3f
 
 	};//math

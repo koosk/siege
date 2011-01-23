@@ -85,5 +85,12 @@ namespace siege{
 			Vector4f v(r);
 			return v;
 		}
+		
+		Vector3f& Vector3f::operator=(const Vector4f &v){
+			x = v.getX();
+			y = v.getY();
+			z = v.getZ();
+			return *this;
+		}
 	};//math
 };//siege

@@ -5,46 +5,45 @@ using namespace std;
 using namespace siege::math;
 
 int main(){
-	float mdata[16] = {1,0,0,0,0,1,-0.9,0,0,0.9,1,0,0,0,0,1};
+	cout.precision(8);
+	float mdata[16] = {1, 0  , 0   , 0,
+		               0, 1  , -0.9, 0,
+					   0, 0.9, 1   , 0,
+					   0, 0  , 0   , 1};
 	Matrix16f m(mdata);
 	cout << m << endl;
 	cout << m.invert() << endl;
-	/*Matrix16f mtx;
-	cout << mtx << endl;
-	float vd[3] = {1.f,2.f,3.f};
-	Vector3f v(vd);
-	mtx = mtx.translate(v);
-	cout << mtx << endl;
-	cout << "transzponalt:" << endl;
-	cout << mtx.transpose() << endl;
-	//float md[16] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
-	float md[16] = {1,5,9,13,2,6,10,14,3,7,11,15,4,8,12,16};*/
-	/*float md[16] = {1,0,0,4,
-		            0,1,0,5,
-	                0,0,1,6,
-	                0,0,0,1};*/
-	/*mtx.loadTranspose(md);
-	cout << "transzponalt betoltes:" << endl;
-	cout << mtx << endl;
-	mtx.load(md);
-	//mtx.set(4,19);
-	cout << mtx << endl;
-	Matrix16f mtx2;
-	cout << mtx2*mtx << endl;
-	Matrix16f onemtx = mtx2*mtx;
+	float md2[16] = {1,0,0,3,
+	                 0,1,0,0,
+	                 0,0,1,0,
+	                 0,0,0,1
+	};
+	Matrix16f m2(md2);
+	float v1d[3] = {0,3,0};
+	float v2d[3] = {-3,0,0};
+	float v3d[3] = {3,0,0};
+	Vector3f v1(v1d);
+	Vector3f v2(v2d);
+	Vector3f v3(v3d);
+	/*Vector4f vres = v1*m2;
+	cout << vres << endl;
+	vres = v2*m2;
+	cout << vres << endl;
+	vres = v3*m2;
+	cout << vres << endl;*/
+	cout << m2*m << endl;
+	cout << endl << "m determinansa: " << m.determinant() << endl;
+	cout << "m2 determinansa: " << m2.determinant() << endl;
+	cout << "m1 es m2 inverze: " << endl;
+	cout << m.invert()  << endl;
+	cout << m2.invert() << endl;
+	cout << m2.transpose().invert() << endl;
 
-	float mtransl[16] = {1,0,0,1,
-		                 0,1,0,1,
-	                     0,0,1,1,
-	                     0,0,0,1};
-	mtx2.load(mtransl);
-	cout << mtx2 << endl;
-	cout << mtx*mtx2 << endl;
-	Matrix16f m3;
-	cout << m3*mtx2 << endl;
-	//cout << "vektor*matrix:" << endl;
-	//Vector4f v2 = v*mtx2;*/
-	
+	float detprb1[9] = {0,0,3,1,0,0,0,1,0};
+	float detprb2[9] = {0,1,0,0,0,1,3,0,0};
+	cout << Matrix16f::determinant3(detprb1) << endl;
+	cout << Matrix16f::determinant3(detprb2) << endl;
+		
 
 	return 0;
 }

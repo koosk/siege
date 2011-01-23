@@ -89,6 +89,12 @@ tmat = $(BUILD)/Rottest.o
 mattest: $(TEST)/Rottest.cpp $(msdata) $(msstruct) $(v3f) $(v4f) $(bie) $(mse) $(util) $(sie) $(mtx16f) $(mathex)
 	$(GPP) -o $(tmat) $+
 	$(tmat)
+	
+prbfile = $(BUILD)/prb
+prb: $(TEST)/prb.cpp $(msdata) $(msstruct) $(v3f) $(v4f) $(bie) $(mse) $(util) $(sie) $(mtx16f) $(mathex)
+	$(GPP) -o $(prbfile) $+
+	$(prbfile)
+
 
 tmatrix = $(BUILD)/testMatrix16f
 $(tmatrix): $(TEST)/Matrix16f.cpp $(v3f) $(v4f) $(bie) $(mtx16f) $(mathex)

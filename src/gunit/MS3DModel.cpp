@@ -90,6 +90,7 @@ namespace siege{
 				Matrix16f mat;
 				mat = mat.translate(joint->getPositionVector());
 				mat = mat.rotate(joint->getRotationVector());
+				Vector3f v = joint->getPositionVector();
 				if(joint->hasParent()){
 					absMatrices[i] = absMatrices[joint->getParent()->getIndex()] * mat;
 				}
@@ -258,6 +259,14 @@ namespace siege{
 		}
 
 		void MS3DModel::drawSkeleton(){
+			glMatrixMode(GL_MODELVIEW);
+			glPushMatrix();
+			Vector3f pos = getPosition();
+			Vector3f rot = getRotation();
+			glTranslatef(pos[0], pos[1], pos[2]);
+			glRotatef(rot[0], 1, 0, 0);
+			glRotatef(rot[1], 0, 1, 0);
+			glRotatef(rot[2], 0, 0, 1);
 			bool glDepth = glIsEnabled(GL_DEPTH_TEST);
 			bool glLight = glIsEnabled(GL_LIGHTING);
 			bool glText = glIsEnabled(GL_TEXTURE_2D);
@@ -274,9 +283,7 @@ namespace siege{
 				glColor3f(1,1,0);
 				glBegin(GL_POINTS);
 					Matrix16f m2;
-					Vector3f v2 = joint->getPositionVector();
-					m2 = m2.rotate(joint->getRotationVector());
-					v2 = v2*m2;
+					Vector3f v2(1,1,1);
 					m2 = finMatrices[i];
 					v2 = v2*m2;
 					float f2[3];
@@ -287,16 +294,12 @@ namespace siege{
 					continue;
 				glColor3f(0,1,0);
 				glBegin(GL_LINES);
-					Vector3f pv = joint->getParent()->getPositionVector();
+					Vector3f pv(1,1,1);
 					Matrix16f m;
-					m = m.rotate(joint->getParent()->getRotationVector());
-					pv = pv*m;
 					m = finMatrices[joint->getParent()->getIndex()];
 					pv = pv*m;
 					m = Matrix16f();
-					Vector3f v = joint->getPositionVector();
-					m = m.rotate(joint->getRotationVector());
-					v = v*m;
+					Vector3f v(1,1,1);
 					m = finMatrices[i];
 					v = v*m;
 					float f[3];
@@ -319,6 +322,8 @@ namespace siege{
 
 			if(isAnimationOn())
 				animate();
+
+			glPopMatrix();
 		}
 
 	}; //gunit

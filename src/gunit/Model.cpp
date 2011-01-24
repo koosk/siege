@@ -90,7 +90,9 @@ namespace siege{
 		void Model::load(char* f){
 			if(f == NULL)
 				throw SiegeException("The model path hasn't been set!");
-			if(strcmp(modelPath, f) != 0)
+			if(modelPath == NULL)
+				setModelPath(f);
+			else if(strcmp(modelPath, f) != 0)
 				setModelPath(f);
 			loadModel(f);
 		}	

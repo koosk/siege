@@ -9,5 +9,8 @@ int main(){
 	try{
 		m.load((char*)"data/beast.ms3d");
 	}catch(exception &e){cout << e.what() << endl;}
+	MS3DData* dat = new MS3DData();
+	dat->load((char*)"data/beast.ms3d");
+	//delete[] dat;
 	return 0;
 }

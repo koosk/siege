@@ -20,10 +20,12 @@ Model* model;
 bool mode = true;
 MS3DModel* model2;
 
+MS3DModel mo;
+
 // Kill program
 void endProgram(int code) {
-	//TODO hiba javitasa
-	//delete [] model;
+	delete  model;
+	delete  model2;
 	SDL_Quit();
 	exit(code);
 	}
@@ -108,6 +110,8 @@ void mainLoop() {
 			model2->setRotation(vr);
 		}
 
+		mo.draw();
+
 		glBegin(GL_TRIANGLES);
 			glVertex3f(-3, 0, 0);
 			glVertex3f(3, 0, 0);
@@ -119,7 +123,6 @@ void mainLoop() {
 }
 void setupOpengl() {
     glViewport(0, 0, width, height);
-    //glMatrixMode(GL_MODELVIEW);
     glMatrixMode(GL_PROJECTION);
     glEnable(GL_DEPTH_TEST);
     gluPerspective(45, (float)width/height, .1, 100000);
@@ -153,16 +156,24 @@ int main(int argc, char* argv[]) {
 	//model = new MS3DModel((char*)"data/cat.ms3d");
 	//model = new MS3DModel((char*)"data/model.ms3d");
 	//model = new MS3DModel((char*)"data/fighter/fighter1.ms3d");
-	model->load();
+	try{
+		model->load();
+	}catch(exception &e){cout << e.what() << endl;}
 	model->setAnimationInterval(0, model->getMaxFrames());
 	//model->useTexture(false);
 	//model->setAnimationInterval(0, 24);
 
 	model2 = new MS3DModel((char*)"data/beast.ms3d");
-	model2->load();
+	try{
+		model2->load();
+	}catch(exception &e){cout << e.what() << endl;}
 	model2->setPosition(posm2);
 	model2->setAnimationInterval(0, 24);
 	model2->start();
+
+	try{
+		mo.load((char*)"data/cat.ms3d");
+	}catch(exception &e){cout << e.what() << endl;}
 
     mainLoop();
     return 0;

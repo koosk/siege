@@ -175,11 +175,12 @@ namespace siege{
 		}
 
 		MS3DGroup::MS3DGroup(MS3DGroup& g){
-			flags = g.flags;
+			/*flags = g.flags;
 			strcpy(name, g.name);
 			triangleIndices = NULL;
 			setTriangles(g.triangleIndices, g.numTriangles);
-			materialIndex = g.materialIndex;
+			materialIndex = g.materialIndex;*/
+			*this = g;
 		}
 
 		MS3DGroup::MS3DGroup(byte fl, char* nm, word ct, word* ind, char mi){
@@ -191,7 +192,7 @@ namespace siege{
 		}
 
 		MS3DGroup::~MS3DGroup(){
-			if(triangleIndices != NULL) 
+			if(triangleIndices != NULL)
 				delete[] triangleIndices;
 		}
 
@@ -479,7 +480,7 @@ namespace siege{
 		}
 	
 		MS3DJoint::MS3DJoint(MS3DJoint& j){
-			index = j.index;
+			/*index = j.index;
 			flags = j.flags;
 			strcpy(name, j.name);
 			parent = j.parent;
@@ -488,7 +489,8 @@ namespace siege{
 			rotKeyFrames = NULL;
 			setRotationKeyFrames(j.rotKeyFrames, j.numRotKeyFrames);
 			transKeyFrames = NULL;
-			setTranslationKeyFrames(j.transKeyFrames, j.numTransKeyFrames);
+			setTranslationKeyFrames(j.transKeyFrames, j.numTransKeyFrames);*/
+			*this = j;
 		}
 
 		MS3DJoint::MS3DJoint(word i, byte f, char* nm, MS3DJoint* pa, Vector3f& r, Vector3f& p, word nr, word nt, MS3DKeyFrame* rot, MS3DKeyFrame* trans){

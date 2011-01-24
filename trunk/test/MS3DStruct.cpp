@@ -7,6 +7,7 @@ using namespace std;
 using namespace siege::gunit;
 
 int main(){
+	{
 	MS3DVertex ver;
 	Vector3f vec(1,2,3);
 	MS3DVertex ver2;
@@ -51,6 +52,41 @@ int main(){
 	MS3DJoint j1;
 
 	j= j1;
+	}
+	//////////////////////
+	cout << "==============================================================" << endl;
+	Vector3f* vector = new Vector3f(1,1,1);
+	MS3DVertex *v = new MS3DVertex(1, *vector, 1, 1);
+	delete[] vector;
+	delete[] v;
+
+	Vector3f v1;
+	Vector3f v2;
+	Vector3f v3;
+	Vector3f vv[3] = {v1,v2,v3}; 
+	word w[3] = {1,2,3};
+	MS3DTriangle* t = new MS3DTriangle(1, w, vv, v1, v2, 1, 2);
+	delete t;
+
+	MS3DGroup* gr = new MS3DGroup();
+	delete gr;
+
+	char* name = "adsasdas";	
+	MS3DGroup* g = new MS3DGroup(1, name, 3, w, 1);
+	delete g;
+
+	Vector4f v4(1,1,1,1);
+	MS3DMaterial* m = new MS3DMaterial(name, v4,v4,v4,v4, 1,1,1, (char*)"data/beas1.png", (char*)"asd");
+	delete[] m;
+
+	MS3DKeyFrame* kf = new MS3DKeyFrame(1, v1);
+	delete[] kf;
+
+	MS3DKeyFrame kf1(1, v2);
+	MS3DKeyFrame kf2(2, v3);
+	MS3DKeyFrame k[2] = {kf1, kf2};
+	MS3DJoint* j = new MS3DJoint(1,1,name, NULL, v1, v2, 2, 2, k, k);
+	delete j;
 
 	return 0;
 }

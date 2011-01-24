@@ -12,9 +12,13 @@ GLuint height = 800;
 float trans = -300.0;
 float transup = -50.0;
 float rotfact;
+Vector3f mr(0,0,0);
+Vector3f mp(0,0,0);
+Vector3f posm2(-150, 0, -600);
 
 Model* model;
-bool mode = true; 
+bool mode = true;
+MS3DModel* model2;
 
 // Kill program
 void endProgram(int code) {
@@ -38,6 +42,18 @@ void handleKeys(SDL_keysym* keysym, bool state) {
         case SDLK_a:    model->stop(); break;
         case SDLK_d:    model->pause(); break;
         case SDLK_q:    mode = !mode; break;
+        case SDLK_i:    {mr[0]++; model->setRotation(mr);break;}
+        case SDLK_k:    {mr[0]--; model->setRotation(mr);break;}
+        case SDLK_l:    {mr[1]++; model->setRotation(mr);break;}
+        case SDLK_j:    {mr[1]--; model->setRotation(mr);break;}
+        case SDLK_o:    {mr[2]++; model->setRotation(mr);break;}
+        case SDLK_u:    {mr[2]--; model->setRotation(mr);break;}
+        case SDLK_KP6:    {mp[0]++; model->setPosition(mp);break;}
+        case SDLK_KP4:    {mp[0]--; model->setPosition(mp);break;}
+        case SDLK_KP8:    {mp[1]++; model->setPosition(mp);break;}
+        case SDLK_KP2:    {mp[1]--; model->setPosition(mp);break;}
+        case SDLK_KP7:    {mp[2]++; model->setPosition(mp);break;}
+        case SDLK_KP9:    {mp[2]--; model->setPosition(mp);break;}
         default: break;
     }
 }
@@ -55,6 +71,7 @@ void processEvents() {
 }
  
 void mainLoop() {
+		int asd = 1;
    	while(true) {
         processEvents();
  
@@ -67,6 +84,35 @@ void mainLoop() {
 			model->draw();
 		else
 			((MS3DModel*)model)->drawSkeleton();
+
+		model2->draw();
+		Vector3f v = model2->getPosition();
+		v[2] += asd*2;
+		model2->setPosition(v);
+		if(v[2] >= 300){
+			asd = 0;
+			Vector3f vr = model2->getRotation();
+			vr[1]++;
+			model2->setRotation(vr);
+			if(vr[1] == 180)
+				asd = -1;
+		}
+		if(v[2] <= posm2[2]){
+			asd = 0;
+			Vector3f vr = model2->getRotation();
+			vr[1]++;
+			if(vr[1] == 360){
+				vr[1] = 0;
+				asd = 1;
+			}
+			model2->setRotation(vr);
+		}
+
+		glBegin(GL_TRIANGLES);
+			glVertex3f(-3, 0, 0);
+			glVertex3f(3, 0, 0);
+			glVertex3f(0, 3, 0);
+		glEnd();
 
         SDL_GL_SwapBuffers();
     }
@@ -109,7 +155,14 @@ int main(int argc, char* argv[]) {
 	//model = new MS3DModel((char*)"data/fighter/fighter1.ms3d");
 	model->load();
 	model->setAnimationInterval(0, model->getMaxFrames());
+	//model->useTexture(false);
 	//model->setAnimationInterval(0, 24);
+
+	model2 = new MS3DModel((char*)"data/beast.ms3d");
+	model2->load();
+	model2->setPosition(posm2);
+	model2->setAnimationInterval(0, 24);
+	model2->start();
 
     mainLoop();
     return 0;

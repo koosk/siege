@@ -1,16 +1,20 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include"math/Vector3f.h"
+
 namespace siege{
 	namespace gunit{
 
 		class Model{
 			private:
-				//TODO position matrix
 				int animBegin;
 				int animEnd;
 				char* modelPath;
 				bool animOn;
+				bool enaTex;
+				math::Vector3f pos;
+				math::Vector3f rot;
 			protected:
 				virtual void loadModel(char*) = 0;
 				virtual void drawModel() = 0;
@@ -35,6 +39,12 @@ namespace siege{
 				int getAnimationEnd();
 				virtual int getMaxFrames() = 0;
 				void draw();
+				bool isTextureEnabled();
+				void useTexture(bool);
+				math::Vector3f getPosition();
+				math::Vector3f getRotation();
+				void setPosition(math::Vector3f);
+				void setRotation(math::Vector3f);
 		}; //Model
 
 	}; //gunit

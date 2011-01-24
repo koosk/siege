@@ -108,7 +108,6 @@ namespace siege{
 					Matrix16f m = absMatrices[(word)v->getBoneId()];
 					try{
 						m = m.invert();
-						//m = m.normalize();
 					}catch(MathException &e){std::cout << e.what() << std::endl;}
 					Vector3f vec = v->operator()();
 					vec = vec * m;
@@ -136,8 +135,7 @@ namespace siege{
 
 		void MS3DModel::animate(){
 			unsigned int sdltic = SDL_GetTicks();
-			//TODO idozites
-			currentTime += ((sdltic - startTime) / 20000.0) * (model.getTotalFrames()/model.getFPS());
+			currentTime += ((sdltic - startTime) / 1000.0);// * model.getFPS()) / model.getFPS();
 			startTime = sdltic;
 			float end = (float)getAnimationEnd()/model.getFPS();
 			if(currentTime > end)
@@ -165,8 +163,6 @@ namespace siege{
 
 		void MS3DModel::drawModel(){
 			bool glText = glIsEnabled(GL_TEXTURE_2D);
-			bool glBlend = glIsEnabled(GL_BLEND);
-			bool glDepth = glIsEnabled(GL_DEPTH_TEST);
 			for(int gi=0; gi<model.getNumberOfGroups(); gi++){
 				char mindex = model.getGroup(gi)->getMaterialIndex();
 				if(mindex >= 0){
@@ -182,26 +178,33 @@ namespace siege{
 					glMaterialfv(GL_FRONT, GL_EMISSION, tmp);
 					float shi = mat->getShininess();
 					glMaterialfv(GL_FRONT, GL_SHININESS, &shi);
+					
+					//a fenyek jobb megjelenitesehez
+					//glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
 
 					//TODO alpha
-					/*if(mat->hasAlphamap() && glBlend){
-						glEnable(GL_BLEND);
-						glDisable(GL_DEPTH_TEST);
-						glEnable(GL_TEXTURE_2D);
-						glBlendFunc(GL_DST_COLOR, GL_ZERO);
-						glBindTexture(GL_TEXTURE_2D, mat->getAlphamap());
-					}else{
-						glDisable(GL_BLEND);
-						glDisable(GL_TEXTURE_2D);
-					}*/
 
-					if(mat->hasTexture() && glText){
-						//glBlendFunc(GL_ONE, GL_ONE);
-						//glDisable(GL_BLEND);
+					if(mat->hasTexture() && isTextureEnabled()){
+						//glActiveTexture(GL_TEXTURE0);
 						glEnable(GL_TEXTURE_2D);
 						glBindTexture(GL_TEXTURE_2D, mat->getTexure());
-					}else
+						/*glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+						glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
+						glActiveTexture(GL_TEXTURE1);
+						glEnable(GL_TEXTURE_2D);
+						glBindTexture(GL_TEXTURE_2D, mat->getAlphamap());
+
+						glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+						glTexEnvi(GL_TEXTURE_ENV,GL_COMBINE_RGB,GL_INTERPOLATE);
+
+						glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE0_ALPHA, GL_TEXTURE0);
+						glTexEnvi(GL_TEXTURE_ENV,GL_OPERAND0_ALPHA,GL_SRC_COLOR); 
+
+						glTexEnvi(GL_TEXTURE_ENV,GL_SOURCE1_ALPHA,GL_TEXTURE2);
+						glTexEnvi(GL_TEXTURE_ENV,GL_OPERAND1_ALPHA,GL_SRC_COLOR); */
+					}else{
 						glDisable(GL_TEXTURE_2D);
+					}
 
 				}else
 					glDisable(GL_TEXTURE_2D);
@@ -245,14 +248,6 @@ namespace siege{
 				glEnable(GL_TEXTURE_2D);
 			else
 				glDisable(GL_TEXTURE_2D);
-			if(glBlend)
-				glEnable(GL_BLEND);
-			else
-				glDisable(GL_BLEND);
-			if(glDepth)
-				glEnable(GL_DEPTH_TEST);
-			else
-				glDisable(GL_DEPTH_TEST);
 
 			if(isAnimationOn())
 				animate();

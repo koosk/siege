@@ -1,7 +1,7 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include"math/Vector3f.h"
+#include"math/Vector3.h"
 
 namespace siege{
 	namespace gunit{
@@ -13,8 +13,8 @@ namespace siege{
 				char* modelPath;
 				bool animOn;
 				bool enaTex;
-				math::Vector3f pos;
-				math::Vector3f rot;
+				math::Vector3 pos;
+				math::Vector3 rot;
 			protected:
 				virtual void loadModel(char*) = 0;
 				virtual void drawModel() = 0;
@@ -41,10 +41,10 @@ namespace siege{
 				void draw();
 				bool isTextureEnabled();
 				void useTexture(bool);
-				math::Vector3f getPosition();
-				math::Vector3f getRotation();
-				void setPosition(math::Vector3f);
-				void setRotation(math::Vector3f);
+				math::Vector3 getPosition();
+				math::Vector3 getRotation();
+				void setPosition(math::Vector3);
+				void setRotation(math::Vector3);
 		}; //Model
 
 	}; //gunit

@@ -15,16 +15,16 @@ build:
 		mkdir -p $(BUILD)/math
 		mkdir -p $(BUILD)/gunit
 
-v3f = $(BUILD)/math/Vector3f.o
-$(v3f): $(SRC)/math/Vector3f.cpp $(HEADER)/math/Vector3f.h
+v3f = $(BUILD)/math/Vector3.o
+$(v3f): $(SRC)/math/Vector3.cpp $(HEADER)/math/Vector3.h
 	$(GPP) -o $@ -c $<
 
-v4f = $(BUILD)/math/Vector4f.o
-$(v4f): $(SRC)/math/Vector4f.cpp $(HEADER)/math/Vector4f.h
+v4f = $(BUILD)/math/Vector4.o
+$(v4f): $(SRC)/math/Vector4.cpp $(HEADER)/math/Vector4.h
 	$(GPP) -o $@ -c $<
 	
-mtx16f = $(BUILD)/math/Matrix16f.o
-$(mtx16f): $(SRC)/math/Matrix16f.cpp $(HEADER)/math/Matrix16f.h $(bie) $(v3f) $(v4f) $(mathex)
+mtx16f = $(BUILD)/math/Matrix4.o
+$(mtx16f): $(SRC)/math/Matrix4.cpp $(HEADER)/math/Matrix4.h $(bie) $(v3f) $(v4f) $(mathex)
 	$(GPP) -o $@ -c $<
 
 bie = $(BUILD)/BadIndexException.o
@@ -65,12 +65,12 @@ $(mathex): $(SRC)/math/MathException.cpp $(HEADER)/math/MathException.h
 
 compile: build
 
-tv3f = $(BUILD)/testVector3f
-$(tv3f): $(TEST)/Vector3f.cpp $(v3f) $(bie) $(v4f)
+tv3f = $(BUILD)/testVector3
+$(tv3f): $(TEST)/Vector3.cpp $(v3f) $(bie) $(v4f)
 	$(GPP) -o $@ $+
 
-tv4f = $(BUILD)/testVector4f
-$(tv4f): $(TEST)/Vector4f.cpp $(v3f) $(v4f) $(bie)
+tv4f = $(BUILD)/testVector4
+$(tv4f): $(TEST)/Vector4.cpp $(v3f) $(v4f) $(bie)
 	$(GPP) -o $@ $+
 
 tmsstruct = $(BUILD)/testMSStruct
@@ -96,8 +96,8 @@ prb: $(TEST)/prb.cpp $(msdata) $(msstruct) $(v3f) $(v4f) $(bie) $(mse) $(util) $
 	$(prbfile)
 
 
-tmatrix = $(BUILD)/testMatrix16f
-$(tmatrix): $(TEST)/Matrix16f.cpp $(v3f) $(v4f) $(bie) $(mtx16f) $(mathex)
+tmatrix = $(BUILD)/testMatrix4
+$(tmatrix): $(TEST)/Matrix4.cpp $(v3f) $(v4f) $(bie) $(mtx16f) $(mathex)
 	$(GPP) -o $@ $+
 
 run-model: compile $(tmodel)

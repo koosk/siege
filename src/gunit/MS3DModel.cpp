@@ -19,9 +19,9 @@ namespace siege{
 			}
 			if(i == 0)
 				return;
-			absMatrices = new Matrix16f[i];
-			relMatrices = new Matrix16f[i];
-			finMatrices = new Matrix16f[i];
+			absMatrices = new Matrix4[i];
+			relMatrices = new Matrix4[i];
+			finMatrices = new Matrix4[i];
 		}
 
 		void MS3DModel::init(){
@@ -31,7 +31,7 @@ namespace siege{
 			initMatrices();
 		}
 
-		void MS3DModel::cpyMatrices(Matrix16f* trg, const Matrix16f* src, word num){
+		void MS3DModel::cpyMatrices(Matrix4* trg, const Matrix4* src, word num){
 			for(int i=0; i<num; i++)
 				trg[i] = src[i];
 		}
@@ -87,10 +87,10 @@ namespace siege{
 			initMatrices(model.getNumberOfJoints());
 			for(int i=0; i<model.getNumberOfJoints(); i++){
 				MS3DJoint* joint = model.getJoint(i);	
-				Matrix16f mat;
+				Matrix4 mat;
 				mat = mat.translate(joint->getPositionVector());
 				mat = mat.rotate(joint->getRotationVector());
-				Vector3f v = joint->getPositionVector();
+				Vector3 v = joint->getPositionVector();
 				if(joint->hasParent()){
 					absMatrices[i] = absMatrices[joint->getParent()->getIndex()] * mat;
 				}
@@ -106,22 +106,22 @@ namespace siege{
 			for(int i=0; i<model.getNumberOfVertices(); i++){
 				MS3DVertex *v = model.getVertex(i);
 				if(v->hasBone()){
-					Matrix16f m = absMatrices[(word)v->getBoneId()];
+					Matrix4 m = absMatrices[(word)v->getBoneId()];
 					try{
 						m = m.invert();
 					}catch(MathException &e){std::cout << e.what() << std::endl;}
-					Vector3f vec = v->operator()();
+					Vector3 vec = v->operator()();
 					vec = vec * m;
 					v->setVertex(vec);
 				}
 			}
 		}
 
-		Vector3f MS3DModel::getKeyFrameVector(MS3DKeyFrame* kf, word num, float time){
+		Vector3 MS3DModel::getKeyFrameVector(MS3DKeyFrame* kf, word num, float time){
 			word fi = 0;
 			while(fi < num && kf[fi].getTime() < time)
 				fi++;
-			Vector3f v;
+			Vector3 v;
 			if(fi == 0){
 				v = kf[fi]();
 				return v;
@@ -149,7 +149,7 @@ namespace siege{
 					finMatrices[i] = absMatrices[i];
 					continue;
 				}
-				Matrix16f m;
+				Matrix4 m;
 				m = m.translate(getKeyFrameVector(j->getTranslationKeyFrames(), j->getNumberOfTranslationKeyFrames(), currentTime));
 				m = m.rotate(getKeyFrameVector(j->getRotationKeyFrames(), j->getNumberOfRotationKeyFrames(), currentTime));
 
@@ -220,13 +220,13 @@ namespace siege{
 							glTexCoord2f(tri->getS()[k], tri->getT()[k]);
 
 							MS3DVertex *ver = model.getVertex(tri->getVertexIndex(k));
-							Matrix16f m;
+							Matrix4 m;
 							bool b = false;
 							if(ver->hasBone()){
 								m = finMatrices[(word)ver->getBoneId()];
 								b = true;
 							}
-							Vector3f v = ver->operator()();
+							Vector3 v = ver->operator()();
 							if(b)
 								v = v*m;
 							v.get(tmp);
@@ -261,8 +261,8 @@ namespace siege{
 		void MS3DModel::drawSkeleton(){
 			glMatrixMode(GL_MODELVIEW);
 			glPushMatrix();
-			Vector3f pos = getPosition();
-			Vector3f rot = getRotation();
+			Vector3 pos = getPosition();
+			Vector3 rot = getRotation();
 			glTranslatef(pos[0], pos[1], pos[2]);
 			glRotatef(rot[0], 1, 0, 0);
 			glRotatef(rot[1], 0, 1, 0);
@@ -282,8 +282,8 @@ namespace siege{
 				MS3DJoint* joint = model.getJoint(i);
 				glColor3f(1,1,0);
 				glBegin(GL_POINTS);
-					Matrix16f m2;
-					Vector3f v2(1,1,1);
+					Matrix4 m2;
+					Vector3 v2(1,1,1);
 					m2 = finMatrices[i];
 					v2 = v2*m2;
 					float f2[3];
@@ -294,12 +294,12 @@ namespace siege{
 					continue;
 				glColor3f(0,1,0);
 				glBegin(GL_LINES);
-					Vector3f pv(1,1,1);
-					Matrix16f m;
+					Vector3 pv(1,1,1);
+					Matrix4 m;
 					m = finMatrices[joint->getParent()->getIndex()];
 					pv = pv*m;
-					m = Matrix16f();
-					Vector3f v(1,1,1);
+					m = Matrix4();
+					Vector3 v(1,1,1);
 					m = finMatrices[i];
 					v = v*m;
 					float f[3];

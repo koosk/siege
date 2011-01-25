@@ -2,7 +2,7 @@
 #include <GL/glu.h>
 #include <SDL/SDL.h>
 #include <iostream>
-#include"math/Matrix16f.h"
+#include"math/Matrix4.h"
 
 using namespace std;
 using namespace siege::math;
@@ -45,22 +45,22 @@ void processEvents() {
 }
  
 void mainLoop() {
-	Vector3f v1(0, 3, 0);
-	Vector3f v2(-3, 0, 0);
-	Vector3f v3(3, 0, 0);
+	Vector3 v1(0, 3, 0);
+	Vector3 v2(-3, 0, 0);
+	Vector3 v3(3, 0, 0);
 
-	Vector3f v4(-1, 0, 0);
-	Vector3f v5(0, 1, 0);
-	Vector3f v6(1, 0, 0);
+	Vector3 v4(-1, 0, 0);
+	Vector3 v5(0, 1, 0);
+	Vector3 v6(1, 0, 0);
 
-	Vector3f vr(0., 0.001, 0.001);
-	Vector3f vr2(0.0, 0.01, 0);
-	Vector3f vt(3, 0., 0);
-	Vector3f vt2(0, 4, 0);
+	Vector3 vr(0., 0.001, 0.001);
+	Vector3 vr2(0.0, 0.01, 0);
+	Vector3 vt(3, 0., 0);
+	Vector3 vt2(0, 4, 0);
 	float f1[3];
 	float f2[3];
 	float f3[3];
-	Matrix16f m, m2;
+	Matrix4 m, m2;
 	cout << m << endl;
 	m = m.translate(vt);
 	cout << m << endl;
@@ -73,11 +73,11 @@ void mainLoop() {
 	cout<<"Utan1:" << v1 << endl;
 	cout<<"Utan2:" << v2 << endl;
 	cout<<"Utan3:" << v3 << endl;
-	m = Matrix16f();
+	m = Matrix4();
 	m = m.rotate(vr);
 	m2 = m2.rotate(vr2);
 
-	Matrix16f m3;
+	Matrix4 m3;
 
 
    	while(true) {
@@ -88,8 +88,8 @@ void mainLoop() {
 		glTranslatef(0.0, 0.0, trans);
 		glRotatef(rotfact, 0,1,0);
 
-		Vector3f vv1 = v4, vv2 = v5, vv3 = v6;
-		Matrix16f m4;
+		Vector3 vv1 = v4, vv2 = v5, vv3 = v6;
+		Matrix4 m4;
 		m4 = m4.translate(v1);
 		m3 = m3*m2;
 

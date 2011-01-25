@@ -2,8 +2,8 @@
 #define MS3D_STRUCT_H
 
 #include"utils.h"
-#include"math/Vector3f.h"
-#include"math/Vector4f.h"
+#include"math/Vector3.h"
+#include"math/Vector4.h"
 
 namespace siege{
 	namespace gunit{
@@ -22,20 +22,20 @@ namespace siege{
 		class MS3DVertex{
 			private:
 				byte flags; //SELECTED | SELECTED2 | HIDDEN
-				Vector3f vertex;
+				Vector3 vertex;
 				char boneId;
 				byte referenceCount;
 			public:
 				MS3DVertex();
-				MS3DVertex(Vector3f&);
-				MS3DVertex(byte, Vector3f&, char, byte);
+				MS3DVertex(Vector3&);
+				MS3DVertex(byte, Vector3&, char, byte);
 				byte getFlags();
-				Vector3f operator()();	//getVertex
+				Vector3 operator()();	//getVertex
 				char getBoneId();
 				byte getReferenceCount();
 				bool hasBone();
 				void setFlags(byte);
-				void setVertex(Vector3f&);
+				void setVertex(Vector3&);
 				void setBoneId(char);
 				void setReferenceCount(byte);
 		}; //MS3DVertex
@@ -47,27 +47,27 @@ namespace siege{
 			private:
 				byte flags; // SELECTED | SELECTED2 | HIDDEN
 				word vertexIndices[3];
-				Vector3f vertexNormals[3];
-				Vector3f s; // texture coordinate
-				Vector3f t;	// texture coordinate
+				Vector3 vertexNormals[3];
+				Vector3 s; // texture coordinate
+				Vector3 t;	// texture coordinate
 				byte smoothingGroup;
 				byte groupIndex;
 			public:
 				MS3DTriangle();
-				MS3DTriangle(word*, Vector3f*);
-				MS3DTriangle(byte, word*, Vector3f*, Vector3f&, Vector3f&, byte, byte);
+				MS3DTriangle(word*, Vector3*);
+				MS3DTriangle(byte, word*, Vector3*, Vector3&, Vector3&, byte, byte);
 				byte getFlags();
 				word getVertexIndex(byte);
-				Vector3f getVertexNormal(byte);
-				Vector3f getS();
-				Vector3f getT();
+				Vector3 getVertexNormal(byte);
+				Vector3 getS();
+				Vector3 getT();
 				byte getSmoothingGroup();
 				byte getGroupIndex();
 				void setFlags(byte);
 				void setVertexIndex(word, byte);
-				void setVertexNormal(Vector3f&, byte);
-				void setS(Vector3f&);
-				void setT(Vector3f&);
+				void setVertexNormal(Vector3&, byte);
+				void setS(Vector3&);
+				void setT(Vector3&);
 				void setSmoothingGroup(byte);
 				void setGroupIndex(byte);
 		}; //MS3DTriangle
@@ -108,10 +108,10 @@ namespace siege{
 			private:
 				GLuint textureQuality; // GL_LINEAR || GL_NEAREST || GL_LINEAR_MIPMAP_NEAREST
 				char name[32];
-				Vector4f ambient;
-				Vector4f diffuse;
-				Vector4f specular;
-				Vector4f emissive;
+				Vector4 ambient;
+				Vector4 diffuse;
+				Vector4 specular;
+				Vector4 emissive;
 				float shininess; //0.0 - 128.0
 				float transparency; //0.0 - 1.0
 				char mode;
@@ -121,12 +121,12 @@ namespace siege{
 				GLuint alphamap;
 			public:
 				MS3DMaterial();
-				MS3DMaterial(char*, Vector4f&, Vector4f&, Vector4f&, Vector4f&, float, float, char ,char*, char*);
+				MS3DMaterial(char*, Vector4&, Vector4&, Vector4&, Vector4&, float, float, char ,char*, char*);
 				char* getName();
-				Vector4f getAmbient();
-				Vector4f getDiffuse();
-				Vector4f getSpecular();
-				Vector4f getEmissive();
+				Vector4 getAmbient();
+				Vector4 getDiffuse();
+				Vector4 getSpecular();
+				Vector4 getEmissive();
 				float getShininess();
 				float getTransparency();
 				char getMode();
@@ -138,10 +138,10 @@ namespace siege{
 				bool hasTexture();
 				bool hasAlphamap();
 				void setName(char*);
-				void setAmbient(Vector4f&);
-				void setDiffuse(Vector4f&);
-				void setSpecular(Vector4f&);
-				void setEmissive(Vector4f&);
+				void setAmbient(Vector4&);
+				void setDiffuse(Vector4&);
+				void setSpecular(Vector4&);
+				void setEmissive(Vector4&);
 				void setShininess(float);
 				void setTransparency(float);
 				void setMode(char);
@@ -156,16 +156,16 @@ namespace siege{
 		class MS3DKeyFrame{
 			private:
 				float time;
-				Vector3f vector;
+				Vector3 vector;
 			public:
 				MS3DKeyFrame();
-				MS3DKeyFrame(float, Vector3f&);
+				MS3DKeyFrame(float, Vector3&);
 				MS3DKeyFrame(MS3DKeyFrame&);
 				float getTime();
-				Vector3f operator()(); //getVector
+				Vector3 operator()(); //getVector
 				void setTime(float);
-				void setVector(Vector3f&);
-				Vector3f& interpolate(MS3DKeyFrame&, float);
+				void setVector(Vector3&);
+				Vector3& interpolate(MS3DKeyFrame&, float);
 		}; //MS3DKeyFrame
 
 ///////////// MS3DJoint //////////////////////////////////////
@@ -177,8 +177,8 @@ namespace siege{
 				byte flags; // SELECTED | DIRTY
 				char name[32];
 				MS3DJoint* parent; //char parentName[32]
-				Vector3f rotation;
-				Vector3f position;
+				Vector3 rotation;
+				Vector3 position;
 				word numRotKeyFrames;
 				word numTransKeyFrames;
 				MS3DKeyFrame* rotKeyFrames;
@@ -186,15 +186,15 @@ namespace siege{
 			public:
 				MS3DJoint();
 				MS3DJoint(MS3DJoint&);
-				MS3DJoint(word, byte, char*, MS3DJoint*, Vector3f&, Vector3f&, word, word, MS3DKeyFrame*, MS3DKeyFrame*);
+				MS3DJoint(word, byte, char*, MS3DJoint*, Vector3&, Vector3&, word, word, MS3DKeyFrame*, MS3DKeyFrame*);
 				~MS3DJoint();
 				MS3DJoint& operator=(MS3DJoint&);
 				byte getFlags();
 				char* getName();
 				int getIndex();
 				MS3DJoint* getParent();
-				Vector3f getRotationVector();
-				Vector3f getPositionVector();
+				Vector3 getRotationVector();
+				Vector3 getPositionVector();
 				word getNumberOfRotationKeyFrames();
 				word getNumberOfTranslationKeyFrames();
 				MS3DKeyFrame* getRotationKeyFrames();
@@ -208,8 +208,8 @@ namespace siege{
 				void setFlags(byte);
 				void setName(char*);
 				void setParent(MS3DJoint*);
-				void setRotationVector(Vector3f&);
-				void setPositionVector(Vector3f&);
+				void setRotationVector(Vector3&);
+				void setPositionVector(Vector3&);
 				void setRotationKeyFrames(MS3DKeyFrame*, word);
 				void setTranslationKeyFrames(MS3DKeyFrame*, word);
 		}; //MS3dJoint

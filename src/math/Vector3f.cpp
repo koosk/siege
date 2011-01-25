@@ -71,8 +71,10 @@ namespace siege{
 			y = f[1];	
 			z = f[2];	
 		}
-		std::ostream& operator<<(std::ostream& out, Vector3f& v){
-			out << "Vector3f(" << v[0] << ", " << v[1] << ", " << v[2] << ")";
+
+		std::ostream& operator<<(std::ostream& out, const Vector3f& v){
+			//out << "Vector3f(" << v[0] << ", " << v[1] << ", " << v[2] << ")";
+			out << "Vector3f(" << v.getX() << ", " << v.getY() << ", " << v.getZ() << ")";
 			return out;
 		}
 		

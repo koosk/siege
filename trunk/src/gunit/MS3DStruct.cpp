@@ -11,19 +11,19 @@ namespace siege{
 
 		MS3DVertex::MS3DVertex(){
 			flags = 0;
-			vertex = Vector3f();
+			vertex = Vector3();
 			boneId = -1;
 			referenceCount = 0;
 		}
 
-		MS3DVertex::MS3DVertex(Vector3f& v){	
+		MS3DVertex::MS3DVertex(Vector3& v){	
 			flags = 0;
 			vertex = v;
 			boneId = -1;
 			referenceCount = 0;
 		}
 
-		MS3DVertex::MS3DVertex(byte fl, Vector3f& v, char bid, byte refc){
+		MS3DVertex::MS3DVertex(byte fl, Vector3& v, char bid, byte refc){
 			flags = fl;
 			vertex = v;
 			boneId = bid;
@@ -34,7 +34,7 @@ namespace siege{
 			return flags;
 		}
 
-		Vector3f MS3DVertex::operator()(){
+		Vector3 MS3DVertex::operator()(){
 			return vertex;
 		}
 
@@ -54,7 +54,7 @@ namespace siege{
 			flags = f;		
 		}
 
-		void MS3DVertex::setVertex(Vector3f& v){
+		void MS3DVertex::setVertex(Vector3& v){
 			vertex = v;	
 		}
 
@@ -75,7 +75,7 @@ namespace siege{
 			groupIndex = 0;
 		}
 
-		MS3DTriangle::MS3DTriangle(word* ind, Vector3f* v){
+		MS3DTriangle::MS3DTriangle(word* ind, Vector3* v){
 			flags = 0;	
 			smoothingGroup = 0;
 			groupIndex = 0;
@@ -85,7 +85,7 @@ namespace siege{
 			}
 		}
 
-		MS3DTriangle::MS3DTriangle(byte fl, word* ind, Vector3f* v, Vector3f& s, Vector3f& t, byte sg, byte g){
+		MS3DTriangle::MS3DTriangle(byte fl, word* ind, Vector3* v, Vector3& s, Vector3& t, byte sg, byte g){
 			flags = fl;
 			for(int i=0; i<3; i++){
 				setVertexIndex(ind[i], i);
@@ -107,17 +107,17 @@ namespace siege{
 			return vertexIndices[i];
 		}
 
-		Vector3f MS3DTriangle::getVertexNormal(byte i){
+		Vector3 MS3DTriangle::getVertexNormal(byte i){
 			if(i<0 || i>2)
 				throw siege::BadIndexException("Bad vertex normal index at MS3DTriangle!");
 			return vertexNormals[i];
 		}
 
-		Vector3f MS3DTriangle::getS(){
+		Vector3 MS3DTriangle::getS(){
 			return s;
 		}
 
-		Vector3f MS3DTriangle::getT(){
+		Vector3 MS3DTriangle::getT(){
 			return t;
 		}
 
@@ -139,17 +139,17 @@ namespace siege{
 			vertexIndices[i] = a;
 		}
 
-		void MS3DTriangle::setVertexNormal(Vector3f& v, byte i){
+		void MS3DTriangle::setVertexNormal(Vector3& v, byte i){
 			if(i<0 || i>2)
 				throw siege::BadIndexException("Bad vertex normal index at MS3DTriangle!");
 			vertexNormals[i] = v;
 		}
 
-		void MS3DTriangle::setS(Vector3f& v){
+		void MS3DTriangle::setS(Vector3& v){
 			s = v;
 		}
 
-		void MS3DTriangle::setT(Vector3f& v){
+		void MS3DTriangle::setT(Vector3& v){
 			t = v;
 		}
 
@@ -274,7 +274,7 @@ namespace siege{
 			mode = 0;
 		}
 
-		MS3DMaterial::MS3DMaterial(char* nm, Vector4f& am, Vector4f& dif, Vector4f& em, Vector4f& spe, float shi, float tra, char md, char* text, char* alpha){
+		MS3DMaterial::MS3DMaterial(char* nm, Vector4& am, Vector4& dif, Vector4& em, Vector4& spe, float shi, float tra, char md, char* text, char* alpha){
 			textureQuality = GL_LINEAR_MIPMAP_NEAREST; 
 			strcpy(name, nm);
 			ambient = am;
@@ -292,19 +292,19 @@ namespace siege{
 			return name;
 		}
 
-		Vector4f MS3DMaterial::getAmbient(){
+		Vector4 MS3DMaterial::getAmbient(){
 			return ambient;
 		}
 
-		Vector4f MS3DMaterial::getDiffuse(){
+		Vector4 MS3DMaterial::getDiffuse(){
 			return diffuse;
 		}
 
-		Vector4f MS3DMaterial::getEmissive(){
+		Vector4 MS3DMaterial::getEmissive(){
 			return emissive;
 		}
 
-		Vector4f MS3DMaterial::getSpecular(){
+		Vector4 MS3DMaterial::getSpecular(){
 			return specular;
 		}
 
@@ -352,19 +352,19 @@ namespace siege{
 			strcpy(name, nm);
 		}
 
-		void MS3DMaterial::setAmbient(Vector4f& v){
+		void MS3DMaterial::setAmbient(Vector4& v){
 			ambient = v;
 		}
 
-		void MS3DMaterial::setDiffuse(Vector4f& v){
+		void MS3DMaterial::setDiffuse(Vector4& v){
 			diffuse = v;
 		}
 
-		void MS3DMaterial::setEmissive(Vector4f& v){
+		void MS3DMaterial::setEmissive(Vector4& v){
 			emissive = v;
 		}
 
-		void MS3DMaterial::setSpecular(Vector4f& v){
+		void MS3DMaterial::setSpecular(Vector4& v){
 			specular = v;
 		}
 
@@ -423,7 +423,7 @@ namespace siege{
 
 		MS3DKeyFrame::MS3DKeyFrame():time(0.0){}
 
-		MS3DKeyFrame::MS3DKeyFrame(float t, Vector3f& v){
+		MS3DKeyFrame::MS3DKeyFrame(float t, Vector3& v){
 			time = t;
 			vector = v;
 		}
@@ -437,7 +437,7 @@ namespace siege{
 			return time;
 		}
 
-		Vector3f MS3DKeyFrame::operator()(){
+		Vector3 MS3DKeyFrame::operator()(){
 			return vector;
 		}
 
@@ -445,11 +445,11 @@ namespace siege{
 			time = t;
 		}
 
-		void MS3DKeyFrame::setVector(Vector3f& v){
+		void MS3DKeyFrame::setVector(Vector3& v){
 			vector = v;
 		}
 
-		Vector3f& MS3DKeyFrame::interpolate(MS3DKeyFrame& kf, float t){
+		Vector3& MS3DKeyFrame::interpolate(MS3DKeyFrame& kf, float t){
 			if(time > kf.time)
 				throw MS3DException("The given keyframe's time must be bigger!");
 			if(t < time || t > kf.time)
@@ -461,7 +461,7 @@ namespace siege{
 			float x = vector[0] + (kf.vector[0] - vector[0]) * intpol;
 			float y = vector[1] + (kf.vector[1] - vector[1]) * intpol;
 			float z = vector[2] + (kf.vector[2] - vector[2]) * intpol;
-			Vector3f v(x, y, z);
+			Vector3 v(x, y, z);
 			return v;
 		}
 
@@ -493,7 +493,7 @@ namespace siege{
 			*this = j;
 		}
 
-		MS3DJoint::MS3DJoint(word i, byte f, char* nm, MS3DJoint* pa, Vector3f& r, Vector3f& p, word nr, word nt, MS3DKeyFrame* rot, MS3DKeyFrame* trans){
+		MS3DJoint::MS3DJoint(word i, byte f, char* nm, MS3DJoint* pa, Vector3& r, Vector3& p, word nr, word nt, MS3DKeyFrame* rot, MS3DKeyFrame* trans){
 			index = i;
 			flags = f;
 			strcpy(name, nm);
@@ -543,11 +543,11 @@ namespace siege{
 			return parent;
 		}
 
-		Vector3f MS3DJoint::getRotationVector(){
+		Vector3 MS3DJoint::getRotationVector(){
 			return rotation;
 		}
 
-		Vector3f MS3DJoint::getPositionVector(){
+		Vector3 MS3DJoint::getPositionVector(){
 			return position;
 		}
 
@@ -607,11 +607,11 @@ namespace siege{
 			parent = p;
 		}
 
-		void MS3DJoint::setRotationVector(Vector3f& v){
+		void MS3DJoint::setRotationVector(Vector3& v){
 			rotation = v;
 		}
 
-		void MS3DJoint::setPositionVector(Vector3f& v){
+		void MS3DJoint::setPositionVector(Vector3& v){
 			position = v;
 		}
 

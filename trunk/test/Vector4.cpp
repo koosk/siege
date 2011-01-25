@@ -1,4 +1,4 @@
-#include"math/Vector4f.h"
+#include"math/Vector4.h"
 #include<iostream>
 #include<exception>
 
@@ -6,10 +6,10 @@ using namespace std;
 using namespace siege::math;
 
 int main(){
-	Vector4f* v = new Vector4f;
+	Vector4* v = new Vector4;
 	delete v;
-	Vector4f v2(1,2,3,4);
-	Vector4f v3(2,5,7,8);
+	Vector4 v2(1,2,3,4);
+	Vector4 v3(2,5,7,8);
 	float f[4];
 	v2.get(f);
 	cout << v2 << endl;

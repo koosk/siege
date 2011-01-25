@@ -32,8 +32,8 @@ namespace siege{
 			animOn = false;
 			modelPath = NULL;
 			enaTex = true;
-			pos = math::Vector3f(0, 0, 0);
-			rot = math::Vector3f(0, 0, 0);
+			pos = math::Vector3(0, 0, 0);
+			rot = math::Vector3(0, 0, 0);
 		}
 
 		Model::Model(char* f){
@@ -43,8 +43,8 @@ namespace siege{
 			modelPath = NULL;
 			setModelPath(f);
 			enaTex = true;
-			pos = math::Vector3f(0, 0, 0);
-			rot = math::Vector3f(0, 0, 0);
+			pos = math::Vector3(0, 0, 0);
+			rot = math::Vector3(0, 0, 0);
 		}
 
 		Model::Model(Model& m){
@@ -138,19 +138,19 @@ namespace siege{
 			enaTex = b;
 		}
 
-		math::Vector3f Model::getPosition(){
+		math::Vector3 Model::getPosition(){
 			return pos;
 		}
 
-		math::Vector3f Model::getRotation(){
+		math::Vector3 Model::getRotation(){
 			return rot;
 		}
 
-		void Model::setPosition(math::Vector3f v){
+		void Model::setPosition(math::Vector3 v){
 			pos = v;
 		}
 
-		void Model::setRotation(math::Vector3f v){
+		void Model::setRotation(math::Vector3 v){
 			rot = v;
 		}
 

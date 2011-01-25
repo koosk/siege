@@ -1,5 +1,5 @@
 #include"gunit/MS3DStruct.h"
-#include"math/Vector3f.h"
+#include"math/Vector3.h"
 #include"utils.h"
 #include<iostream>
 
@@ -9,7 +9,7 @@ using namespace siege::gunit;
 int main(){
 	{
 	MS3DVertex ver;
-	Vector3f vec(1,2,3);
+	Vector3 vec(1,2,3);
 	MS3DVertex ver2;
 	ver2 = MS3DVertex(ver);
 	ver.setVertex(vec);
@@ -19,7 +19,7 @@ int main(){
 	cout << "tri flag: "  << a << endl;
 	a = t.getVertexIndex(1);
 	cout << "tri 1 index: " << a << endl;
-	siege::math::Vector3f v;
+	siege::math::Vector3 v;
 	v = t.getVertexNormal(1);
 	cout << "tri 1 normal: "  << v << endl;
 
@@ -55,15 +55,15 @@ int main(){
 	}
 	//////////////////////
 	cout << "==============================================================" << endl;
-	Vector3f* vector = new Vector3f(1,1,1);
+	Vector3* vector = new Vector3(1,1,1);
 	MS3DVertex *v = new MS3DVertex(1, *vector, 1, 1);
 	delete[] vector;
 	delete[] v;
 
-	Vector3f v1;
-	Vector3f v2;
-	Vector3f v3;
-	Vector3f vv[3] = {v1,v2,v3}; 
+	Vector3 v1;
+	Vector3 v2;
+	Vector3 v3;
+	Vector3 vv[3] = {v1,v2,v3}; 
 	word w[3] = {1,2,3};
 	MS3DTriangle* t = new MS3DTriangle(1, w, vv, v1, v2, 1, 2);
 	delete t;
@@ -75,7 +75,7 @@ int main(){
 	MS3DGroup* g = new MS3DGroup(1, name, 3, w, 1);
 	delete g;
 
-	Vector4f v4(1,1,1,1);
+	Vector4 v4(1,1,1,1);
 	MS3DMaterial* m = new MS3DMaterial(name, v4,v4,v4,v4, 1,1,1, (char*)"data/beas1.png", (char*)"asd");
 	delete[] m;
 

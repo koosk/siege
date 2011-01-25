@@ -12,9 +12,9 @@ GLuint height = 800;
 float trans = -300.0;
 float transup = -50.0;
 float rotfact;
-Vector3f mr(0,0,0);
-Vector3f mp(0,0,0);
-Vector3f posm2(-150, 0, -600);
+Vector3 mr(0,0,0);
+Vector3 mp(0,0,0);
+Vector3 posm2(-150, 0, -600);
 
 Model* model;
 bool mode = true;
@@ -88,12 +88,12 @@ void mainLoop() {
 			((MS3DModel*)model)->drawSkeleton();
 
 		model2->draw();
-		Vector3f v = model2->getPosition();
+		Vector3 v = model2->getPosition();
 		v[2] += asd*2;
 		model2->setPosition(v);
 		if(v[2] >= 300){
 			asd = 0;
-			Vector3f vr = model2->getRotation();
+			Vector3 vr = model2->getRotation();
 			vr[1]++;
 			model2->setRotation(vr);
 			if(vr[1] == 180)
@@ -101,7 +101,7 @@ void mainLoop() {
 		}
 		if(v[2] <= posm2[2]){
 			asd = 0;
-			Vector3f vr = model2->getRotation();
+			Vector3 vr = model2->getRotation();
 			vr[1]++;
 			if(vr[1] == 360){
 				vr[1] = 0;

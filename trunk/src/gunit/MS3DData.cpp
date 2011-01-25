@@ -318,7 +318,7 @@ namespace siege{
 				byte refc;
 				memcpy(&refc, ptr, sizeof(refc));
 				ptr += sizeof(refc);
-				Vector3f v(ftmp);
+				Vector3 v(ftmp);
 				vertices[i] = MS3DVertex(btmp, v, ctmp, refc);
 			}
 			//////////////TRIANGLES////////////////////
@@ -332,20 +332,20 @@ namespace siege{
 				word vi[3];
 				memcpy(vi, ptr, sizeof(vi));
 				ptr += sizeof(vi);
-				Vector3f vec[3];
+				Vector3 vec[3];
 				for(int k=0; k<3; k++){
 					float f[3];
 					memcpy(f, ptr, sizeof(f));
 					ptr += sizeof(f);
-					vec[k] = Vector3f(f);
+					vec[k] = Vector3(f);
 				}
 				float f[3];
 				memcpy(f, ptr, sizeof(f));
 				ptr += sizeof(f);
-				Vector3f s(f);
+				Vector3 s(f);
 				memcpy(f, ptr, sizeof(f));
 				ptr += sizeof(f);
-				Vector3f t(f);
+				Vector3 t(f);
 				byte sg;
 				memcpy(&sg, ptr, sizeof(sg));
 				ptr += sizeof(sg);
@@ -393,16 +393,16 @@ namespace siege{
 				float f[4];
 				memcpy(f, ptr, sizeof(f));
 				ptr += sizeof(f);
-				Vector4f amb(f);
+				Vector4 amb(f);
 				memcpy(f, ptr, sizeof(f));
 				ptr += sizeof(f);
-				Vector4f dif(f);
+				Vector4 dif(f);
 				memcpy(f, ptr, sizeof(f));
 				ptr += sizeof(f);
-				Vector4f spe(f);
+				Vector4 spe(f);
 				memcpy(f, ptr, sizeof(f));
 				ptr += sizeof(f);
-				Vector4f emi(f);
+				Vector4 emi(f);
 				float sh;
 				memcpy(&sh, ptr, sizeof(sh));
 				ptr += sizeof(sh);
@@ -475,10 +475,10 @@ namespace siege{
 				float f[3];
 				memcpy(f, ptr, sizeof(f));
 				ptr += sizeof(f);
-				Vector3f rot(f);
+				Vector3 rot(f);
 				memcpy(f, ptr, sizeof(f));
 				ptr += sizeof(f);
-				Vector3f pos(f);
+				Vector3 pos(f);
 				word rkf;
 				memcpy(&rkf, ptr, sizeof(rkf));
 				ptr += sizeof(rkf);
@@ -494,7 +494,7 @@ namespace siege{
 					float f[3];
 					memcpy(f, ptr, sizeof(f));
 					ptr += sizeof(f);
-					Vector3f v(f);
+					Vector3 v(f);
 					MS3DKeyFrame kf(ti, v);
 					rotkf[k] = kf;
 				}
@@ -505,7 +505,7 @@ namespace siege{
 					float f[3];
 					memcpy(f, ptr, sizeof(f));
 					ptr += sizeof(f);
-					Vector3f v(f);
+					Vector3 v(f);
 					MS3DKeyFrame kf(ti, v);
 					trakf[k] = kf;
 				}

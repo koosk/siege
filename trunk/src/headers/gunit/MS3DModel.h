@@ -3,7 +3,7 @@
 
 #include"Model.h"
 #include"MS3DData.h"
-#include"math/Matrix16f.h"
+#include"math/Matrix4.h"
 
 namespace siege{
 	namespace gunit{
@@ -13,18 +13,18 @@ namespace siege{
 				float currentTime;
 				unsigned int startTime;
 				MS3DData model;
-				Matrix16f* absMatrices;
-				Matrix16f* relMatrices;
-				Matrix16f* finMatrices;
+				Matrix4* absMatrices;
+				Matrix4* relMatrices;
+				Matrix4* finMatrices;
 				void init();
-				Vector3f getKeyFrameVector(MS3DKeyFrame*, word, float);
+				Vector3 getKeyFrameVector(MS3DKeyFrame*, word, float);
 			protected:
 				void loadModel(char*);
 				void drawModel();
 				virtual void setupMatrices();
 				virtual void setupVertices();
 				virtual void initMatrices(word);
-				virtual void cpyMatrices(Matrix16f*, const Matrix16f*, word);
+				virtual void cpyMatrices(Matrix4*, const Matrix4*, word);
 				virtual void animate();
 			public:
 				MS3DModel();

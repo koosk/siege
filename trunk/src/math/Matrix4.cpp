@@ -1,4 +1,4 @@
-#include "math/Matrix16f.h"
+#include "math/Matrix4.h"
 #include "BadIndexException.h"
 #include <string.h>
 #include <cmath>
@@ -6,7 +6,7 @@
 
 namespace siege{
 	namespace math{
-		Matrix16f::Matrix16f(){
+		Matrix4::Matrix4(){
 			for(int i=0; i<16; i++){
 				data[i] = 0.f;
 			}
@@ -14,28 +14,28 @@ namespace siege{
 			this->data[10] = this->data[15] = 1.f;
 		}
 		
-		Matrix16f::Matrix16f(const Matrix16f &m){
+		Matrix4::Matrix4(const Matrix4 &m){
 			memcpy(data,m.data,sizeof(float[16]));
 		}
 
-		Matrix16f::Matrix16f(const float *data){
+		Matrix4::Matrix4(const float *data){
 			memcpy(this->data,data,sizeof(float[16]));
 		}
 
-		Matrix16f::~Matrix16f(){
-			//std::cout << "Matrix16f destruktor" << std::endl;
+		Matrix4::~Matrix4(){
+			//std::cout << "Matrix4 destruktor" << std::endl;
 		};
 		
-		Matrix16f& Matrix16f::operator=(const Matrix16f &m){
+		Matrix4& Matrix4::operator=(const Matrix4 &m){
 			memcpy(data,m.data,sizeof(float[16]));
 			return (*this);
 		}
 
-		void Matrix16f::load(const float *data){
+		void Matrix4::load(const float *data){
 			memcpy(this->data,data,sizeof(float[16]));
 		}
 
-		void Matrix16f::loadTranspose(const float *data){
+		void Matrix4::loadTranspose(const float *data){
 			for(int i=0; i<4; i++){
 				for(int j=0; j<4; j++){
 					this->data[i*4+j] = data[4*j+i];
@@ -43,21 +43,21 @@ namespace siege{
 			}
 		}
 
-		void Matrix16f::set(int pos, float value){
+		void Matrix4::set(int pos, float value){
 			if(pos>15){
 				throw siege::BadIndexException();
 			}
 			data[pos] = value;
 		}
 
-		float Matrix16f::operator[](int index) const{//index from 0
+		float Matrix4::operator[](int index) const{//index from 0
 			if(index>15 || index<0){
 				throw siege::BadIndexException();
 			}
 			return data[index];
 		}
 		
-		Matrix16f Matrix16f::operator*(const Matrix16f &m) const{
+		Matrix4 Matrix4::operator*(const Matrix4 &m) const{
 			float r[16];
 			r[0]  = data[0]*m.data[0]  + data[4]*m.data[1]  + data[8]*m.data[2]   + data[12]*m.data[3];
 			r[1]  = data[1]*m.data[0]  + data[5]*m.data[1]  + data[9]*m.data[2]   + data[13]*m.data[3];
@@ -78,25 +78,25 @@ namespace siege{
 			r[13] = data[1]*m.data[12] + data[4]*m.data[13] + data[9]*m.data[14]  + data[13]*m.data[15];
 			r[14] = data[2]*m.data[12] + data[5]*m.data[13] + data[10]*m.data[14] + data[14]*m.data[15];
 			r[15] = data[3]*m.data[12] + data[6]*m.data[13] + data[11]*m.data[14] + data[15]*m.data[15];
-			return Matrix16f(r);
+			return Matrix4(r);
 		}
 		
-		Matrix16f Matrix16f::operator*=(const Matrix16f &m){
+		Matrix4 Matrix4::operator*=(const Matrix4 &m){
 			*this = (*this) * m;
 			return *this;
 		}
 
-		Matrix16f Matrix16f::transpose() const{
+		Matrix4 Matrix4::transpose() const{
 			float res[16];
 			for(int i=0; i<4; i++){
 				for(int j=0; j<4; j++){
 					res[4*j+i] = data[4*i+j];
 				}
 			}
-			return Matrix16f(res);
+			return Matrix4(res);
 		}
 
-		std::ostream& operator<<(std::ostream &out,const Matrix16f &m){
+		std::ostream& operator<<(std::ostream &out,const Matrix4 &m){
 			for(int i=0; i<4; i++){
 				int j;
 				for(j=0; j<3; j++){
@@ -107,7 +107,7 @@ namespace siege{
 			return out;
 		}
 		
-		Matrix16f Matrix16f::translate(const Vector3f &v) const{
+		Matrix4 Matrix4::translate(const Vector3 &v) const{
 			float r[16];
 			float x = v.getX();
 			float y = v.getY();
@@ -128,10 +128,10 @@ namespace siege{
 			r[7] = data[13]+data[15]*y;
 			r[11] = data[14]+data[15]*z;
 			r[15] = data[15];
-			return Matrix16f(r);
+			return Matrix4(r);
 		}
 
-		Matrix16f Matrix16f::rotate(const Vector3f &v) const{
+		Matrix4 Matrix4::rotate(const Vector3 &v) const{
 			/*float phi = v.getX();
 			float theta = v.getY();
 			float psi = v.getZ();*/
@@ -183,27 +183,27 @@ namespace siege{
 			               -cz*sy+sz*sx*cy, sz*sy+cz*sx*cy , cx*cy , 0.,
 			               0.             , 0.             , 0.    , 1.
 			};
-			return ((*this)*Matrix16f(r));
-		//	return (Matrix16f(r)*(*this));
+			return ((*this)*Matrix4(r));
+		//	return (Matrix4(r)*(*this));
 		}
 		
-		Matrix16f Matrix16f::scale(const Vector3f &v) const{
+		Matrix4 Matrix4::scale(const Vector3 &v) const{
 			float *r = new float[16];
 			memcpy(r,data,sizeof(float[16]));
 			r[0]  *= v.getX();
 			r[5]  *= v.getY();
 			r[10] *= v.getZ();
-			return Matrix16f(r);
+			return Matrix4(r);
 		}
 
 		//A matrix and its transpose have the same determinant.
 		//Using rule of Sarrus.
-		float Matrix16f::determinant3(const float *f){
+		float Matrix4::determinant3(const float *f){
 			return (f[0]*f[4]*f[8] + f[1]*f[5]*f[6] + f[2]*f[3]*f[7]
 				  - f[2]*f[4]*f[6] - f[1]*f[3]*f[8] - f[0]*f[5]*f[7]);
 		}
 		
-		float Matrix16f::determinant() const{
+		float Matrix4::determinant() const{
 			float tmp1[9] = {data[1],data[2],data[3],
 			                 data[5],data[6],data[7],
 			                 data[9],data[10],data[11]};
@@ -223,7 +223,7 @@ namespace siege{
 				    - data[14]*determinant3(tmp3) + data[15]*determinant3(tmp4));
 		}
 		
-		Matrix16f Matrix16f::invert() const throw(MathException){
+		Matrix4 Matrix4::invert() const throw(MathException){
 			float det = determinant();
 			if(0==det){
 				throw MathException("Singular matrix does not have determinant and inverse.");
@@ -330,52 +330,52 @@ namespace siege{
 				r[15] = determinant3(c);
 			}
 
-			return fabs(1./det)*Matrix16f(r).transpose();
+			return fabs(1./det)*Matrix4(r).transpose();
 		}
 		
-		Matrix16f operator*(float c,const Matrix16f &m){
+		Matrix4 operator*(float c,const Matrix4 &m){
 			float r[16];
 			for(int i=0; i<16; i++){
 				r[i] = c*m.data[i];
 			}
-			return Matrix16f(r);
+			return Matrix4(r);
 		}
 
-		Matrix16f Matrix16f::operator+(const Matrix16f &m) const{
+		Matrix4 Matrix4::operator+(const Matrix4 &m) const{
 			float r[16];
 			for(int i=0; i<16; i++){
 				r[i] = data[i] + m.data[i];
 			}
-			return Matrix16f(r);
+			return Matrix4(r);
 		}
 		
-		Matrix16f Matrix16f::operator-(const Matrix16f &m) const{
+		Matrix4 Matrix4::operator-(const Matrix4 &m) const{
 			float r[16];
 			for(int i=0; i<16; i++){
 				r[i] = data[i] - m.data[i];
 			}
-			return Matrix16f(r);
+			return Matrix4(r);
 		}
 
-		Matrix16f Matrix16f::operator+=(const Matrix16f &m){
+		Matrix4 Matrix4::operator+=(const Matrix4 &m){
 			*this = (*this) + m;
 			return *this;
 		}
 		
-		Matrix16f Matrix16f::operator-=(const Matrix16f &m){
+		Matrix4 Matrix4::operator-=(const Matrix4 &m){
 			*this = (*this) - m;
 			return *this;
 		}
 
-		float Matrix16f::getNormaF(){
+		float Matrix4::getNormaF(){
 			float f = 0;
 			for(int i=0; i<16; i++)
 				f += data[i]*data[i];
 			return sqrt(f);
 		}
 
-		Matrix16f Matrix16f::normalize(){
-			Matrix16f m = *this;
+		Matrix4 Matrix4::normalize(){
+			Matrix4 m = *this;
 			float norm = m.getNormaF();
 			for(int i=0; i<16; i++)
 				m.data[i] = m.data[i]/norm;

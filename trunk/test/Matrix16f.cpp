@@ -106,8 +106,9 @@ int main(){
 	Matrix16f scalem2;
 	scalem2 = scalem2.scale(scalev3);
 	cout << endl << scalem2 << endl;
-	vres = v2s2*scalem2;
-	cout << vres << endl;
+	//vres = v2s2*scalem2;
+	//cout << vres << endl;
+	cout << v2s2*scalem2 << endl;
 
 	return 0;
 }

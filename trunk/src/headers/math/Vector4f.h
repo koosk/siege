@@ -20,7 +20,7 @@ namespace siege{
 				float& operator[](const int);
 				float* get(float*);
 				void set(float*);
-				friend  std::ostream& siege::math::operator<<(std::ostream&, Vector4f&);
+				friend std::ostream& siege::math::operator<<(std::ostream&, const Vector4f&);
 		}; //Vector4f
 
 	};//math

@@ -55,8 +55,10 @@ namespace siege{
 			(*this)[2] = f[2];
 			a = f[3];
 		}
-		std::ostream& operator<<(std::ostream& out, Vector4f& v){
-			out << "Vector4f(" << v[0] << ", " << v[1] << ", " << v[2] << ", " << v[3] << ")";
+		
+		std::ostream& operator<<(std::ostream& out, const Vector4f& v){
+			//out << "Vector4f(" << v[0] << ", " << v[1] << ", " << v[2] << ", " << v[3] << ")";
+			out << "Vector4f(" << v.getX() << ", " << v.getY() << ", " << v.getZ() << ", " << v.getA() << ")";
 			return out;
 		}
 	}; //math

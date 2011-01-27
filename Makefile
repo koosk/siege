@@ -63,7 +63,11 @@ mathex = $(BUILD)/math/MathException.o
 $(mathex): $(SRC)/math/MathException.cpp $(HEADER)/math/MathException.h
 	$(GPP) -o $@ -c $<
 
-compile: build
+bsp = $(BUILD)/gunit/BSPStruct.o
+$(bsp): $(SRC)/gunit/BSPStruct.cpp $(HEADER)/gunit/BSPStruct.h
+	$(GPP) -o $@ -c $+
+
+compile: build $(bsp)
 
 tv3f = $(BUILD)/testVector3
 $(tv3f): $(TEST)/Vector3.cpp $(v3f) $(bie) $(v4f)

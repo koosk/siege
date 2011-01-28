@@ -14,6 +14,7 @@ build:
 		mkdir -p $(BUILD);
 		mkdir -p $(BUILD)/math
 		mkdir -p $(BUILD)/gunit
+		mkdir -p $(BUILD)/scene
 
 v3f = $(BUILD)/math/Vector3.o
 $(v3f): $(SRC)/math/Vector3.cpp $(HEADER)/math/Vector3.h
@@ -63,8 +64,12 @@ mathex = $(BUILD)/math/MathException.o
 $(mathex): $(SRC)/math/MathException.cpp $(HEADER)/math/MathException.h
 	$(GPP) -o $@ -c $<
 
+bb = $(BUILD)/scene/BoundingBox.o
+$(bb): $(SRC)/scene/BoundingBox.cpp $(HEADER)/scene/BoundingBox.h
+	$(GPP) -o $@ -c $<
+
 bsp = $(BUILD)/gunit/BSPStruct.o
-$(bsp): $(SRC)/gunit/BSPStruct.cpp $(HEADER)/gunit/BSPStruct.h $(v3f) $(sie) $(bie) $(utils)
+$(bsp): $(SRC)/gunit/BSPStruct.cpp $(HEADER)/gunit/BSPStruct.h $(v3f) $(sie) $(bie) $(utils) $(bb)
 	$(GPP) -o $@ -c $<
 
 compile: build 
@@ -105,7 +110,7 @@ $(tmatrix): $(TEST)/Matrix4.cpp $(v3f) $(v4f) $(bie) $(mtx16f) $(mathex)
 	$(GPP) -o $@ $+
 
 tbsp = $(BUILD)/testBSPStruct
-$(tbsp): $(TEST)/BSPStruct.cpp $(v3f) $(v4f)  $(bie) $(bsp) $(util) $(sie)
+$(tbsp): $(TEST)/BSPStruct.cpp $(v3f) $(v4f)  $(bie) $(bsp) $(util) $(sie) $(bb)
 	$(GPP) -o $@ $+
 
 run-model: compile $(tmodel)

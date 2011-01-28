@@ -7,6 +7,7 @@
 #include<GL/gl.h>
 #include"math/Vector3.h"
 #include"utils.h"
+#include"scene/BoundingBox.h"
 
 namespace siege{
 	namespace gunit{
@@ -176,6 +177,8 @@ namespace siege{
 				virtual void draw() const = 0;
 		}; //BSPFace
 
+///////////// BSPPolygon ////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 		class BSPPolygon : public BSPFace{
 			private:
 				Vector3 lightmapOrigin;
@@ -196,6 +199,8 @@ namespace siege{
 				void draw() const;
 		}; //BSPPolygon
 
+///////////// BSPPatch //////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 		class BSPPatch : public BSPFace{
 			private:
 				int dimension[2];
@@ -209,6 +214,8 @@ namespace siege{
 				void draw() const;
 		}; //BSPPatch
 
+///////////// BSPMesh ///////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 		class BSPMesh : public BSPFace{
 			public:
 				BSPMesh();
@@ -218,6 +225,8 @@ namespace siege{
 				void draw() const;
 		}; //BSPMesh
 
+///////////// BSPBillboard //////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 		class BSPBillboard : public BSPFace{
 			public:
 				BSPBillboard();
@@ -260,9 +269,15 @@ namespace siege{
 		class BSPTreePoint{
 			protected:
 				bool node;
-				BSPTreePoint();
+				scene::BoundingBox box;
 			public:
+				BSPTreePoint();
+				BSPTreePoint(scene::BoundingBox);
 				bool isNode();
+				bool isInside(Vector3);
+				void setBoundingBox(scene::BoundingBox);
+				scene::BoundingBox getBoundingBox() const;
+				virtual void draw()const = 0;
 		}; //BSPTreePoint
 
 ///////////// BSPLeaf //////////////////////////////////////////////////////////
@@ -271,28 +286,22 @@ namespace siege{
 			private:
 				BSPVisdata* cluster;
 				int area;
-				int mins[3];
-				int maxs[3];
 				int numFaces;
-				BSPFace** face;
+				BSPFace** faces;
 				int numBrushes;
 				BSPBrush** brushes;
 			public:
 				BSPLeaf();
-				BSPLeaf(BSPVisdata const*, int, int const*, int const*, BSPFace* const*, int, BSPBrush* const*, int);
+				BSPLeaf(BSPVisdata*, int, BSPFace**, int, BSPBrush**, int, scene::BoundingBox);
 				BSPLeaf(const BSPLeaf&);
 				~BSPLeaf();
 				BSPLeaf& operator=(const BSPLeaf&);
-				void setCluster(BSPVisdata const*);
+				void setCluster(BSPVisdata*);
 				void setArea(int);
-				void setBoxMin(int const*);
-				void setBoxMax(int const*);
-				void setFaces(BSPFace* const*, int);
-				void setBrush(BSPBrush* const*, int);
+				void setFaces(BSPFace**, int);
+				void setBrushes(BSPBrush**, int);
 				BSPVisdata* getCluster() const;
 				int getArea() const;
-				int const* getBoxMin() const;
-				int const* getBoxMax() const;
 				int getNumberOfFaces() const;
 				BSPFace* getFace(int) const;
 				int getNumberOfBrushes() const;
@@ -307,21 +316,16 @@ namespace siege{
 				BSPPlane* plane;
 				BSPTreePoint* left;
 				BSPTreePoint* right;
-				int mins[3];
-				int maxs[3];
 			public:
 				BSPNode();
-				BSPNode(BSPPlane const*, BSPTreePoint const*, BSPTreePoint const*, int const*, int const*);
+				BSPNode(BSPPlane const*, BSPTreePoint const*, BSPTreePoint const*, scene::BoundingBox);
 				void setPlane(BSPPlane const*);
 				void setLeftChild(BSPTreePoint const*);
 				void setRightChild(BSPTreePoint const*);
-				void setBoxMin(int const*);
-				void setBoxMax(int const*);
 				BSPPlane* getPlane() const;
 				BSPTreePoint* getLeftChild() const; 
 				BSPTreePoint* getRightChild() const; 
-				int const* getBoxMin() const;
-				int const* getBoxMax() const;
+				void draw() const;
 		}; //BSPNode
 
 		//TODO entity, model, lightval, etc

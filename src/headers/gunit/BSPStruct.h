@@ -13,7 +13,7 @@ namespace siege{
 
 		using namespace siege::math;
 
-//mehsvert, leafbrush are not needed to be make as class
+//mehsvert, leafbrush, leafface are not needed to be make as class
 
 ///////////// BSPVertex /////////////////////////////////////
 /////////////////////////////////////////////////////////////
@@ -45,9 +45,10 @@ namespace siege{
 				byte value[128][128][3];
 			public:
 				BSPLightmap();
-				BSPLightmap(byte const*);
-				void setValue(byte const*);
-				byte const* getValue() const;
+				BSPLightmap(byte** const*);
+				void setValue(byte** const*);
+				//TODO
+				//byte** const* getValue();
 		}; //BSPLightmap
 
 ///////////// BSPPlane /////////////////////////////////////////
@@ -73,16 +74,19 @@ namespace siege{
 				int flags;
 				int contents;
 				GLuint texture;
+				GLuint texquality;
+				void loadTexture();
 			public:
 				BSPTexture();
 				BSPTexture(char const*, const int, const int);
 				void setPath(char const*);
 				void setFlags(const int);
 				void setContents(const int);
+				void setTextureQuality(GLuint);
 				char const* getPath() const;
 				int getFlags() const;
 				int getContents() const;
-				GLuint getTexture();
+				GLuint getTexture() const;
 		}; //BSPTexture
 
 ///////////// BSPBrushSide /////////////////////////////////////
@@ -93,9 +97,9 @@ namespace siege{
 				BSPTexture* texture;
 			public:
 				BSPBrushSide();
-				BSPBrushSide(BSPPlane const*, BSPTexture const*);
-				void setPlane(BSPPlane const*);
-				void setTexture(BSPTexture const*);
+				BSPBrushSide(BSPPlane*, BSPTexture*);
+				void setPlane(BSPPlane*);
+				void setTexture(BSPTexture*);
 				BSPPlane* getPlane() const;
 				BSPTexture* getTexture() const;
 		}; //BSPBrushSide
@@ -109,12 +113,12 @@ namespace siege{
 				BSPTexture* texture;
 			public:
 				BSPBrush();
-				BSPBrush(BSPBrushSide* const*, int, BSPTexture const*);
+				BSPBrush(BSPBrushSide**, int, BSPTexture*);
 				BSPBrush(const BSPBrush&);
 				~BSPBrush();
 				BSPBrush& operator=(const BSPBrush&);
-				void setBrushSides(BSPBrushSide* const*, int);
-				void setTexture(BSPTexture const*);
+				void setBrushSides(BSPBrushSide**, int);
+				void setTexture(BSPTexture*);
 				int getNumberOfBrushSides() const;
 				BSPBrushSide* getBrushSide(int) const;
 				BSPTexture* getTexture() const;
@@ -129,11 +133,11 @@ namespace siege{
 				//int unknown 	Always 5, except in q3dm8, which has one effect with -1
 			private:
 				BSPEffect();
-				BSPEffect(char const*, BSPBrush const*);
+				BSPEffect(char const*, BSPBrush*);
 				void setName(char const*);
-				void setBrush(BSPBrush const*);
+				void setBrush(BSPBrush*);
 				char const* getName() const;
-				BSPBrush const* getBrush() const;
+				BSPBrush* getBrush() const;
 		}; //BSPEffect
 
 ///////////// BSPFace //////////////////////////////////////////
@@ -219,13 +223,13 @@ namespace siege{
 
 ///////////// BSPVisdata ///////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-		class BSPLeafe;
+		class BSPLeaf;
 
 		class BSPVisdata{
 			private:
 				int numVisdata;
 				BSPVisdata** visdata;
-				std::vector<BSPLeafe*> leaves;
+				std::vector<BSPLeaf*> leaves;
 			public:
 				BSPVisdata();
 				BSPVisdata(int);
@@ -236,18 +240,78 @@ namespace siege{
 				void resetVisData(int);
 				void addVisdata(BSPVisdata const*);
 				void setNumberofVisdata(BSPVisdata* const*, int);
-				void addLeafe(BSPLeafe const*);
+				void addLeaf(BSPLeaf const*);
 				int getNumberOfVisdata() const;
 				BSPVisdata* getVisData(int) const;
 				int getNumberOfLeaves() const;
-				BSPLeafe* getLeafe(int) const;
+				BSPLeaf* getLeaf(int) const;
 		}; //BSPVisdata
 
-///////////// BSPLeafe //////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////
-		class BSPLeafe{
+		class BSPTreePoint{
+			protected:
+				bool node;
+				BSPTreePoint();
+			public:
+				bool isNode();
+		}; //BSPTreePoint
 
-		}; //BSPLeafe
+///////////// BSPLeaf //////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+		class BSPLeaf : public BSPTreePoint{
+			private:
+				BSPVisdata* cluster;
+				int area;
+				int mins[3];
+				int maxs[3];
+				int numFaces;
+				BSPFace** face;
+				int numBrushes;
+				BSPBrush** brushes;
+			public:
+				BSPLeaf();
+				BSPLeaf(BSPVisdata const*, int, int const*, int const*, BSPFace* const*, int, BSPBrush* const*, int);
+				BSPLeaf(const BSPLeaf&);
+				~BSPLeaf();
+				BSPLeaf& operator=(const BSPLeaf&);
+				void setCluster(BSPVisdata const*);
+				void setArea(int);
+				void setBoxMin(int const*);
+				void setBoxMax(int const*);
+				void setFaces(BSPFace* const*, int);
+				void setBrush(BSPBrush* const*, int);
+				BSPVisdata* getCluster() const;
+				int getArea() const;
+				int const* getBoxMin() const;
+				int const* getBoxMax() const;
+				int getNumberOfFaces() const;
+				BSPFace* getFace(int) const;
+				int getNumberOfBrushes() const;
+				BSPBrush* getBrush(int) const;
+		}; //BSPLeaf
+
+///////////// BSPNode ///////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
+		class BSPNode : public BSPTreePoint{
+			private:
+				BSPPlane* plane;
+				BSPTreePoint* left;
+				BSPTreePoint* right;
+				int mins[3];
+				int maxs[3];
+			public:
+				BSPNode();
+				BSPNode(BSPPlane const*, BSPTreePoint const*, BSPTreePoint const*, int const*, int const*);
+				void setPlane(BSPPlane const*);
+				void setLeftChild(BSPTreePoint const*);
+				void setRightChild(BSPTreePoint const*);
+				void setBoxMin(int const*);
+				void setBoxMax(int const*);
+				BSPPlane* getPlane() const;
+				BSPTreePoint* getLeftChild() const; 
+				BSPTreePoint* getRightChild() const; 
+				int const* getBoxMin() const;
+				int const* getBoxMax() const;
+		}; //BSPNode
 
 		//TODO entity, model, lightval, etc
 

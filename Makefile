@@ -64,10 +64,10 @@ $(mathex): $(SRC)/math/MathException.cpp $(HEADER)/math/MathException.h
 	$(GPP) -o $@ -c $<
 
 bsp = $(BUILD)/gunit/BSPStruct.o
-$(bsp): $(SRC)/gunit/BSPStruct.cpp $(HEADER)/gunit/BSPStruct.h
-	$(GPP) -o $@ -c $+
+$(bsp): $(SRC)/gunit/BSPStruct.cpp $(HEADER)/gunit/BSPStruct.h $(v3f) $(sie) $(bie) $(utils)
+	$(GPP) -o $@ -c $<
 
-compile: build $(bsp)
+compile: build 
 
 tv3f = $(BUILD)/testVector3
 $(tv3f): $(TEST)/Vector3.cpp $(v3f) $(bie) $(v4f)
@@ -104,10 +104,14 @@ tmatrix = $(BUILD)/testMatrix4
 $(tmatrix): $(TEST)/Matrix4.cpp $(v3f) $(v4f) $(bie) $(mtx16f) $(mathex)
 	$(GPP) -o $@ $+
 
+tbsp = $(BUILD)/testBSPStruct
+$(tbsp): $(TEST)/BSPStruct.cpp $(v3f) $(v4f)  $(bie) $(bsp) $(util) $(sie)
+	$(GPP) -o $@ $+
+
 run-model: compile $(tmodel)
 	$(tmodel)
 
-test: compile $(tv3f) $(tv4f) $(tmsstruct) $(tmsdata) $(tmodel) $(tmatrix)
+test: compile $(tv3f) $(tv4f) $(tmsstruct) $(tmsdata) $(tmodel) $(tmatrix) $(tbsp)
 
 run-test: test
 	$(tv3f)
@@ -115,6 +119,7 @@ run-test: test
 	$(tmsstruct)
 	$(tmsdata)
 	$(tmatrix)
+	$(tbsp)
 
 .PHONY: clear
 clear:

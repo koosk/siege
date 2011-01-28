@@ -1,5 +1,6 @@
 #include"gunit/BSPStruct.h"
 #include"BadIndexException.h"
+#include"SiegeException.h"
 #include<string.h>
 
 namespace siege{
@@ -282,6 +283,378 @@ namespace siege{
 		BSPBrush* BSPEffect::getBrush() const{
 			return brush;
 		}
+
+///////////////////// BSPFace ////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+
+		BSPFace::BSPFace(){
+			numVertices = 0;
+			vertices = NULL;
+			numMeshes = 0;
+			meshes = NULL;
+		}
+
+		BSPFace::BSPFace(BSPTexture* tex, BSPEffect* eff, BSPVertex** ver, int nv, int const* mesh,
+						int nm, BSPLightmap* lm, int const* lmst, int const* lmsi, const Vector3 norm)
+		{
+			setTexture(tex);
+			setEffect(eff);
+			numVertices = 0;
+			vertices = NULL;
+			numMeshes = 0;
+			meshes = NULL;
+			setVertices(ver, nv);
+			setMeshes(mesh, nm);
+			setLighMap(lm, lmst, lmsi);
+			setNormal(norm);
+		}
+
+		BSPFace::BSPFace(const BSPFace &f){
+			*this = f;
+		}
+
+		BSPFace::~BSPFace(){
+			if(vertices != NULL)
+				delete[] vertices;
+			if(meshes != NULL)
+				delete[] meshes;
+		}
+
+		BSPFace& BSPFace::operator=(const BSPFace &f){
+			setTexture(f.texture);
+			setEffect(f.effect);
+			numVertices = 0;
+			vertices = NULL;
+			numMeshes = 0;
+			meshes = NULL;
+			setVertices(f.vertices, f.numVertices);
+			setMeshes(f.meshes, f.numMeshes);
+			setLighMap(f.lightmap, f.lightmapStart, f.lightmapSize);
+			setNormal(f.normal);
+			return *this;
+		}
+
+		void BSPFace::setTexture(BSPTexture* t){
+			texture = t;
+		}
+
+		void BSPFace::setEffect(BSPEffect* e){
+			effect = e;
+		}
+
+		void BSPFace::setVertices(BSPVertex** v, int n){
+			if(vertices != NULL){
+				delete[] vertices;
+				vertices = NULL;
+				numVertices = 0;
+			}
+			if(v == NULL || n == 0)
+				return;
+			numVertices = n;
+			vertices = new BSPVertex*[n];
+			memcpy(vertices, v, sizeof(v));
+		}
+
+		void BSPFace::setMeshes(int const* m, int n){
+			if(meshes != NULL){
+				delete[] meshes;
+				meshes = NULL;
+				numMeshes = 0;
+			}
+			if(m == NULL || n == 0)
+				return;
+			numMeshes = n;
+			meshes = new int[n];
+			memcpy(meshes, m, sizeof(m));
+		}
+
+		void BSPFace::setLighMap(BSPLightmap* lm, int const* lmst, int const* lmsi){
+			lightmap = lm;
+			if(lm == NULL)
+				return;
+			memcpy(lightmapStart, lmst, sizeof(lmst));
+			memcpy(lightmapSize, lmsi, sizeof(lmsi));
+		}
+
+		void BSPFace::setNormal(const Vector3 n){
+			normal = n;
+		}
+
+		BSPTexture* BSPFace::getTexture() const{
+			return texture;
+		}
+
+		BSPEffect* BSPFace::getEffect() const{
+			return effect;
+		}
+
+		BSPLightmap* BSPFace::getLightmap() const{
+			return lightmap;
+		}
+
+		Vector3 BSPFace::getNormal() const{
+			return normal;
+		}
+
+/////////////////////////// BSPPolygon ///////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+		BSPPolygon::BSPPolygon() : BSPFace(){}
+
+		BSPPolygon::BSPPolygon(BSPTexture* tex, BSPEffect* eff, BSPVertex** ver, int nv, int const* mesh, int nm,
+								BSPLightmap* lm, int const* lmst, int const* lmsi, Vector3 norm, Vector3 lmo, Vector3 lms, Vector3 lmt)
+								: BSPFace(tex, eff, ver, nv, mesh, nm, lm, lmst, lmsi, norm)
+		{
+			setLightmapOrigin(lmo);
+			setLightmapS(lms);
+			setLightmapT(lmt);
+		}
+
+		BSPPolygon::BSPPolygon(const BSPPolygon &p){
+			*this = p;
+		}
+
+		BSPPolygon& BSPPolygon::operator=(const BSPPolygon &p){
+			*((BSPFace*)this) = BSPFace::operator=(*((BSPFace*)&p));
+			setLightmapOrigin(p.lightmapOrigin);
+			setLightmapS(p.lightmapS);
+			setLightmapT(p.lightmapT);
+			return *this;
+		}
+
+		void BSPPolygon::setLightmapOrigin(Vector3 o){
+			lightmapOrigin = o;
+		}
+
+		void BSPPolygon::setLightmapS(Vector3 s){
+			lightmapS = s;
+		}
+
+		void BSPPolygon::setLightmapT(Vector3 t){
+			lightmapT = t;
+		}
+
+		Vector3 BSPPolygon::getLightmapOrigin() const{
+			return lightmapOrigin;
+		}
+
+		Vector3 BSPPolygon::getLightmapS() const {
+			return lightmapS;
+		}
+
+		Vector3 BSPPolygon::getLightmapT() const {
+			return lightmapT;
+		}
+
+		void BSPPolygon::draw() const{
+			//TODO
+		}
+
+/////////////////////////// BSPPatch ////////////////////////////////
+/////////////////////////////////////////////////////////////////////
+
+		BSPPatch::BSPPatch() : BSPFace() {}
+
+		BSPPatch::BSPPatch(BSPTexture* tex, BSPEffect* eff, BSPVertex** ver, int nv, BSPLightmap* lm, int const* lmst, int const* lmsi,
+							Vector3 norm, int const* dim) : BSPFace(tex, eff, ver, nv, NULL, 0, lm, lmst, lmsi, norm)
+		{
+			setDimension(dim);
+		}
+
+		BSPPatch::BSPPatch(const BSPPatch &p){
+			*this = p;
+		}
+
+		BSPPatch& BSPPatch::operator=(const BSPPatch &p){
+			*((BSPFace*)this) = BSPFace::operator=(*((BSPFace*)&p));	
+			setDimension(p.dimension);
+			return *this;
+		}
+
+		void BSPPatch::setDimension(int const* d){
+			if(d == NULL){
+				dimension[0] = 0;
+				dimension[1] = 0;
+				return;
+			}
+			memcpy(dimension, d, sizeof(dimension));
+		}
+
+		int const* BSPPatch::getDimension() const{
+			return dimension;
+		}
+
+		void BSPPatch::draw() const{
+			//TODO
+		}
+
+/////////////////// BSPMesh //////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+
+		BSPMesh::BSPMesh() : BSPFace() {}
+
+		BSPMesh::BSPMesh(BSPTexture* tex, BSPEffect* eff, BSPVertex** ver, int nv, int const* mesh, int nm, 
+						BSPLightmap* lm, int const* lmst, int const* lmsi, Vector3 norm) : BSPFace(tex, eff, ver, nv, mesh, nm, lm, lmst,lmsi, norm) {}
+
+		BSPMesh::BSPMesh(const BSPMesh &m){
+			*this = m;
+		}
+
+		BSPMesh& BSPMesh::operator=(const BSPMesh &m){
+			*((BSPFace*)this) = BSPFace::operator=(*((BSPFace*)&m));
+			return *this;
+		}
+
+		void BSPMesh::draw() const{
+			//TODO
+		}
+
+/////////////////// BSPBillboard ////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
+
+		BSPBillboard::BSPBillboard() : BSPFace() {}
+
+		BSPBillboard::BSPBillboard(BSPTexture* tex, BSPEffect* eff, BSPVertex* ver, BSPLightmap* lm, 
+									int const* lmst, int const* lmsi, Vector3 norm) : BSPFace(tex, eff, NULL, 0, NULL, 0, lm, lmst, lmsi, norm)
+		{
+			BSPVertex* v[1] = {ver};
+			setVertices(v, 1);
+		}
+
+		BSPBillboard::BSPBillboard(const BSPBillboard &b){
+			*this = b;
+		}
+
+		BSPBillboard& BSPBillboard::operator=(const BSPBillboard &b){
+			*((BSPFace*)this) = BSPFace::operator=(*((BSPFace*)&b));
+			return *this;
+		}
+
+
+		void BSPBillboard::draw() const{
+			//TODO
+		}
+
+/////////////////// BSPVisdata ////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+
+		void BSPVisdata::setVisdata(BSPVisdata** vd, int size, int num = -1){
+			if(num == -1)
+				num = size;
+			if(visdata == NULL){
+				delete[] visdata;
+				visdata = NULL;
+				numVisdata = 0;
+				visSize = 0;
+			}
+			if(vd == NULL || size == 0)
+				return;
+			visSize = size;
+			numVisdata = num;
+			visdata = new BSPVisdata*[size];
+			for(int i=0; i<num; i++)
+				visdata[i] = vd[i];
+		}
+
+		BSPVisdata::BSPVisdata(){
+			numVisdata = 0;
+			visSize = 0;
+			visdata = NULL;
+			lit = leaves.begin();
+		}
+
+		BSPVisdata::BSPVisdata(int n){
+			numVisdata = 0;
+			visSize = 0;
+			visdata = NULL;
+			resetVisData(n);
+			lit = leaves.begin();
+		}
+
+		BSPVisdata::BSPVisdata(BSPVisdata** vd, int n ){
+			numVisdata = 0;
+			visSize = 0;
+			visdata = NULL;
+			setVisdata(vd, n);
+			lit = leaves.begin();
+		}
+
+		BSPVisdata::BSPVisdata(const BSPVisdata &v){
+			numVisdata = 0;
+			visSize = 0;
+			visdata = NULL;
+			*this = v;
+		}
+
+		BSPVisdata::~BSPVisdata(){
+			if(visdata != NULL)
+				delete[] visdata;
+		}
+
+		BSPVisdata& BSPVisdata::operator=(const BSPVisdata &v){
+			setVisdata(v.visdata, v.visSize, v.numVisdata);
+			leaves = v.leaves;
+			lit = leaves.end();
+			return *this;
+		}
+
+		void BSPVisdata::resetVisData(int n){
+			if(visdata != NULL){
+				delete[] visdata;
+				visdata = NULL;
+				numVisdata = 0;
+				visSize = 0;
+			}
+			if(n == 0)
+				return;
+			numVisdata = 0;
+			visSize = n;
+			visdata = new BSPVisdata*[n];
+		}
+
+		void BSPVisdata::addVisdata(BSPVisdata* vd){
+			if(numVisdata >= visSize)
+				throw SiegeException("BSPVisdata cannont be added!");
+			visdata[numVisdata] = vd;
+			numVisdata++;
+		}
+
+		void BSPVisdata::addLeaf(BSPLeaf* l){
+			leaves.insert(lit, l);
+		}
+
+		int BSPVisdata::getNumberOfVisdata() const{
+			return numVisdata;
+		}
+
+		BSPVisdata* BSPVisdata::getVisData(int i) const{
+			if(i<0 || i>=numVisdata)
+				throw BadIndexException("Bad index in BSPVisdata while gettint BSPVisdata!");
+			return visdata[i];
+		}
+
+		int BSPVisdata::getNumberOfLeaves() const{
+			return leaves.size();
+		}
+
+		BSPLeaf* BSPVisdata::getLeaf(int i) const{
+			if(i<0 || i>=((unsigned int)leaves.size()))
+				throw BadIndexException("Bad index in BSPVisdata while gettint BSPLeaf!");
+			return leaves[i];
+		}
+
+/////////////////////////////// BSPTreePoint ////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////
+
+		BSPTreePoint::BSPTreePoint(){}
+
+		bool BSPTreePoint::isNode(){
+			return node;
+		}
+
+////////////////////////////// BSPLeaf /////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
 
 	}; //gunit
 }; //siege

@@ -94,5 +94,25 @@ namespace siege{
 			z = v.getZ();
 			return *this;
 		}
+
+		bool Vector3::operator==(Vector3 v) const{
+			return x == v.x && y == v.y && z == v.z;
+		}
+
+		bool Vector3::operator<(Vector3 v) const{
+			return x < v.x && y < v.y && z < v.z;
+		}
+
+		bool Vector3::operator>(Vector3 v) const{
+			return x > v.x && y > v.y && z > v.z;
+		}
+
+		bool Vector3::operator<=(Vector3 v) const{
+			return *this < v || *this == v;
+		}
+
+		bool Vector3::operator>=(Vector3 v) const{
+			return *this > v || *this == v;
+		}
 	};//math
 };//siege

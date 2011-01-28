@@ -649,12 +649,137 @@ namespace siege{
 
 		BSPTreePoint::BSPTreePoint(){}
 
+		BSPTreePoint::BSPTreePoint(scene::BoundingBox b){
+			setBoundingBox(b);
+		}
+
+		void BSPTreePoint::setBoundingBox(scene::BoundingBox b){
+			box = b;
+		}
+
 		bool BSPTreePoint::isNode(){
 			return node;
 		}
 
+		bool BSPTreePoint::isInside(Vector3 v){
+			return box.isInside(v);
+		}
+
+		scene::BoundingBox BSPTreePoint::getBoundingBox() const{
+			return box;
+		}
+
 ////////////////////////////// BSPLeaf /////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
+
+		BSPLeaf::BSPLeaf(){
+			numFaces = 0;
+			faces = NULL;
+			numBrushes = 0;
+			brushes = NULL;
+		}
+
+		BSPLeaf::BSPLeaf(BSPVisdata* vd, int ar, BSPFace** fc, int nf, BSPBrush** bs, int ns, scene::BoundingBox b) : BSPTreePoint(b){
+			setCluster(vd);
+			setArea(ar);
+			numFaces = 0;
+			faces = NULL;
+			numBrushes = 0;
+			brushes = NULL;
+			setFaces(fc, nf);
+			setBrushes(bs, ns);
+		}
+
+		BSPLeaf::BSPLeaf(const BSPLeaf &l){
+			*this = l;
+		}
+
+		BSPLeaf::~BSPLeaf(){
+			if(faces == NULL)
+				delete[] faces;
+			if(brushes == NULL)
+				delete[] brushes;
+		}
+
+		BSPLeaf& BSPLeaf::operator=(const BSPLeaf &l){
+			*((BSPTreePoint*)this) = *(BSPTreePoint*)&l;
+			numFaces = 0;
+			faces = NULL;
+			numBrushes = 0;
+			brushes = NULL;
+			setCluster(l.cluster);
+			setArea(l.area);
+			setFaces(l.faces, l.numFaces);
+			setBrushes(l.brushes, l.numBrushes);
+			return *this;
+		}
+
+		void BSPLeaf::setCluster(BSPVisdata* vd){
+			cluster = vd;
+		}
+
+		void BSPLeaf::setArea(int a){
+			area = a;
+		}
+
+		void BSPLeaf::setFaces(BSPFace** f, int n){
+			if(faces == NULL){
+				delete[] faces;
+				faces = NULL;
+				numFaces = 0;
+			}
+			if(f == NULL || n == 0)
+				return;
+			numFaces = n;
+			faces = new BSPFace*[n];
+			memcpy(faces, f, sizeof(f));
+		}
+
+		void BSPLeaf::setBrushes(BSPBrush** b, int n){
+			if(brushes == NULL){
+				delete[] brushes;
+				brushes = NULL;
+				numBrushes = 0;
+			}
+			if(b == NULL || n == 0)
+				return;
+			numBrushes = n;
+			brushes = new BSPBrush*[n];
+			memcpy(brushes, b, sizeof(b));
+		}
+
+		BSPVisdata* BSPLeaf::getCluster() const{
+			return cluster;
+		}
+
+		int BSPLeaf::getArea() const{
+			return area;
+		}
+
+		int BSPLeaf::getNumberOfFaces() const{
+			return numFaces;
+		}
+
+		BSPFace* BSPLeaf::getFace(int i) const{
+			if(i<0 || i>=numFaces)
+				throw BadIndexException("Bad index while getting BSPFace in BSPLeaf!");
+			return faces[i];
+		}
+
+		int BSPLeaf::getNumberOfBrushes() const{
+			return numBrushes;
+		}
+
+		BSPBrush* BSPLeaf::getBrush(int i) const{
+			if(i<0 || i>=numBrushes)
+				throw BadIndexException("Bad index while getting BSPBrush in BSPLeaf!");
+			return brushes[i];
+		}
+
+		void BSPLeaf::draw() const{
+			for(int i=0; i<numFaces; i++)
+				faces[i]->draw();
+		}
 
 	}; //gunit
 }; //siege

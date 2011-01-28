@@ -30,6 +30,11 @@ namespace siege{
 				friend  std::ostream& operator<<(std::ostream&, const Vector3&);
 				Vector4 operator*(const Matrix4 &) const;
 				Vector3& operator=(const Vector4 &);
+				bool operator==(Vector3) const;
+				bool operator<(Vector3) const;
+				bool operator>(Vector3) const;
+				bool operator<=(Vector3) const;
+				bool operator>=(Vector3) const;
 		};//Vector3
 
 	};//math

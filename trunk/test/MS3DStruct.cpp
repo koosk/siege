@@ -71,7 +71,7 @@ int main(){
 	MS3DGroup* gr = new MS3DGroup();
 	delete gr;
 
-	char* name = "adsasdas";	
+	char* name = (char*)"adsasdas";	
 	MS3DGroup* g = new MS3DGroup(1, name, 3, w, 1);
 	delete g;
 

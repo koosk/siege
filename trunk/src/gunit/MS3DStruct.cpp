@@ -449,7 +449,7 @@ namespace siege{
 			vector = v;
 		}
 
-		Vector3& MS3DKeyFrame::interpolate(MS3DKeyFrame& kf, float t){
+		Vector3 MS3DKeyFrame::interpolate(MS3DKeyFrame& kf, float t){
 			if(time > kf.time)
 				throw MS3DException("The given keyframe's time must be bigger!");
 			if(t < time || t > kf.time)

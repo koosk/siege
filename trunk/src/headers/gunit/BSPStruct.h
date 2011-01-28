@@ -148,30 +148,31 @@ namespace siege{
 				BSPEffect* effect;
 				int numVertices;
 				BSPVertex** vertices;
-				int firstMeshvert;
-				int numMeshVertices;
+				int numMeshes;
+				int* meshes;
 				BSPLightmap* lightmap;
 				int lightmapStart[2];
 				int lightmapSize[2];
-				Vector3 Normal;
+				Vector3 normal;
 			public:
 				BSPFace();
-				BSPFace(BSPTexture const*, BSPEffect const*, BSPVertex* const*, int, int, int, BSPLightmap const*, int const*, int const*, Vector3);
+				BSPFace(BSPTexture*, BSPEffect*, BSPVertex**, int, int const*, int, BSPLightmap*, int const*, int const*, const Vector3);
 				BSPFace(const BSPFace&);
-				~BSPFace();
+				virtual ~BSPFace();
 				BSPFace& operator=(const BSPFace&);
-				void setTexture(BSPTexture const*);
-				void setEffect(BSPEffect const*);
-				void setVertices(BSPVertex* const*, int);
-				void setMeshes(int, int);
-				void setLighMap(BSPLightmap const*, int const*, int const*);
+				void setTexture(BSPTexture*);
+				void setEffect(BSPEffect*);
+				void setVertices(BSPVertex**, int);
+				void setMeshes(int const*, int);
+				void setLighMap(BSPLightmap*, int const*, int const*);
 				void setNormal(const Vector3);
-				//BSPTexture* getTexture() const;
-				BSPEffect getEffect() const;
+				BSPTexture* getTexture() const;
+				BSPEffect* getEffect() const;
 				/*int getNumberOfVertices() const;
 				BSPVertex const* getVertex(int) const;
 				hasonloan a meshekre sem valoszinu h fog kelleni*/
-				//BSPLightmap* getLightmap() const;
+				BSPLightmap* getLightmap() const;
+				Vector3 getNormal() const;
 				virtual void draw() const = 0;
 		}; //BSPFace
 
@@ -181,7 +182,8 @@ namespace siege{
 				Vector3 lightmapS;
 				Vector3 lightmapT;
 			public:
-				BSPPolygon(BSPTexture const*, BSPEffect const*, BSPVertex* const*, int, int, int, BSPLightmap const*, 
+				BSPPolygon();
+				BSPPolygon(BSPTexture*, BSPEffect*, BSPVertex**, int, int const*, int, BSPLightmap*, 
 							int const*, int const*, Vector3, Vector3, Vector3, Vector3);
 				BSPPolygon(const BSPPolygon&);
 				BSPPolygon& operator=(const BSPPolygon&);
@@ -191,13 +193,15 @@ namespace siege{
 				Vector3 getLightmapS() const;
 				Vector3 getLightmapT() const;
 				Vector3 getLightmapOrigin() const;
+				void draw() const;
 		}; //BSPPolygon
 
 		class BSPPatch : public BSPFace{
 			private:
 				int dimension[2];
 			public:
-				BSPPatch(BSPTexture const*, BSPEffect const*, BSPVertex* const*, int, int, int, BSPLightmap const*, int const*, int const*, Vector3, int const*);
+				BSPPatch();
+				BSPPatch(BSPTexture*, BSPEffect*, BSPVertex**,int, BSPLightmap*, int const*, int const*, Vector3, int const*);
 				BSPPatch(const BSPPatch&);
 				BSPPatch& operator=(const BSPPatch&);
 				void setDimension(int const*);
@@ -207,7 +211,8 @@ namespace siege{
 
 		class BSPMesh : public BSPFace{
 			public:
-				BSPMesh(BSPTexture const*, BSPEffect const*, BSPVertex* const*, int, int, int, BSPLightmap const*, int const*, int const*, Vector3);
+				BSPMesh();
+				BSPMesh(BSPTexture*, BSPEffect*, BSPVertex**, int, int const*, int, BSPLightmap*, int const*, int const*, Vector3);
 				BSPMesh(const BSPMesh&);
 				BSPMesh& operator=(const BSPMesh&);
 				void draw() const;
@@ -215,7 +220,8 @@ namespace siege{
 
 		class BSPBillboard : public BSPFace{
 			public:
-				BSPBillboard(BSPTexture const*, BSPEffect const*, BSPVertex* const*, int, int, int, BSPLightmap const*, int const*, int const*, Vector3);
+				BSPBillboard();
+				BSPBillboard(BSPTexture*, BSPEffect*, BSPVertex*, BSPLightmap*, int const*, int const*, Vector3);
 				BSPBillboard(const BSPBillboard&);
 				BSPBillboard& operator=(const BSPBillboard&);
 				void draw() const;
@@ -228,25 +234,29 @@ namespace siege{
 		class BSPVisdata{
 			private:
 				int numVisdata;
+				int visSize;
 				BSPVisdata** visdata;
 				std::vector<BSPLeaf*> leaves;
+				std::vector<BSPLeaf*>::iterator lit;
 			public:
 				BSPVisdata();
 				BSPVisdata(int);
-				BSPVisdata(BSPVisdata* const*, int);
+				BSPVisdata(BSPVisdata**, int);
 				BSPVisdata(const BSPVisdata&);
 				~BSPVisdata();
 				BSPVisdata& operator=(const BSPVisdata&);
 				void resetVisData(int);
-				void addVisdata(BSPVisdata const*);
-				void setNumberofVisdata(BSPVisdata* const*, int);
-				void addLeaf(BSPLeaf const*);
+				void addVisdata(BSPVisdata*);
+				void setVisdata(BSPVisdata**, int, int);
+				void addLeaf(BSPLeaf*);
 				int getNumberOfVisdata() const;
 				BSPVisdata* getVisData(int) const;
 				int getNumberOfLeaves() const;
 				BSPLeaf* getLeaf(int) const;
 		}; //BSPVisdata
-
+		
+///////////// BSPTreePoint /////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 		class BSPTreePoint{
 			protected:
 				bool node;
@@ -287,6 +297,7 @@ namespace siege{
 				BSPFace* getFace(int) const;
 				int getNumberOfBrushes() const;
 				BSPBrush* getBrush(int) const;
+				void draw() const;
 		}; //BSPLeaf
 
 ///////////// BSPNode ///////////////////////////////////////////////////////////

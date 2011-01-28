@@ -165,7 +165,7 @@ namespace siege{
 				Vector3 operator()(); //getVector
 				void setTime(float);
 				void setVector(Vector3&);
-				Vector3& interpolate(MS3DKeyFrame&, float);
+				Vector3 interpolate(MS3DKeyFrame&, float);
 		}; //MS3DKeyFrame
 
 ///////////// MS3DJoint //////////////////////////////////////

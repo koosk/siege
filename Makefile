@@ -71,6 +71,10 @@ $(bb): $(SRC)/scene/BoundingBox.cpp $(HEADER)/scene/BoundingBox.h
 bsp = $(BUILD)/gunit/BSPStruct.o
 $(bsp): $(SRC)/gunit/BSPStruct.cpp $(HEADER)/gunit/BSPStruct.h $(v3f) $(sie) $(bie) $(utils) $(bb)
 	$(GPP) -o $@ -c $<
+	
+camera = $(BUILD)/scene/Camera.o
+$(camera): $(SRC)/scene/Camera.cpp $(Camera_o) $(HEADER)/scene/Camera.h $(v3f) $(v4f) $(mtx16f)
+	$(GPP) -o $(camera) -c $<
 
 compile: build 
 
@@ -100,7 +104,7 @@ mattest: $(TEST)/Rottest.cpp $(msdata) $(msstruct) $(v3f) $(v4f) $(bie) $(mse) $
 	$(tmat)
 	
 prbfile = $(BUILD)/prb
-prb: $(TEST)/prb.cpp $(msdata) $(msstruct) $(v3f) $(v4f) $(bie) $(mse) $(util) $(sie) $(mtx16f) $(mathex)
+prb: $(TEST)/prb.cpp $(msdata) $(msstruct) $(v3f) $(v4f) $(bie) $(mse) $(util) $(sie) $(mtx16f) $(mathex) $(model) $(msmodel) $(camera)
 	$(GPP) -o $(prbfile) $+
 	$(prbfile)
 

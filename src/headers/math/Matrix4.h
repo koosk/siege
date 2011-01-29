@@ -39,6 +39,8 @@ namespace siege{
 				Matrix4 operator-=(const Matrix4 &);
 				float getNormaF();
 				Matrix4 normalize();
+				static Matrix4 identity();
+				Matrix4& loadIdentity();
 		};
 	};
 };

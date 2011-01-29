@@ -114,5 +114,12 @@ namespace siege{
 		bool Vector3::operator>=(Vector3 v) const{
 			return *this > v || *this == v;
 		}
+		
+		void Vector3::normalize(){
+			float d = x*x+y*y+z*z;
+			x = x/d;
+			y = y/d;
+			z = z/d;
+		}
 	};//math
 };//siege

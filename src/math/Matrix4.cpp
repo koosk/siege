@@ -381,6 +381,19 @@ namespace siege{
 				m.data[i] = m.data[i]/norm;
 			return m;
 		}
+		
+		Matrix4 Matrix4::identity(){
+			return Matrix4();
+		}
+
+		Matrix4& Matrix4::loadIdentity(){
+			static float id[16] = {1.,0.,0.,0.,
+			                       0.,1.,0.,0.,
+			                       0.,0.,1.,0.,
+			                       0.,0.,0.,1.};
+			memcpy(data,id,16*sizeof(float));
+			return *this;
+		}
 
 	};//math
 };//siege

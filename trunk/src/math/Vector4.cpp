@@ -61,5 +61,13 @@ namespace siege{
 			out << "Vector4(" << v.getX() << ", " << v.getY() << ", " << v.getZ() << ", " << v.getA() << ")";
 			return out;
 		}
+
+		void Vector4::normalize(){
+			float d = getX()*getX() + getY()*getY() + getZ()*getZ() + a*a;
+			setX(getX()/d);
+			setY(getY()/d);
+			setZ(getZ()/d);
+			a = a/d;
+		}
 	}; //math
 }; //siege

@@ -21,7 +21,6 @@ namespace siege{
 				float* get(float*);
 				void set(float*);
 				friend std::ostream& siege::math::operator<<(std::ostream&, const Vector4&);
-				virtual void normalize();
 		}; //Vector4
 
 	};//math

@@ -83,12 +83,17 @@ namespace siege{
 			}
 		}else if(direction==LEAN_LEFT || direction==LEAN_RIGHT){
 	//!!!!!!!!!!!!!!! itt valami nem jo
-			u = lookAt.getX() - pos.getX();
-			v = lookAt.getY() - pos.getY();
-			w = lookAt.getZ() - pos.getZ();
-			a = pos.getX();
+			Vector3 tmpv( lookAt.getX() - pos.getX(), lookAt.getY() - pos.getY(), lookAt.getZ() - pos.getZ());
+			//tmpv.normalize();
+			u = tmpv.getX();
+			v = tmpv.getY();
+			w = tmpv.getZ();
+			/*a = pos.getX();
 			b = pos.getY();
-			c = pos.getZ();
+			c = pos.getZ();*/
+			a = 0;
+			b = 0;
+			c = 0;
 			x = up.getX();
 			y = up.getY();
 			z = up.getZ();
@@ -117,6 +122,7 @@ namespace siege{
 			lookAt.setX(resX);
 			lookAt.setY(resY);
 			lookAt.setZ(resZ);
+			cout << lookAt << endl;
 		}else if(direction==LEAN_LEFT || direction==LEAN_RIGHT){
 			cout << up << endl;
 			up.setX(resX);

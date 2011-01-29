@@ -262,6 +262,7 @@ namespace siege{
 				BSPVisdata* getVisData(int) const;
 				int getNumberOfLeaves() const;
 				BSPLeaf* getLeaf(int) const;
+				void draw() const;
 		}; //BSPVisdata
 		
 ///////////// BSPTreePoint /////////////////////////////////////////////////////
@@ -318,10 +319,10 @@ namespace siege{
 				BSPTreePoint* right;
 			public:
 				BSPNode();
-				BSPNode(BSPPlane const*, BSPTreePoint const*, BSPTreePoint const*, scene::BoundingBox);
-				void setPlane(BSPPlane const*);
-				void setLeftChild(BSPTreePoint const*);
-				void setRightChild(BSPTreePoint const*);
+				BSPNode(BSPPlane*, BSPTreePoint*, BSPTreePoint*, scene::BoundingBox);
+				void setPlane(BSPPlane*);
+				void setLeftChild(BSPTreePoint*);
+				void setRightChild(BSPTreePoint*);
 				BSPPlane* getPlane() const;
 				BSPTreePoint* getLeftChild() const; 
 				BSPTreePoint* getRightChild() const; 

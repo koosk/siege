@@ -644,6 +644,11 @@ namespace siege{
 			return leaves[i];
 		}
 
+		void BSPVisdata::draw() const{
+			for(int i=0; i<((unsigned int)leaves.size()); i++)
+				leaves[i]->draw();
+		}
+
 /////////////////////////////// BSPTreePoint ////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -779,6 +784,46 @@ namespace siege{
 		void BSPLeaf::draw() const{
 			for(int i=0; i<numFaces; i++)
 				faces[i]->draw();
+		}
+
+///////////////////////// BSPNode /////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+
+		BSPNode::BSPNode(){}
+
+		BSPNode::BSPNode(BSPPlane* pl, BSPTreePoint* l, BSPTreePoint* r, scene::BoundingBox bb) : BSPTreePoint(bb){
+			setPlane(pl);
+			setLeftChild(l);
+			setRightChild(r);
+		}
+
+		void BSPNode::setPlane(BSPPlane* p){
+			plane = p;
+		}
+
+		void BSPNode::setLeftChild(BSPTreePoint* c){
+			left = c;
+		}
+
+		void BSPNode::setRightChild(BSPTreePoint* c){
+			right = c;
+		}
+
+		BSPPlane* BSPNode::getPlane() const{
+			return plane;
+		}
+
+		BSPTreePoint* BSPNode::getLeftChild() const{
+			return left;
+		}
+
+		BSPTreePoint* BSPNode::getRightChild() const{
+			return right;
+		}
+
+		void BSPNode::draw() const{
+			left->draw();
+			right->draw();
 		}
 
 	}; //gunit

@@ -10,9 +10,12 @@ using namespace siege::gunit;
 
 GLuint width = 800;
 GLuint height = 800;
-float trans = -3000.0;
-float rotfact;
+float rotfact1;
+float rotfact2;
+float rotfact3;
 Vector3 cam(0,0,0);
+Vector3 pos(0,0,0);
+Vector3 rot(0,0,0);
 
 BSPMap map;
  
@@ -27,10 +30,16 @@ void endProgram(int code) {
 void handleKeys(SDL_keysym* keysym, bool state) {
     if(state)switch(keysym->sym) {
         case SDLK_ESCAPE:    endProgram(0); break;
-        case SDLK_DOWN:    trans -= 100; break;
-        case SDLK_UP:    trans += 100; break;
-        case SDLK_RIGHT:    rotfact += 1; break;
-        case SDLK_LEFT:    rotfact -= 1; break;
+        case SDLK_DOWN:    rot[0] += 1; break;
+        case SDLK_UP:    rot[0] -= 1; break;
+        case SDLK_RIGHT:    rot[1] += 1; break;
+        case SDLK_LEFT:    rot[1] -= 1; break;
+        case SDLK_KP8:    pos[1] -= 50; break;
+        case SDLK_KP2:    pos[1] += 50; break;
+        case SDLK_KP4:    pos[0] -= 50; break;
+        case SDLK_KP6:    pos[0] += 50; break;
+        case SDLK_KP7:    pos[2] += 50; break;
+        case SDLK_KP9:    pos[2] -= 50; break;
         case SDLK_w:    cam[1] += 50; break;
         case SDLK_s:    cam[1] -= 50; break;
         case SDLK_d:    cam[0] -= 50; break;
@@ -56,17 +65,19 @@ void processEvents() {
 void mainLoop() {
 
 
-	float f1[3];
-	float f2[3];
-	float f3[3];
 
    	while(true) {
         processEvents();
  
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         glLoadIdentity();
-		glTranslatef(0.0, 0.0, trans);
-		glRotatef(rotfact, 0,1,0);
+		glRotatef(rot[0], 1, 0, 0);
+		glRotatef(rot[1], 0, 1, 0);
+		glRotatef(rot[2], 0, 0, 1);
+		glTranslatef(pos[0], pos[1], pos[2]);
+		float fl[3];
+		pos.get(fl);
+		glLightfv(GL_LIGHT1, GL_POSITION, fl);
 		Vector3 v1 = cam;
 		v1[0] -= 100;
 		Vector3 v2 = cam;
@@ -74,11 +85,20 @@ void mainLoop() {
 		Vector3 v3 = cam;
 		v3[1] += 100;
 
+		Vector3 posneg = pos;
+		posneg[0] = -posneg[0];
+		posneg[1] = -posneg[1];
+		posneg[2] = -posneg[2];
+		map.draw(posneg);
 
-		map.draw();
+		//map.draw();
 
+		/*map.draw(cam);
 		glBegin(GL_TRIANGLES);
 			glColor3f(1, 0, 0);
+			float f1[3];
+			float f2[3];
+			float f3[3];
 			v1.get(f1);
 			v2.get(f2);
 			v3.get(f3);
@@ -86,7 +106,7 @@ void mainLoop() {
 			glVertex3fv(f2);
 			glVertex3fv(f3);
 
-		glEnd();
+		glEnd();*/
 
         SDL_GL_SwapBuffers();
 	}
@@ -122,7 +142,10 @@ int main(int argc, char* argv[]) {
     SDL_SetVideoMode(width, height, 24, SDL_OPENGL | SDL_GL_DOUBLEBUFFER);
     setupOpengl();
 
-	map.load((char*)"data/map/maps/q3shw18.bsp");
+	//map.load((char*)"data/map/maps/q3shw18.bsp");
+	//map.load((char*)"data/map/maps/minirazz.bsp");
+	map.load((char*)"data/map/maps/artefacts1.bsp");
+	//map.load((char*)"data/map/maps/csq3sg1.bsp");
 
     mainLoop();
     return 0;

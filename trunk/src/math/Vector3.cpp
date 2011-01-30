@@ -122,6 +122,12 @@ namespace siege{
 			y = y/d;
 			z = z/d;
 		}
+
+		void Vector3::swapYZ(){
+			float f = y;
+			y = z;
+			z = f;
+		}
 		
 		Vector3 Vector3::operator-() const{
 			return Vector3(-x,-y,-z);

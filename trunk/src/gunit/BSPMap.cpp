@@ -189,6 +189,7 @@ namespace siege{
 			memcpy(pos, ptr, sizeof(pos));
 			ptr += sizeof(pos);
 			math::Vector3 position(pos);
+			position.swapYZ();
 			float sc[2];
 			memcpy(sc, ptr, sizeof(sc));
 			ptr += sizeof(sc);
@@ -198,6 +199,7 @@ namespace siege{
 			memcpy(pos, ptr, sizeof(pos));
 			ptr += sizeof(pos);
 			math::Vector3 norm(pos);
+			norm.swapYZ();
 			byte col[4];
 			memcpy(col, ptr, sizeof(col));
 			ptr += sizeof(col);
@@ -248,6 +250,7 @@ namespace siege{
 			memcpy(f, ptr, sizeof(f));
 			ptr += sizeof(f);
 			math::Vector3 norm(f);
+			norm.swapYZ();
 			float d;
 			memcpy(&d, ptr, sizeof(d));
 			ptr += sizeof(d);
@@ -451,13 +454,20 @@ namespace siege{
 			float lmo[3];
 			memcpy(lmo, ptr, sizeof(lmo));
 			ptr += sizeof(lmo);
+			math::Vector3 lmorig(lmo);
+			lmorig.swapYZ();
 			float lmv[2][3];
 			memcpy(lmv, ptr, sizeof(lmv));
 			ptr += sizeof(lmv);
+			math::Vector3 lms(lmv[0]);
+			lms.swapYZ();
+			math::Vector3 lmt(lmv[1]);
+			lmt.swapYZ();
 			float nor[3];
 			memcpy(nor, ptr, sizeof(nor));
 			ptr += sizeof(nor);
 			math::Vector3 normal(nor);
+			normal.swapYZ();
 			int dim[2];
 			memcpy(dim, ptr, sizeof(dim));
 			ptr += sizeof(dim);
@@ -469,8 +479,7 @@ namespace siege{
 			for(int k=0; k<nm; k++)
 				mesh[k] = meshverts[mi+k];
 			if(type == 1){ //polygon
-				faces[i] = new BSPPolygon(&textures[tex], &effects[eff], vert, nv, mesh, nm, &lightmaps[lmi], lmst, lmsi, normal, math::Vector3(lmo),
-										math::Vector3(lmv[0]), math::Vector3(lmv[1]));
+				faces[i] = new BSPPolygon(&textures[tex], &effects[eff], vert, nv, mesh, nm, &lightmaps[lmi], lmst, lmsi, normal, lmorig, lms, lmt);
 			}else if(type == 2){ //patch
 				faces[i] = new BSPPatch(&textures[tex], &effects[eff], vert, nv, &lightmaps[lmi], lmst, lmsi, normal, dim);
 			}else if(type == 3){ //mesh
@@ -542,10 +551,12 @@ namespace siege{
 			ptr += sizeof(tmpi);
 			float tmpf[3] = {tmpi[0], tmpi[1], tmpi[2]};
 			math::Vector3 min(tmpf);
+			min.swapYZ();
 			memcpy(tmpi, ptr, sizeof(tmpi));
 			ptr += sizeof(tmpi);
 			float tmpf2[3] = {tmpi[0], tmpi[1], tmpi[2]};
 			math::Vector3 max(tmpf2);
+			max.swapYZ();
 			int lf;
 			memcpy(&lf, ptr, sizeof(lf));
 			ptr += sizeof(lf);
@@ -601,10 +612,12 @@ namespace siege{
 			ptr += sizeof(tmp);
 			float f1[3] = {tmp[0], tmp[1], tmp[2]};
 			math::Vector3 min(f1);
+			min.swapYZ();
 			memcpy(tmp, ptr, sizeof(tmp));
 			ptr += sizeof(tmp);
 			float f2[3] = {tmp[0], tmp[1], tmp[2]};
 			math::Vector3 max(f2);
+			max.swapYZ();
 			BSPTreePoint* left;
 			if(ch[0] < 0)
 				left = &leaves[-(ch[0]+1)];
@@ -648,9 +661,12 @@ namespace siege{
 			else
 				t = n->getRightChild();
 		}
+		glColor3f(1,1,0);
+		t->getBoundingBox().draw();
 		BSPLeaf* l = (BSPLeaf*)t;
-		if(l->getCluster() == NULL)
+		if(l->getCluster() == NULL){
 			l->draw();
+		}
 		else
 			l->getCluster()->drawAllVisible();
 	}

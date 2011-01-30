@@ -1,5 +1,6 @@
 #include"scene/BoundingBox.h"
 #include"BadIndexException.h"
+#include<GL/gl.h>
 
 namespace siege{
 	namespace scene{
@@ -30,7 +31,39 @@ namespace siege{
 		}
 
 		void BoundingBox::draw() const{
-			//TODO
+			math::Vector3 v1 = position[0];
+			math::Vector3 v2 = position[1];
+			glBegin(GL_LINES);
+				glVertex3f(v1[0], v1[1], v1[2]);	
+				glVertex3f(v2[0], v1[1], v1[2]);	
+				glVertex3f(v1[0], v1[1], v1[2]);	
+				glVertex3f(v1[0], v1[1], v2[2]);	
+				glVertex3f(v1[0], v1[1], v1[2]);	
+				glVertex3f(v1[0], v2[1], v1[2]);	
+
+				glVertex3f(v2[0], v2[1], v2[2]);	
+				glVertex3f(v1[0], v2[1], v2[2]);	
+				glVertex3f(v2[0], v2[1], v2[2]);	
+				glVertex3f(v2[0], v2[1], v1[2]);	
+				glVertex3f(v2[0], v2[1], v2[2]);	
+				glVertex3f(v2[0], v1[1], v2[2]);	
+
+				glVertex3f(v1[0], v2[1], v2[2]);	
+				glVertex3f(v1[0], v2[1], v1[2]);	
+				glVertex3f(v1[0], v2[1], v2[2]);	
+				glVertex3f(v1[0], v1[1], v2[2]);	
+
+				glVertex3f(v1[0], v2[1], v1[2]);	
+				glVertex3f(v2[0], v2[1], v1[2]);	
+
+				glVertex3f(v2[0], v1[1], v2[2]);	
+				glVertex3f(v1[0], v1[1], v2[2]);	
+				glVertex3f(v2[0], v1[1], v2[2]);	
+				glVertex3f(v2[0], v1[1], v1[2]);	
+
+				glVertex3f(v2[0], v1[1], v1[2]);	
+				glVertex3f(v2[0], v2[1], v1[2]);	
+			glEnd();
 		}
 
 	}; //scene

@@ -2,6 +2,7 @@
 #include "BadIndexException.h"
 #include "math/Vector4.h"
 #include "math/Matrix4.h"
+#include <cmath>
 
 namespace siege{
 	namespace math{
@@ -116,10 +117,14 @@ namespace siege{
 		}
 		
 		void Vector3::normalize(){
-			float d = x*x+y*y+z*z;
+			float d = sqrt(x*x+y*y+z*z);
 			x = x/d;
 			y = y/d;
 			z = z/d;
 		}
+		
+		Vector3 Vector3::operator-() const{
+			return Vector3(-x,-y,-z);
+		};
 	};//math
 };//siege

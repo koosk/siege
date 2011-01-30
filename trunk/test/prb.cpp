@@ -22,7 +22,9 @@ Vector3 mp(0,0,0);
 Vector3 posm2(-150, 0, -600);
 
 //Camera cam(25,800,0, 25,0,0, 1,0,0);
-Camera cam(-25,0,-600, 0,0,0, 0,1,0);
+Camera cam(0,0,600, 0,0,0, 0,1,0);
+//Camera cam(0,0,0, 0,0,-1, 0,1,0);
+//Camera cam(100,-100,0, -1,1,0, 1,1,0);
 
 Model* model;
 bool mode = true;
@@ -90,8 +92,10 @@ void mainLoop() {
 		//glTranslatef(0.0, transup, trans);
 		//glRotatef(rotfact, 0,1,0);
 		cam.refresh();
-		//cam.rotate(Camera::ROTATE_RIGHT);
-		cam.rotate(Camera::LEAN_LEFT);
+		cam.rotate(Camera::ROTATE_RIGHT);
+		//cam.rotate(Camera::ROTATE_LEFT);
+		//cam.rotate(Camera::LEAN_RIGHT);
+		//cam.rotate(Camera::LEAN_RIGHT);
 
 		if(mode)
 			model->draw();
@@ -191,21 +195,38 @@ int main(int argc, char* argv[]) {
 }
 
 /*int main(){
-	Matrix4 m;
-	Vector3 v(1,1,1);
+	Matrix4 Rxz;
+	Vector3 v(100,0,100);
+	Vector3 p(0,1,0);
+	//xz sikba forgatas
 	float d1 = (sqrt(v.getX()*v.getX() + v.getY()*v.getY()));
-	float d2 = (sqrt(v.getX()*v.getX() + v.getY()*v.getY()));
+	//float d2 = (sqrt(v.getX()*v.getX() + v.getY()*v.getY()));
 	float d = sqrt(v.getX()*v.getX()+v.getY()*v.getY()+v.getZ()*v.getZ());
-	m.set(0,v.getX()/d1);
-	m.set(1,v.getY()/d2);
-	m.set(4,-v.getY()/d2);
-	m.set(5,v.getX()/d1);
-	v = v*m;
+	Rxz.set(0,v.getX()/d1);
+	Rxz.set(1,v.getY()/d1);
+	Rxz.set(4,-v.getY()/d1);
+	Rxz.set(5,v.getX()/d1);
+	cout << Rxz << endl;
+	v = v*Rxz;
 	cout << v << endl;
-	m.loadIdentity();
-	m.set(0,v.getZ()/d);
-	m.set(2,-d1/d);
-	m.set(8,d1/d);
-	m.set(10,v.getZ()/d);
-	cout << v*m << endl;
+	p = p*Rxz;
+	//z tengelyre forgatas
+	//m.loadIdentity();
+	Matrix4 Rxz2z;
+	Rxz2z.set(0,v.getZ()/d);
+	Rxz2z.set(2,-d1/d);
+	Rxz2z.set(8,d1/d);
+	Rxz2z.set(10,v.getZ()/d);
+	v = v*Rxz2z;
+	cout << v << endl;
+	p = p*Rxz2z;
+	cout << p << endl;
+	//z tengelyen valo forgatas
+	Matrix4 Rz;
+	Vector3 rotv(0,0,1.57);
+	Rz = Rz.rotate(rotv);
+	p = p*Rz*Rxz2z.invert()*Rxz.invert();
+	cout << p << endl;
+	cout << v*Rz*Rxz2z.invert()*Rxz.invert() << endl;
+
 }*/

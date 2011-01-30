@@ -37,6 +37,7 @@ namespace siege{
 				bool operator>=(Vector3) const;
 				void normalize();
 				Vector3 operator-() const;
+				Vector3 crossProduct(const Vector3 &) const;
 		};//Vector3
 
 	};//math

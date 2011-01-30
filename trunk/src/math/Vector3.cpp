@@ -126,5 +126,9 @@ namespace siege{
 		Vector3 Vector3::operator-() const{
 			return Vector3(-x,-y,-z);
 		};
+
+		Vector3 Vector3::crossProduct(const Vector3 &v) const{
+			return Vector3(y*v.z-z*v.y, z*v.x-x*v.z, x*v.y-y*v.x);
+		}
 	};//math
 };//siege

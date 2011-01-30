@@ -109,7 +109,7 @@ namespace siege{
 					Matrix4 m = absMatrices[(word)v->getBoneId()];
 					try{
 						m = m.invert();
-					}catch(MathException &e){std::cout << e.what() << std::endl;}
+					}catch(MathException &e){std::cerr << e.what() << std::endl;}
 					Vector3 vec = v->operator()();
 					vec = vec * m;
 					v->setVertex(vec);

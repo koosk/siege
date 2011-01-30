@@ -8,6 +8,35 @@ namespace siege{
 
 		using namespace math;
 
+//////////////// BSPDir ///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+	
+		BSPDir::BSPDir(){
+			offset = 0;
+			length = 0;
+		}
+
+		BSPDir::BSPDir(unsigned int o, unsigned int l){
+			offset = o;
+			length = l;
+		}
+
+		void BSPDir::setOffset(unsigned int o){
+			offset = o;
+		}
+
+		void BSPDir::setLength(unsigned int l){
+			length = l;
+		}
+
+		unsigned int BSPDir::getOffset() const{
+			return offset;
+		}
+
+		unsigned int BSPDir::getLength() const{
+			return length;
+		}
+
 //////////////// BSPVertex ////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 
@@ -26,10 +55,10 @@ namespace siege{
 		}
 
 		void BSPVertex::setSurfaceTextureCoordinate(float const* f){
-			memcpy(texcoord[0], f, sizeof(f));	
+			memcpy(texcoord[0], f, sizeof(float)*2);	
 		}
 		void BSPVertex::setLightmapTextureCoordinate(float const* f){
-			memcpy(texcoord[1], f, sizeof(f));
+			memcpy(texcoord[1], f, sizeof(float)*2);
 		}
 
 		void BSPVertex::setNormal(const Vector3 n){
@@ -37,7 +66,7 @@ namespace siege{
 		}
 
 		void BSPVertex::setColor(byte const* c){
-				memcpy(color, c, sizeof(c));
+				memcpy(color, c, sizeof(byte)*4);
 		}
 
 		Vector3 BSPVertex::getPosition() const{
@@ -70,7 +99,7 @@ namespace siege{
 		}
 
 		void BSPLightmap::setValue(byte** const* v){
-			memcpy(value, v, sizeof(v));
+			memcpy(value, v, sizeof(value));
 		}
 
 		//TODO
@@ -110,14 +139,14 @@ namespace siege{
 		BSPTexture::BSPTexture(){
 			strcpy(path, "None");
 			texture = 0;
-			texquality = GL_LINEAR_MIPMAP_NEAREST;
+			texquality = DEFAULT_TEXTURE_QUALITY;
 		}
 
 		BSPTexture::BSPTexture( char const* path, const int flags, const int cont){
 			setPath(path);
 			setFlags(flags);
 			setContents(cont);
-			texquality = GL_LINEAR_MIPMAP_NEAREST;
+			texquality = DEFAULT_TEXTURE_QUALITY;
 		}
 
 		void BSPTexture::loadTexture(){
@@ -232,7 +261,7 @@ namespace siege{
 				return;
 			numbs = n;
 			brusSides = new BSPBrushSide*[n];
-			memcpy(brusSides, bs, sizeof(bs));
+			memcpy(brusSides, bs, sizeof(BSPBrushSide**)*n);
 		}
 
 		void BSPBrush::setTexture(BSPTexture* t){
@@ -352,7 +381,7 @@ namespace siege{
 				return;
 			numVertices = n;
 			vertices = new BSPVertex*[n];
-			memcpy(vertices, v, sizeof(v));
+			memcpy(vertices, v, sizeof(BSPVertex**)*n);
 		}
 
 		void BSPFace::setMeshes(int const* m, int n){
@@ -365,15 +394,15 @@ namespace siege{
 				return;
 			numMeshes = n;
 			meshes = new int[n];
-			memcpy(meshes, m, sizeof(m));
+			memcpy(meshes, m, sizeof(int)*n);
 		}
 
 		void BSPFace::setLighMap(BSPLightmap* lm, int const* lmst, int const* lmsi){
 			lightmap = lm;
 			if(lm == NULL)
 				return;
-			memcpy(lightmapStart, lmst, sizeof(lmst));
-			memcpy(lightmapSize, lmsi, sizeof(lmsi));
+			memcpy(lightmapStart, lmst, sizeof(lightmapStart));
+			memcpy(lightmapSize, lmsi, sizeof(lightmapSize));
 		}
 
 		void BSPFace::setNormal(const Vector3 n){
@@ -447,7 +476,17 @@ namespace siege{
 		}
 
 		void BSPPolygon::draw() const{
-			//TODO
+			glBegin(GL_TRIANGLES);
+				for(int i=0; i<numMeshes; i++){
+					const byte* col = vertices[meshes[i]]->getColor();
+					glColor3f(col[0], col[1], col[2]);
+					float f[3];
+					vertices[meshes[i]]->getNormal().get(f);
+					glNormal3fv(f);
+					vertices[meshes[i]]->getPosition().get(f);
+					glVertex3fv(f);
+				}
+			glEnd();
 		}
 
 /////////////////////////// BSPPatch ////////////////////////////////
@@ -595,7 +634,7 @@ namespace siege{
 		BSPVisdata& BSPVisdata::operator=(const BSPVisdata &v){
 			setVisdata(v.visdata, v.visSize, v.numVisdata);
 			leaves = v.leaves;
-			lit = leaves.end();
+			lit = leaves.begin();
 			return *this;
 		}
 
@@ -622,6 +661,7 @@ namespace siege{
 
 		void BSPVisdata::addLeaf(BSPLeaf* l){
 			leaves.insert(lit, l);
+			lit = leaves.begin();
 		}
 
 		int BSPVisdata::getNumberOfVisdata() const{
@@ -647,6 +687,11 @@ namespace siege{
 		void BSPVisdata::draw() const{
 			for(int i=0; i<((unsigned int)leaves.size()); i++)
 				leaves[i]->draw();
+		}
+
+		void BSPVisdata::drawAllVisible() const{
+			for(int i=0; i<numVisdata; i++)
+				visdata[i]->draw();
 		}
 
 /////////////////////////////// BSPTreePoint ////////////////////////////////////////////
@@ -678,6 +723,7 @@ namespace siege{
 ////////////////////////////////////////////////////////////////////////////////////////
 
 		BSPLeaf::BSPLeaf(){
+			node = false;
 			numFaces = 0;
 			faces = NULL;
 			numBrushes = 0;
@@ -685,6 +731,7 @@ namespace siege{
 		}
 
 		BSPLeaf::BSPLeaf(BSPVisdata* vd, int ar, BSPFace** fc, int nf, BSPBrush** bs, int ns, scene::BoundingBox b) : BSPTreePoint(b){
+			node = false;
 			setCluster(vd);
 			setArea(ar);
 			numFaces = 0;
@@ -708,6 +755,7 @@ namespace siege{
 
 		BSPLeaf& BSPLeaf::operator=(const BSPLeaf &l){
 			*((BSPTreePoint*)this) = *(BSPTreePoint*)&l;
+			node = false;
 			numFaces = 0;
 			faces = NULL;
 			numBrushes = 0;
@@ -721,6 +769,8 @@ namespace siege{
 
 		void BSPLeaf::setCluster(BSPVisdata* vd){
 			cluster = vd;
+			if(vd != NULL)
+				vd->addLeaf(this);
 		}
 
 		void BSPLeaf::setArea(int a){
@@ -737,7 +787,7 @@ namespace siege{
 				return;
 			numFaces = n;
 			faces = new BSPFace*[n];
-			memcpy(faces, f, sizeof(f));
+			memcpy(faces, f, sizeof(BSPFace**)*n);
 		}
 
 		void BSPLeaf::setBrushes(BSPBrush** b, int n){
@@ -750,7 +800,7 @@ namespace siege{
 				return;
 			numBrushes = n;
 			brushes = new BSPBrush*[n];
-			memcpy(brushes, b, sizeof(b));
+			memcpy(brushes, b, sizeof(BSPBrush**)*n);
 		}
 
 		BSPVisdata* BSPLeaf::getCluster() const{
@@ -789,9 +839,12 @@ namespace siege{
 ///////////////////////// BSPNode /////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
 
-		BSPNode::BSPNode(){}
+		BSPNode::BSPNode(){
+			node = true;	
+		}
 
 		BSPNode::BSPNode(BSPPlane* pl, BSPTreePoint* l, BSPTreePoint* r, scene::BoundingBox bb) : BSPTreePoint(bb){
+			node = true;	
 			setPlane(pl);
 			setLeftChild(l);
 			setRightChild(r);

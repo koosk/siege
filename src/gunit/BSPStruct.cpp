@@ -143,10 +143,10 @@ namespace siege{
 		}
 
 		BSPTexture::BSPTexture( char const* path, const int flags, const int cont){
+			texquality = DEFAULT_TEXTURE_QUALITY;
 			setPath(path);
 			setFlags(flags);
 			setContents(cont);
-			texquality = DEFAULT_TEXTURE_QUALITY;
 		}
 
 		void BSPTexture::loadTexture(){
@@ -476,14 +476,19 @@ namespace siege{
 		}
 
 		void BSPPolygon::draw() const{
+			if(glIsEnabled(GL_TEXTURE_2D))
+				glBindTexture(GL_TEXTURE_2D, texture->getTexture());
 			glBegin(GL_TRIANGLES);
 				for(int i=0; i<numMeshes; i++){
-					const byte* col = vertices[meshes[i]]->getColor();
+					BSPVertex* ver = vertices[meshes[i]];
+					const byte* col = ver->getColor();
 					glColor3f(col[0], col[1], col[2]);
+					float const* tc = ver->getSurfaceTextureCoordinate();
+					glTexCoord2f(tc[0], tc[1]);
 					float f[3];
-					vertices[meshes[i]]->getNormal().get(f);
+					ver->getNormal().get(f);
 					glNormal3fv(f);
-					vertices[meshes[i]]->getPosition().get(f);
+					ver->getPosition().get(f);
 					glVertex3fv(f);
 				}
 			glEnd();

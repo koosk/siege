@@ -36,6 +36,7 @@ namespace siege{
 				bool operator<=(Vector3) const;
 				bool operator>=(Vector3) const;
 				void normalize();
+				Vector3 operator-() const;
 		};//Vector3
 
 	};//math

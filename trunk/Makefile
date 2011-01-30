@@ -68,8 +68,16 @@ bb = $(BUILD)/scene/BoundingBox.o
 $(bb): $(SRC)/scene/BoundingBox.cpp $(HEADER)/scene/BoundingBox.h
 	$(GPP) -o $@ -c $<
 
+bspe = $(BUILD)/gunit/BSPException.o
+$(bspe): $(SRC)/gunit/BSPException.cpp $(HEADER)/gunit/BSPException.h
+	$(GPP) -o $@ -c $<
+
 bsp = $(BUILD)/gunit/BSPStruct.o
 $(bsp): $(SRC)/gunit/BSPStruct.cpp $(HEADER)/gunit/BSPStruct.h $(v3f) $(sie) $(bie) $(utils) $(bb)
+	$(GPP) -o $@ -c $<
+
+bspm = $(BUILD)/gunit/BSPMap.o
+$(bspm): $(SRC)/gunit/BSPMap.cpp $(HEADER)/gunit/BSPMap.h $(bsp) $(bspe)
 	$(GPP) -o $@ -c $<
 	
 camera = $(BUILD)/scene/Camera.o
@@ -117,10 +125,17 @@ tbsp = $(BUILD)/testBSPStruct
 $(tbsp): $(TEST)/BSPStruct.cpp $(v3f) $(v4f)  $(bie) $(bsp) $(util) $(sie) $(bb)
 	$(GPP) -o $@ $+
 
+tbspm = $(BUILD)/testBSPMap
+$(tbspm): $(TEST)/BSPMap.cpp $(v3f) $(v4f) $(bie) $(sie) $(bsp) $(bb) $(util) $(bspm) $(bspe)
+	$(GPP) -o $@ $+
+
 run-model: compile $(tmodel)
 	$(tmodel)
 
-test: compile $(tv3f) $(tv4f) $(tmsstruct) $(tmsdata) $(tmodel) $(tmatrix) $(tbsp)
+bsp: compile $(tbspm)
+	$(tbspm)
+
+test: compile $(tv3f) $(tv4f) $(tmsstruct) $(tmsdata) $(tmodel) $(tmatrix) $(tbsp) $(tbspm)
 
 run-test: test
 	$(tv3f)

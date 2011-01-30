@@ -14,7 +14,56 @@ namespace siege{
 
 		using namespace siege::math;
 
+////////////// SIZE //////////////////////////////////////////
+//////////////////////////////////////////////////////////////
+
+		static const int BSP_VERTEX_SIZE = 44;
+		static const int BSP_LIGHTMAP_SIZE = 128*128*3;
+		static const int BSP_PLANE_SIZE = 16;
+		static const int BSP_TEXTURE_SIZE = 72;
+		static const int BSP_BRUSHSIDE_SIZE = 8;
+		static const int BSP_BRUSH_SIZE = 12;
+		static const int BSP_EFFECT_SIZE = 72;
+		static const int BSP_FACE_SIZE = 104;
+		static const int BSP_LEAF_SIZE = 48;
+		static const int BSP_NODE_SIZE = 36;
+		static const int BSP_MODEL_SIZE = 40;
+		static const int BSP_LIGHVAL_SIZE = 8;
+
 //mehsvert, leafbrush, leafface are not needed to be make as class
+
+///////////// BSPDir ///////////////////////////////////////
+////////////////////////////////////////////////////////////
+		class BSPDir{
+			private:
+				unsigned int offset;
+				unsigned int length;
+			public:
+				static const byte NUMDIR = 17;
+				static const byte ENTITY = 0;
+				static const byte TEXTURE = 1;
+				static const byte PLANE = 2;
+				static const byte NODE = 3;
+				static const byte LEAF = 4;
+				static const byte LEAFFACE = 5;
+				static const byte LEAFBRUSH = 6;
+				static const byte MODEL = 7;
+				static const byte BRUSH = 8;
+				static const byte BRUSHSIDE = 9;
+				static const byte VERTEX = 10;
+				static const byte MESHVERT = 11;
+				static const byte EFFECT = 12;
+				static const byte FACE = 13;
+				static const byte LIGHTMAP = 14;
+				static const byte LIGHTVOLS = 15;
+				static const byte VISDATA = 16;
+				BSPDir();
+				BSPDir(unsigned int, unsigned int);
+				void setOffset(unsigned int);
+				void setLength(unsigned int);
+				unsigned int getOffset() const;
+				unsigned int getLength() const;
+		}; //BSPDir
 
 ///////////// BSPVertex /////////////////////////////////////
 /////////////////////////////////////////////////////////////
@@ -78,6 +127,7 @@ namespace siege{
 				GLuint texquality;
 				void loadTexture();
 			public:
+				static const GLuint DEFAULT_TEXTURE_QUALITY = GL_LINEAR_MIPMAP_NEAREST;
 				BSPTexture();
 				BSPTexture(char const*, const int, const int);
 				void setPath(char const*);
@@ -132,7 +182,7 @@ namespace siege{
 				char name[64];
 				BSPBrush* brush;
 				//int unknown 	Always 5, except in q3dm8, which has one effect with -1
-			private:
+			public:
 				BSPEffect();
 				BSPEffect(char const*, BSPBrush*);
 				void setName(char const*);
@@ -263,6 +313,7 @@ namespace siege{
 				int getNumberOfLeaves() const;
 				BSPLeaf* getLeaf(int) const;
 				void draw() const;
+				void drawAllVisible() const;
 		}; //BSPVisdata
 		
 ///////////// BSPTreePoint /////////////////////////////////////////////////////

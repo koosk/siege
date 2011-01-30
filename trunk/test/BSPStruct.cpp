@@ -12,5 +12,11 @@ int main(){
 	cout << p2.getNormal() << endl;
 	BSPPolygon p3(p2);
 	cout << p3.getNormal() << endl;
+
+	BSPNode* n =  new BSPNode[4205];
+	delete[] n;
+
+	siege::scene::BoundingBox b(siege::math::Vector3(1,2,3), siege::math::Vector3(4,5,6));
+
 	return 0;
 }

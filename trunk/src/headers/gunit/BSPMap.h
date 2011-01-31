@@ -11,6 +11,10 @@ Versions:
 #define BSP_MAP_H
 
 #include"gunit/BSPStruct.h"
+#include"math/Vector4.h"
+#include"gunit/Model.h"
+#include"scene/Camera.h"
+#include<vector>
 #include<GL/gl.h>
 
 namespace siege{
@@ -45,6 +49,7 @@ namespace siege{
 				BSPVisdata* clusters;
 				BSPLeaf* leaves;
 				BSPNode* nodes;
+				std::vector<math::Vector4> spawnPoints;
 			protected:
 				virtual void init();
 				void initVertices(int);
@@ -87,6 +92,10 @@ namespace siege{
 				void draw() const;
 				void draw(math::Vector3) const;
 				void setTextureQuality(GLuint);
+				void spawn(math::Vector3&, int = -1) const;
+				void spawn(Model*, int = -1) const;
+				void spawn(scene::Camera&, int = -1) const;
+				unsigned int getNumSpawnPoints() const;
 		}; //BSPMap
 
 	}; //gunit

@@ -84,6 +84,10 @@ camera = $(BUILD)/scene/Camera.o
 $(camera): $(SRC)/scene/Camera.cpp $(Camera_o) $(HEADER)/scene/Camera.h $(v3f) $(v4f) $(mtx16f)
 	$(GPP) -o $(camera) -c $<
 
+bsppar = $(BUILD)/gunit/BSPEntityParser.o
+$(bsppar): $(SRC)/gunit/BSPEntityParser.cpp $(HEADER)/gunit/BSPEntityParser.h
+	$(GPP) -o $@ -c $<
+
 compile: build 
 
 tv3f = $(BUILD)/testVector3
@@ -126,7 +130,7 @@ $(tbsp): $(TEST)/BSPStruct.cpp $(v3f) $(v4f)  $(bie) $(bsp) $(util) $(sie) $(bb)
 	$(GPP) -o $@ $+
 
 tbspm = $(BUILD)/testBSPMap
-$(tbspm): $(TEST)/BSPMap.cpp $(v3f) $(v4f) $(bie) $(sie) $(bsp) $(bb) $(util) $(bspm) $(bspe) $(camera) $(mtx16f) $(mathex)
+$(tbspm): $(TEST)/BSPMap.cpp $(v3f) $(v4f) $(bie) $(sie) $(bsp) $(bb) $(util) $(bspm) $(bspe) $(camera) $(mtx16f) $(mathex) $(bsppar) $(model)
 	$(GPP) -o $@ $+
 
 run-model: compile $(tmodel)

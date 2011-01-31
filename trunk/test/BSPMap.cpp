@@ -19,6 +19,7 @@ Vector3 cam(0,0,0);
 Vector3 pos(0,0,0);
 Vector3 rot(0,0,0);
 float tim = 0;
+bool mode = true;
 
 Camera c;
 
@@ -35,16 +36,18 @@ void endProgram(int code) {
 void handleKeys(SDL_keysym* keysym, bool state) {
     if(state)switch(keysym->sym) {
         case SDLK_ESCAPE:    endProgram(0); break;
-        case SDLK_DOWN:    rot[0] += 1*tim; break;
+        /*case SDLK_DOWN:    rot[0] += 1*tim; break;
         case SDLK_UP:    rot[0] -= 1*tim; break;
         case SDLK_RIGHT:    rot[1] += 1*tim; break;
         case SDLK_LEFT:    rot[1] -= 1*tim; break;
-        case SDLK_KP8:    c.move(Camera::MOVE_FORWARD); break;
-        case SDLK_KP2:    c.move(Camera::MOVE_BACKWARD); break;
-        case SDLK_KP4:    c.rotate(Camera::ROTATE_UP); break;
-        case SDLK_KP6:    c.rotate(Camera::ROTATE_DOWN); break;
-        case SDLK_KP7:    c.rotate(Camera::ROTATE_LEFT);  break;
-        case SDLK_KP9:    c.rotate(Camera::ROTATE_RIGHT); break;
+        */case SDLK_KP8:    c.move(Camera::MOVE_UP); break;
+        case SDLK_KP2:    c.move(Camera::MOVE_DOWN); break;
+        case SDLK_UP:    c.move(Camera::MOVE_FORWARD); break;
+        case SDLK_DOWN:    c.move(Camera::MOVE_BACKWARD); break;
+        case SDLK_KP7:    c.rotate(Camera::ROTATE_UP); break;
+        case SDLK_KP9:    c.rotate(Camera::ROTATE_DOWN); break;
+        case SDLK_LEFT:    c.rotate(Camera::ROTATE_LEFT);  break;
+        case SDLK_RIGHT:    c.rotate(Camera::ROTATE_RIGHT); break;
         /*case SDLK_KP8:    pos[1] -= 50*tim; break;
         case SDLK_KP2:    pos[1] += 50*tim; break;
         case SDLK_KP4:    pos[0] -= 50*tim; break;
@@ -57,6 +60,8 @@ void handleKeys(SDL_keysym* keysym, bool state) {
         case SDLK_a:    cam[0] += 50*tim; break;
         case SDLK_q:    cam[2] += 50*tim; break;
         case SDLK_e:    cam[2] -= 50*tim; break;
+        case SDLK_m:    mode = !mode; break;
+        case SDLK_RETURN:    map.spawn(c); break;
         default: break;
     }
 }
@@ -75,20 +80,21 @@ void processEvents() {
  
 void mainLoop() {
 
-
+	map.spawn(c);
 
    	while(true) {
 		static int  tt = SDL_GetTicks();
 		int t = tt;
 		tt = SDL_GetTicks();
-		tim = (tt - t)/1;
+		tim = (tt - t);
 		c.setMovementIntensity(tim);
 		c.setRotationIntensity(tim/100);
+		cout << "FPS: " << (1000 / tim) << "   MODE: " << (!mode?"FULL":"LEAF") << "\033[1A" <<endl;
         processEvents();
  
         glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
         glLoadIdentity();
-		c.refresh();
+		c.render();
 		/*glRotatef(rot[0], 1, 0, 0);
 		glRotatef(rot[1], 0, 1, 0);
 		glRotatef(rot[2], 0, 0, 1);
@@ -103,29 +109,33 @@ void mainLoop() {
 		Vector3 v3 = cam;
 		v3[1] += 100;
 
-		/*Vector3 posneg = pos;
-		posneg[0] = -posneg[0];
-		posneg[1] = -posneg[1];
-		posneg[2] = -posneg[2];
-		map.draw(posneg);
-*/
-		map.draw();
+		if(!mode)
+			map.draw();
+		else{
+			/*Vector3 posneg = pos;
+			posneg[0] = -posneg[0];
+			posneg[1] = -posneg[1];
+			posneg[2] = -posneg[2];
+			map.draw(posneg);
+	*/
+			map.draw(c.getPosition());
 
-		/*map.draw(cam);
-		glBegin(GL_TRIANGLES);
-			glColor3f(1, 0, 0);
-			float f1[3];
-			float f2[3];
-			float f3[3];
-			v1.get(f1);
-			v2.get(f2);
-			v3.get(f3);
-			lVertex3fv(f1);
-			glVertex3fv(f2);
-			glVertex3fv(f3);
+			/*map.draw(cam);
+			glBegin(GL_TRIANGLES);
+				glColor3f(1, 0, 0);
+				float f1[3];
+				float f2[3];
+				float f3[3];
+				v1.get(f1);
+				v2.get(f2);
+				v3.get(f3);
+				lVertex3fv(f1);
+				glVertex3fv(f2);
+				glVertex3fv(f3);
 
-		glEnd();
-*/
+			glEnd();
+	*/		
+		}
         SDL_GL_SwapBuffers();
 	}
 }
@@ -162,8 +172,8 @@ int main(int argc, char* argv[]) {
 
 	//map.load((char*)"data/map/maps/q3shw18.bsp");
 	//map.load((char*)"data/map/maps/minirazz.bsp");
-	//map.load((char*)"data/map/maps/csq3sg1.bsp");
-	map.load((char*)"data/map/maps/artefacts1.bsp");
+	map.load((char*)"data/map/maps/csq3sg1.bsp");
+	//map.load((char*)"data/map/maps/artefacts1.bsp");
 	//map.load((char*)"data/map/maps/20kdm2.bsp");
 
     mainLoop();

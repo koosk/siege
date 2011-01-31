@@ -25,7 +25,7 @@ namespace siege{
 			}else if(position[0] < position[1]){
 				if(v <= position[1] && v >= position[0])
 					return true;
-			}else if(v == position[0])
+			}else if(position[0] == position[1] && v == position[0])
 				return true;
 			return false;
 		}

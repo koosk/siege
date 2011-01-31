@@ -268,5 +268,17 @@ namespace siege{
 	const Vector3& Camera::getLookAt() const{
 		return lookAt;
 	}
+	
+	void Camera::setPosition(const Vector3 &pos){
+		this->pos = pos;
+	}
+
+	void Camera::setUp(const Vector3 &up){
+		this->up = up;
+	}
+
+	void Camera::setLookAt(const Vector3 &lookAt){
+		this->lookAt = lookAt;
+	}
   };//namespace scene
 };//namespace siege

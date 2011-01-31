@@ -39,6 +39,8 @@ namespace siege{
 				void swapYZ();
 				Vector3 operator-() const;
 				Vector3 crossProduct(const Vector3 &) const;
+				Vector3 operator-(const Vector3 &) const;
+				Vector3 operator+(const Vector3 &) const;
 		};//Vector3
 
 	};//math

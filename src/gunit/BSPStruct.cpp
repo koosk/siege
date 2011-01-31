@@ -577,6 +577,20 @@ namespace siege{
 
 		void BSPBillboard::draw() const{
 			//TODO
+			/*
+			glDisable(GL_DEPTH_TEST);
+			glDisable(GL_LIGHTING);
+			glDisable(GL_TEXTURE_2D);
+			glPointSize(6.0);
+			glBegin(GL_POINTS);
+				float f[3];
+				vertices[0]->getPosition().get(f);
+				glVertex3fv(f);
+			glEnd();
+			glEnable(GL_DEPTH_TEST);
+			glEnable(GL_LIGHTING);
+			glEnable(GL_TEXTURE_2D);
+			*/
 		}
 
 /////////////////// BSPVisdata ////////////////////////////////////////////////

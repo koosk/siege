@@ -1,9 +1,14 @@
 #include"gunit/BSPMap.h"
 #include"SiegeException.h"
 #include"gunit/BSPException.h"
+#include"BadIndexException.h"
+#include"math/Matrix4.h"
 #include<string.h>
 #include<fstream>
 #include<string>
+#include<stdlib.h>
+#include<time.h>
+#include"gunit/BSPEntityParser.h"
 
 namespace siege{
 	namespace gunit{
@@ -35,6 +40,7 @@ namespace siege{
 		leaves = NULL;
 		numNodes = 0;
 		nodes = NULL;
+		srand(time(NULL));
 	}
 
 	BSPMap::BSPMap(){
@@ -165,8 +171,9 @@ namespace siege{
 	void BSPMap::loadEntities(char* ptr, unsigned int len){
 		char data[len];
 		memcpy(data, ptr, len);
-		//cout << data << endl;
 		//TODO data feldolgozasa
+		BSPEntityParser parser(data);
+		spawnPoints = parser.getAllSpawnPoints();
 	}
 
 	void BSPMap::initVertices(int n){
@@ -658,14 +665,26 @@ namespace siege{
 			BSPNode* n = (BSPNode*)t;
 			if(n->getLeftChild()->isInside(v))
 				t = n->getLeftChild();
-			else
-				t = n->getRightChild();
+			else {
+				if(n->getRightChild()->isInside(v))
+					t = n->getRightChild();
+				else{
+					t = NULL;
+					break;
+				}
+			}
+		}
+		if(t == NULL){
+			draw();
+			cout << "NULL" << endl;
+			return;
 		}
 		glColor3f(1,1,0);
 		t->getBoundingBox().draw();
 		BSPLeaf* l = (BSPLeaf*)t;
 		if(l->getCluster() == NULL){
 			l->draw();
+			//draw();
 		}
 		else
 			l->getCluster()->drawAllVisible();
@@ -677,6 +696,42 @@ namespace siege{
 			for(unsigned int i=0; i<numTextures; i++)
 				textures[i].setTextureQuality(q);
 		}
+	}
+
+	unsigned int BSPMap::getNumSpawnPoints() const{
+		return spawnPoints.size();
+	}
+
+	void BSPMap::spawn(math::Vector3& v, int i) const{
+		if(i<-1 || i>=(int)spawnPoints.size())
+			throw BadIndexException("Bad index while getting spawn point in BSPMap!");
+		if(i == -1)
+			i = rand() % spawnPoints.size();
+		v = spawnPoints[i];
+	}
+
+	void BSPMap::spawn(Model* model, int i) const{
+		if(i<-1 || i>=(int)spawnPoints.size())
+			throw BadIndexException("Bad index while getting spawn point in BSPMap!");
+		if(i == -1)
+			i = rand() % spawnPoints.size();
+		model->setPosition(spawnPoints[i]);
+		model->setRotation(math::Vector3(spawnPoints[i].getX(), 0, 0));
+	}
+
+	void BSPMap::spawn(scene::Camera& cam, int i) const{
+		if(i<-1 || i>=(int)spawnPoints.size())
+			throw BadIndexException("Bad index while getting spawn point in BSPMap!");
+		if(i == -1)
+			i = rand() % spawnPoints.size();
+		cam.setPosition(spawnPoints[i]);	
+		math::Vector3 v(1, 0, 0);
+		Matrix4 m;
+		math::Vector3 v2;
+		v2[1] = spawnPoints[i].getA() * (3.14/180);
+		m.rotate(v2);
+		v = v*m;
+		cam.setLookAt(spawnPoints[i]+v);
 	}
 
 	}; //gunit

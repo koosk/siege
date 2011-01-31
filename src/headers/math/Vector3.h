@@ -46,6 +46,7 @@ namespace siege{
 				Vector3& operator+=(const Vector3 &);
 				Vector3& operator-=(const Vector3 &);
 				Vector3 operator*(const float) const;
+				virtual float length() const;
 		};//Vector3
 
 	};//math

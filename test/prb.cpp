@@ -91,12 +91,18 @@ void mainLoop() {
 		glLoadIdentity();
 		//glTranslatef(0.0, transup, trans);
 		//glRotatef(rotfact, 0,1,0);
-		cam.rotate(Camera::ROTATE_RIGHT);
+		//cam.rotate(Camera::ROTATE_RIGHT);
 		//cam.rotate(Camera::ROTATE_LEFT);
 		//cam.rotate(Camera::LEAN_RIGHT);
 		//cam.rotate(Camera::LEAN_RIGHT);
-		cam.rotate(Camera::ROTATE_UP);
+		//cam.rotate(Camera::ROTATE_UP);
 		//cam.rotate(Camera::ROTATE_DOWN);
+		//cam.move(Camera::MOVE_FORWARD);
+		//cam.move(Camera::MOVE_BACKWARD);
+		//cam.move(Camera::MOVE_RIGHT);
+		//cam.move(Camera::MOVE_LEFT);
+		//cam.move(Camera::MOVE_UP);
+		cam.move(Camera::MOVE_DOWN);
 		cam.refresh();
 
 		if(mode)

@@ -14,6 +14,9 @@ namespace siege{
 			private:
 				float x, y, z;
 			public:
+				friend std::ostream& operator<<(std::ostream&, const Vector3&);
+				friend Vector3 operator*(const float, const Vector3&);
+
 				Vector3();
 				Vector3(const float, const float, const float);
 				Vector3(const float*);
@@ -27,7 +30,6 @@ namespace siege{
 				virtual float& operator[](const int);
 				virtual float* get(float*);
 				virtual void set(const float*);
-				friend  std::ostream& operator<<(std::ostream&, const Vector3&);
 				Vector4 operator*(const Matrix4 &) const;
 				Vector3& operator=(const Vector4 &);
 				bool operator==(Vector3) const;
@@ -41,6 +43,9 @@ namespace siege{
 				Vector3 crossProduct(const Vector3 &) const;
 				Vector3 operator-(const Vector3 &) const;
 				Vector3 operator+(const Vector3 &) const;
+				Vector3& operator+=(const Vector3 &);
+				Vector3& operator-=(const Vector3 &);
+				Vector3 operator*(const float) const;
 		};//Vector3
 
 	};//math

@@ -18,14 +18,16 @@ namespace siege{
 			static const float defaultRotationIntensity = 0.005;
 			static const int MOVE_FORWARD  = 0;
 			static const int MOVE_BACKWARD = 1;
-			/*static const int MOVE_RIGHT    = 2;
-			static const int MOVE_LEFT     = 3;*/
-			static const int ROTATE_RIGHT = 0;
-			static const int ROTATE_LEFT  = 1;
-			static const int ROTATE_UP    = 2;
-			static const int ROTATE_DOWN  = 3;
-			static const int LEAN_LEFT    = 4;
-			static const int LEAN_RIGHT   = 5;
+			static const int MOVE_RIGHT    = 2;
+			static const int MOVE_LEFT     = 3;
+			static const int MOVE_UP       = 4;
+			static const int MOVE_DOWN     = 5;
+			static const int ROTATE_RIGHT  = 0;
+			static const int ROTATE_LEFT   = 1;
+			static const int ROTATE_UP     = 2;
+			static const int ROTATE_DOWN   = 3;
+			static const int LEAN_LEFT     = 4;
+			static const int LEAN_RIGHT    = 5;
 
 			Camera();
 			Camera(const Vector3, const Vector3, const Vector3);
@@ -41,6 +43,7 @@ namespace siege{
 			float getMovementIntensity() const;
 			float getRotationIntensity() const; 
 			void rotate(const int direction);
+			void move(const int direction);
 
 	};
 };

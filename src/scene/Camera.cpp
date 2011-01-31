@@ -202,7 +202,7 @@ namespace siege{
 			Vector3 dir = lookAt-pos;
 			dir.normalize();
 			Vector3 right = dir.crossProduct(up);
-			cout << right;
+			//cout << right;
 			
 			T = T.translate(-pos);
 			d1 = (sqrt(sqr(right.getX()) + sqr(right.getY()) ));
@@ -225,12 +225,43 @@ namespace siege{
 			Rz = Rz.rotate(rotv);
 			lookAt = lookAt*T*Rxz*Rxz2z*Rz*Rxz2z.invert()*Rxz.invert()*T.invert();
 			up     =     up  *Rxz*Rxz2z*Rz*Rxz2z.invert()*Rxz.invert();
-			cout << " " << lookAt << " " << up << endl;
-
-
-
+			//cout << " " << lookAt << " " << up << endl;
 		}
-
 #undef sqr
 	}
-};
+
+	void Camera::move(const int direction){
+		if(direction==MOVE_FORWARD || direction==MOVE_BACKWARD){
+			Vector3 dir = lookAt - pos;
+			dir.normalize();
+			if(direction==MOVE_FORWARD){
+				pos    += movementIntensity*dir;
+				lookAt += movementIntensity*dir;
+			}else{//MOVE_BACKWARD
+				pos    -= movementIntensity*dir;
+				lookAt -= movementIntensity*dir;
+			}
+		}else if(direction==MOVE_RIGHT || direction==MOVE_LEFT){
+			Vector3 viewDir = lookAt - pos;
+			viewDir.normalize();
+			Vector3 right   = viewDir.crossProduct(up);
+			right.normalize();
+			if(direction==MOVE_RIGHT){
+				pos    += movementIntensity*right;
+				lookAt += movementIntensity*right;
+			}else{//MOVE_LEFT
+				pos    -= movementIntensity*right;
+				lookAt -= movementIntensity*right;
+			}
+		}else if(direction==MOVE_UP || direction==MOVE_DOWN){
+			up.normalize();
+			if(direction==MOVE_UP){
+				pos    += movementIntensity*up;
+				lookAt += movementIntensity*up;
+			}else{//MOVE_DOWN
+				pos    -= movementIntensity*up;
+				lookAt -= movementIntensity*up;
+			}
+		}
+	}
+};//namespace siege

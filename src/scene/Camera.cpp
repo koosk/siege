@@ -6,6 +6,7 @@
 using namespace std;
 
 namespace siege{
+namespace scene{
 	Camera::Camera():lookAt(Vector3(0.f,0.f,-1.f)),up(Vector3(0.f,1.f,0.f)),
 		movementIntensity(defaultMovementIntensity),rotationIntensity(defaultRotationIntensity){
 	}
@@ -264,4 +265,5 @@ namespace siege{
 			}
 		}
 	}
+};//namespace scene
 };//namespace siege

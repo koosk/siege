@@ -4,6 +4,7 @@
 #include "math/Vector3.h"
 
 namespace siege{
+	namespace scene{
 	using namespace siege::math;
 
 	class Camera{
@@ -45,6 +46,7 @@ namespace siege{
 			void rotate(const int direction);
 			void move(const int direction);
 
+	};
 	};
 };
 

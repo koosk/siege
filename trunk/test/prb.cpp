@@ -22,7 +22,7 @@ Vector3 mp(0,0,0);
 Vector3 posm2(-150, 0, -600);
 
 //Camera cam(25,800,0, 25,0,0, 1,0,0);
-Camera cam(0,0,600, 0,0,0, 0,1,0);
+Camera cam(-600,0,600, 0,0,0, 0,1,0);
 //Camera cam(0,0,0, 0,0,-1, 0,1,0);
 //Camera cam(100,-100,0, -1,1,0, 1,1,0);
 
@@ -91,11 +91,13 @@ void mainLoop() {
 		glLoadIdentity();
 		//glTranslatef(0.0, transup, trans);
 		//glRotatef(rotfact, 0,1,0);
-		cam.refresh();
 		cam.rotate(Camera::ROTATE_RIGHT);
 		//cam.rotate(Camera::ROTATE_LEFT);
 		//cam.rotate(Camera::LEAN_RIGHT);
 		//cam.rotate(Camera::LEAN_RIGHT);
+		cam.rotate(Camera::ROTATE_UP);
+		//cam.rotate(Camera::ROTATE_DOWN);
+		cam.refresh();
 
 		if(mode)
 			model->draw();

@@ -199,7 +199,36 @@ namespace siege{
 			Rz = Rz.rotate(rotv);
 			up = up*T*Rxz*Rxz2z*Rz*Rxz2z.invert()*Rxz.invert()*T.invert();
 		}else if(ROTATE_UP || ROTATE_DOWN){
-			cout << "rotate up/down not implemented yet" << endl;
+			Vector3 dir = lookAt-pos;
+			dir.normalize();
+			Vector3 right = dir.crossProduct(up);
+			cout << right;
+			
+			T = T.translate(-pos);
+			d1 = (sqrt(sqr(right.getX()) + sqr(right.getY()) ));
+			d = sqrt(sqr(right.getX())+sqr(right.getY())+sqr(right.getZ()));
+			if(d1!=0){
+				Rxz.set(0,right.getX()/d1);
+				Rxz.set(1,right.getY()/d1);
+				Rxz.set(4,-right.getY()/d1);
+				Rxz.set(5,right.getX()/d1);
+			}
+			Rxz2z.set(0,right.getZ()/d);
+			Rxz2z.set(2,-d1/d);
+			Rxz2z.set(8,d1/d);
+			Rxz2z.set(10,right.getZ()/d);
+			if(direction==ROTATE_UP){
+				rotv.setZ(rotationIntensity);
+			}else{//ROTATE_DOWN
+				rotv.setZ(-rotationIntensity);
+			}
+			Rz = Rz.rotate(rotv);
+			lookAt = lookAt*T*Rxz*Rxz2z*Rz*Rxz2z.invert()*Rxz.invert()*T.invert();
+			up     =     up  *Rxz*Rxz2z*Rz*Rxz2z.invert()*Rxz.invert();
+			cout << " " << lookAt << " " << up << endl;
+
+
+
 		}
 
 #undef sqr

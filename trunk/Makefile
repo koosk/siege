@@ -126,7 +126,7 @@ $(tbsp): $(TEST)/BSPStruct.cpp $(v3f) $(v4f)  $(bie) $(bsp) $(util) $(sie) $(bb)
 	$(GPP) -o $@ $+
 
 tbspm = $(BUILD)/testBSPMap
-$(tbspm): $(TEST)/BSPMap.cpp $(v3f) $(v4f) $(bie) $(sie) $(bsp) $(bb) $(util) $(bspm) $(bspe)
+$(tbspm): $(TEST)/BSPMap.cpp $(v3f) $(v4f) $(bie) $(sie) $(bsp) $(bb) $(util) $(bspm) $(bspe) $(camera) $(mtx16f) $(mathex)
 	$(GPP) -o $@ $+
 
 run-model: compile $(tmodel)

@@ -3,7 +3,7 @@
 #include "math/Vector4.h"
 #include "math/Matrix4.h"
 #include <cmath>
-
+#define sqr(x) (x*x)
 namespace siege{
 	namespace math{
 
@@ -162,5 +162,10 @@ namespace siege{
 		Vector3 operator*(const float a, const Vector3 &v){
 			return Vector3(v.x*a, v.y*a, v.z*a);
 		}
+
+		float Vector3::length() const{
+			return sqrt(sqr(x)+sqr(y)+sqr(z));
+		}
 	};//math
 };//siege
+#undef sqr

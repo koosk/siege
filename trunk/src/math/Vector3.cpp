@@ -144,5 +144,23 @@ namespace siege{
 		Vector3 Vector3::operator+(const Vector3 &v) const{
 			return Vector3(x+v.x, y+v.y, z+v.z);
 		}
+		
+		Vector3& Vector3::operator+=(const Vector3 &v){
+			*this = *this + v;
+			return *this;
+		}
+		
+		Vector3& Vector3::operator-=(const Vector3 &v){
+			*this = *this - v;
+			return *this;
+		}
+		
+		Vector3 Vector3::operator*(const float a) const{
+			return Vector3(x*a, y*a, z*a);
+		}
+		
+		Vector3 operator*(const float a, const Vector3 &v){
+			return Vector3(v.x*a, v.y*a, v.z*a);
+		}
 	};//math
 };//siege

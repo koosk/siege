@@ -4,7 +4,7 @@
 #include "math/Vector3.h"
 
 namespace siege{
-	namespace scene{
+  namespace scene{
 	using namespace siege::math;
 
 	class Camera{
@@ -36,18 +36,18 @@ namespace siege{
 			       const float, const float, const float,
 			       const float, const float, const float);
 			~Camera();
-			void refresh() const;
+			void render() const;
 			void setMovementIntensity(const float);
 			void setRotationIntensity(const float);
-			void setDefaultMovementIntensity();
-			void setDefaultRotationIntensity();
 			float getMovementIntensity() const;
 			float getRotationIntensity() const; 
 			void rotate(const int direction);
 			void move(const int direction);
+			const Vector3& getPosition() const;
+			const Vector3& getUp() const;
+			const Vector3& getLookAt() const;
 
-	};
-	};
-};
-
+	};//class Camera
+  };//namespace scene
+};//namespace siege
 #endif

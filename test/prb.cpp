@@ -8,7 +8,7 @@
 #include "scene/Camera.h"
 
 using namespace std;
-using namespace siege;
+using namespace siege::scene;
 using namespace siege::math;
 using namespace siege::gunit;
 
@@ -103,7 +103,7 @@ void mainLoop() {
 		//cam.move(Camera::MOVE_LEFT);
 		//cam.move(Camera::MOVE_UP);
 		cam.move(Camera::MOVE_DOWN);
-		cam.refresh();
+		cam.render();
 
 		if(mode)
 			model->draw();

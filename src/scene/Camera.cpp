@@ -6,7 +6,7 @@
 using namespace std;
 
 namespace siege{
-namespace scene{
+  namespace scene{
 	Camera::Camera():lookAt(Vector3(0.f,0.f,-1.f)),up(Vector3(0.f,1.f,0.f)),
 		movementIntensity(defaultMovementIntensity),rotationIntensity(defaultRotationIntensity){
 	}
@@ -27,7 +27,7 @@ namespace scene{
 	Camera::~Camera(){
 	}
 
-	void Camera::refresh() const{
+	void Camera::render() const{
 		gluLookAt(pos.getX(),pos.getY(),pos.getZ(),
 		          lookAt.getX(),lookAt.getY(),lookAt.getZ(),
 		          up.getX(),up.getY(),up.getZ());
@@ -40,16 +40,8 @@ namespace scene{
 	void Camera::setRotationIntensity(const float rotationIntensity){
 		this->rotationIntensity = rotationIntensity;
 	}
-	
-	void Camera::setDefaultMovementIntensity(){
-		movementIntensity = defaultMovementIntensity;
-	}
 
-	void Camera::setDefaultRotationIntensity(){
-		rotationIntensity = defaultRotationIntensity;
-	}
-
-	 float Camera::getMovementIntensity() const{
+	float Camera::getMovementIntensity() const{
 		return movementIntensity;
 	}
 
@@ -63,7 +55,6 @@ namespace scene{
 		/*float x,y,z,a,b,c,u,v,w;
 		float stheta;
 		float ctheta;
-		//TODO valtozhat, hogy mi korul forgatunk
 		if(direction==ROTATE_LEFT || direction==ROTATE_RIGHT){
 			x = lookAt.getX();
 			y = lookAt.getY();
@@ -265,5 +256,17 @@ namespace scene{
 			}
 		}
 	}
-};//namespace scene
+
+	const Vector3& Camera::getPosition() const{
+		return pos;
+	}
+
+	const Vector3& Camera::getUp() const{
+		return up;
+	}
+
+	const Vector3& Camera::getLookAt() const{
+		return lookAt;
+	}
+  };//namespace scene
 };//namespace siege

@@ -46,6 +46,9 @@ namespace siege{
 			const Vector3& getPosition() const;
 			const Vector3& getUp() const;
 			const Vector3& getLookAt() const;
+			void setPosition(const Vector3 &);
+			void setUp(const Vector3 &);
+			void setLookAt(const Vector3 &);
 
 	};//class Camera
   };//namespace scene

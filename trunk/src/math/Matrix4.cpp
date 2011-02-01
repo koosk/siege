@@ -1,5 +1,4 @@
 #include "math/Matrix4.h"
-#include "BadIndexException.h"
 #include <string.h>
 #include <cmath>
 #include <iostream>
@@ -21,7 +20,7 @@ namespace siege{
 		Matrix4::Matrix4(const float *data){
 			memcpy(this->data,data,sizeof(float[16]));
 		}
-
+		
 		Matrix4::~Matrix4(){
 			//std::cout << "Matrix4 destruktor" << std::endl;
 		};
@@ -43,20 +42,6 @@ namespace siege{
 			}
 		}
 
-		void Matrix4::set(int pos, float value){
-			if(pos>15){
-				throw siege::BadIndexException();
-			}
-			data[pos] = value;
-		}
-
-		float Matrix4::operator[](int index) const{//index from 0
-			if(index>15 || index<0){
-				throw siege::BadIndexException();
-			}
-			return data[index];
-		}
-		
 		Matrix4 Matrix4::operator*(const Matrix4 &m) const{
 			float r[16];
 			r[0]  = data[0]*m.data[0]  + data[4]*m.data[1]  + data[8]*m.data[2]   + data[12]*m.data[3];
@@ -393,6 +378,27 @@ namespace siege{
 			                       0.,0.,0.,1.};
 			memcpy(data,id,16*sizeof(float));
 			return *this;
+		}
+
+		Matrix4 Matrix4::translation(const Vector3 &v){
+			float data[16] = {1.,0.,0.,v.getX(),
+			                  0.,1.,0.,v.getY(),
+			                  0.,0.,1.,v.getZ(),
+			                  0.,0.,0.,1.};
+			return Matrix4(data);
+		}
+		Matrix4 Matrix4::rotation(const Vector3 &v){
+			Matrix4 r;
+			r.rotate(v);
+			return r;
+		}
+
+		Matrix4 Matrix4::scaling(const Vector3 &v){
+			float data[16] = {v.getX(), 0., 0., 0.,
+			                  0., v.getY(), 0., 0.,
+			                  0., 0., v.getZ(), 0.,
+			                  0., 0.,      0. , 1.};
+			return Matrix4(data);
 		}
 
 	};//math

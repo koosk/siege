@@ -1,5 +1,4 @@
 #include "math/Vector3.h"
-#include "BadIndexException.h"
 #include "math/Vector4.h"
 #include "math/Matrix4.h"
 #include <cmath>
@@ -23,41 +22,6 @@ namespace siege{
 			x = v.x;
 			y = v.y;
 			z = v.z;
-		}
-
-		float Vector3::getX() const{
-			return x;
-		}
-
-		float Vector3::getY() const{
-			return y;
-		}
-
-		float Vector3::getZ() const{
-			return z;
-		}
-
-		void Vector3::setX(float a){
-			x = a;
-		}
-
-		void Vector3::setY(float a){
-			y = a;
-		}
-
-		void Vector3::setZ(float a){
-			z = a;
-		}
-
-		float& Vector3::operator[](const int i){
-			if(i == 0)
-				return x;
-			if(i == 1)
-				return y;
-			if(i == 2)
-				return z;
-			
-			throw siege::BadIndexException();
 		}
 
 		float* Vector3::get(float* f){

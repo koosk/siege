@@ -15,13 +15,27 @@ namespace siege{
 				Vector4(const float*);
 				Vector4(const Vector4&);
 				Vector4(const Vector3&);
-				float getA() const;
-				void setA(float);
-				float& operator[](const int);
+				inline float getA() const;
+				inline void setA(const float);
+				inline float& operator[](const int);
 				float* get(float*);
 				void set(float*);
 				friend std::ostream& siege::math::operator<<(std::ostream&, const Vector4&);
 		}; //Vector4
+		
+		float Vector4::getA() const{
+			return a;
+		}
+
+		void Vector4::setA(const  float f){
+			a = f;
+		}
+
+		float& Vector4::operator[](const int i){
+			if(i == 3)
+				return a;
+			return Vector3::operator[](i);
+		}
 
 	};//math
 };//siege

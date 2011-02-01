@@ -27,20 +27,6 @@ namespace siege{
 			a = 0.0;
 		}
 
-		float Vector4::getA() const{
-			return a;
-		}
-
-		void Vector4::setA(float f){
-			a = f;
-		}
-
-		float& Vector4::operator[](int i){
-			if(i == 3)
-				return a;
-			return Vector3::operator[](i);
-		}
-
 		float* Vector4::get(float* f){
 			f[0] = (*this)[0];
 			f[1] = (*this)[1];

@@ -2,6 +2,7 @@
 #define VECTOR3_H
 
 #include<iostream>
+#include "BadIndexException.h"
 
 namespace siege{
 
@@ -21,13 +22,13 @@ namespace siege{
 				Vector3(const float, const float, const float);
 				Vector3(const float*);
 				Vector3(const Vector3&);
-				float getX() const;
-				float getY() const;
-				float getZ() const;
-				void setX(float);
-				void setY(float);
-				void setZ(float);
-				virtual float& operator[](const int);
+				inline float getX() const;
+				inline float getY() const;
+				inline float getZ() const;
+				inline void setX(const float);
+				inline void setY(const float);
+				inline void setZ(const float);
+				inline virtual float& operator[](const int);
 				virtual float* get(float*);
 				virtual void set(const float*);
 				Vector4 operator*(const Matrix4 &) const;
@@ -48,6 +49,41 @@ namespace siege{
 				Vector3 operator*(const float) const;
 				virtual float length() const;
 		};//Vector3
+		
+		float Vector3::getX() const{
+			return x;
+		}
+
+		float Vector3::getY() const{
+			return y;
+		}
+
+		float Vector3::getZ() const{
+			return z;
+		}
+
+		void Vector3::setX(const float a){
+			x = a;
+		}
+
+		void Vector3::setY(const float a){
+			y = a;
+		}
+
+		void Vector3::setZ(const float a){
+			z = a;
+		}
+		
+		float& Vector3::operator[](const int i){
+			if(i == 0)
+				return x;
+			if(i == 1)
+				return y;
+			if(i == 2)
+				return z;
+			
+			throw siege::BadIndexException();
+		}
 
 	};//math
 

@@ -102,7 +102,7 @@ void mainLoop() {
 		//cam.move(Camera::MOVE_RIGHT);
 		//cam.move(Camera::MOVE_LEFT);
 		//cam.move(Camera::MOVE_UP);
-		cam.move(Camera::MOVE_DOWN);
+		//cam.move(Camera::MOVE_DOWN);
 		cam.render();
 
 		if(mode)
@@ -153,18 +153,26 @@ void setupOpengl() {
 	glShadeModel(GL_SMOOTH);
 	
 
-	GLfloat ambient[] = {.5, .5, .5, 1};
-	GLfloat diffuse[] = {1, 1, 1, 1};
+	GLfloat ambient[]  = {0, 0, 0, 1};
+	GLfloat diffuse[]  = {0, 0, 0, 1};
+	GLfloat specular[] = {0, 0, 0, 1};
 	GLfloat pos[] = {0, 50, -50, 1};
-	glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
-	glLightfv(GL_LIGHT1, GL_POSITION, pos);
-	glEnable(GL_LIGHT1);
+	//GLfloat ambient[] = {.5, .5, .5, 1};
+	//GLfloat diffuse[] = {1, 1, 1, 1};
+	//GLfloat pos[] = {0, 50, -50, 1};
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+	glLightfv(GL_LIGHT0, GL_POSITION, pos);
+	GLfloat ambientLight[]  = {0., 0, 0, 1};
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT,ambientLight);
+	glEnable(GL_LIGHT0);
 	glEnable(GL_COLOR_MATERIAL);	
 	glEnable(GL_LIGHTING);
+	//glDisable(GL_LIGHTING);
 
 	glEnable( GL_TEXTURE_2D );
-	glEnable( GL_BLEND );
+	//glEnable( GL_BLEND );
 	SDL_EnableKeyRepeat( 100, SDL_DEFAULT_REPEAT_INTERVAL );
 
 }

@@ -10,6 +10,8 @@ namespace siege{
 			private:
 				float a;
 			public:
+				friend std::ostream& siege::math::operator<<(std::ostream&, const Vector4&);
+
 				Vector4();
 				Vector4(float, float, float, float);
 				Vector4(const float*);
@@ -18,9 +20,8 @@ namespace siege{
 				inline float getA() const;
 				inline void setA(const float);
 				inline float& operator[](const int);
-				float* get(float*);
+				float* get(float*) const;
 				void set(float*);
-				friend std::ostream& siege::math::operator<<(std::ostream&, const Vector4&);
 		}; //Vector4
 		
 		float Vector4::getA() const{

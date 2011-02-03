@@ -27,10 +27,10 @@ namespace siege{
 			a = 0.0;
 		}
 
-		float* Vector4::get(float* f){
-			f[0] = (*this)[0];
-			f[1] = (*this)[1];
-			f[2] = (*this)[2];
+		float* Vector4::get(float* f) const{
+			f[0] = getX();
+			f[1] = getY();
+			f[2] = getZ();
 			f[3] = a;
 			return f;
 		}

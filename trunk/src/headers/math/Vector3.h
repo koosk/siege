@@ -29,7 +29,7 @@ namespace siege{
 				inline void setY(const float);
 				inline void setZ(const float);
 				inline virtual float& operator[](const int);
-				virtual float* get(float*);
+				virtual float* get(float*) const;
 				virtual void set(const float*);
 				Vector4 operator*(const Matrix4 &) const;
 				Vector3& operator=(const Vector4 &);

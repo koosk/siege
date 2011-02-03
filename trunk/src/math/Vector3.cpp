@@ -24,7 +24,7 @@ namespace siege{
 			z = v.z;
 		}
 
-		float* Vector3::get(float* f){
+		float* Vector3::get(float* f) const{
 			f[0] = x;
 			f[1] = y;
 			f[2] = z;

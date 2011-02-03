@@ -84,6 +84,10 @@ camera = $(BUILD)/scene/Camera.o
 $(camera): $(SRC)/scene/Camera.cpp $(Camera_o) $(HEADER)/scene/Camera.h $(v3f) $(v4f) $(mtx16f)
 	$(GPP) -o $(camera) -c $<
 
+light = $(BUILD)/scene/Light.o
+$(light): $(SRC)/scene/Light.cpp $(v4f) $(HEADER)/scene/Light.h
+	$(GPP) -o $@ -c $<
+
 bsppar = $(BUILD)/gunit/BSPEntityParser.o
 $(bsppar): $(SRC)/gunit/BSPEntityParser.cpp $(HEADER)/gunit/BSPEntityParser.h
 	$(GPP) -o $@ -c $<

@@ -172,9 +172,9 @@ int main(int argc, char* argv[]) {
 
 	//map.load((char*)"data/map/maps/q3shw18.bsp");
 	//map.load((char*)"data/map/maps/minirazz.bsp");
-	map.load((char*)"data/map/maps/csq3sg1.bsp");
+	//map.load((char*)"data/map/maps/csq3sg1.bsp");
 	//map.load((char*)"data/map/maps/artefacts1.bsp");
-	//map.load((char*)"data/map/maps/20kdm2.bsp");
+	map.load((char*)"data/map/maps/20kdm2.bsp");
 
     mainLoop();
     return 0;

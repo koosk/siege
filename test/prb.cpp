@@ -44,12 +44,12 @@ void endProgram(int code) {
 void handleKeys(SDL_keysym* keysym, bool state) {
 	if(state)switch(keysym->sym) {
 		case SDLK_ESCAPE:    endProgram(0); break;
-		case SDLK_DOWN:    trans -= 50; break;
-		case SDLK_UP:    trans += 50; break;
+		case SDLK_DOWN:    cam.move(Camera::MOVE_BACKWARD); break;
+		case SDLK_UP:    cam.move(Camera::MOVE_FORWARD); break;
 		case SDLK_PAGEDOWN:    transup -= 10; break;
 		case SDLK_PAGEUP:    transup += 10; break;
-		case SDLK_RIGHT:    rotfact += 1; break;
-		case SDLK_LEFT:    rotfact -= 1; break;
+		case SDLK_RIGHT:    cam.rotate(Camera::ROTATE_RIGHT); break;
+		case SDLK_LEFT:    cam.rotate(Camera::ROTATE_LEFT); break;
 		case SDLK_s:    model->start(); break;
 		case SDLK_a:    model->stop(); break;
 		case SDLK_d:    model->pause(); break;
@@ -69,6 +69,26 @@ void handleKeys(SDL_keysym* keysym, bool state) {
 		default: break;
 	}
 }
+
+void handleMouse(SDL_MouseMotionEvent &e){
+	//cout << e.xrel << " " << e.yrel << endl;
+	if(e.xrel<0){
+		cam.setRotationIntensity(abs(0.0035*e.xrel));
+		cam.rotate(Camera::ROTATE_LEFT);
+	}
+	if(e.xrel>0){
+		cam.setRotationIntensity(0.0035*e.xrel);
+		cam.rotate(Camera::ROTATE_RIGHT);
+	}
+	if(e.yrel>0){
+		cam.setRotationIntensity(0.0035*e.yrel);
+		cam.rotate(Camera::ROTATE_DOWN);
+	}
+	if(e.yrel<0){
+		cam.setRotationIntensity(abs(0.0035*e.yrel));
+		cam.rotate(Camera::ROTATE_UP);
+	}
+}
  
 // Process SDL events
 void processEvents() {
@@ -77,6 +97,7 @@ void processEvents() {
 		switch(event.type) {
 			case SDL_KEYDOWN:    handleKeys(&event.key.keysym, true ); break;
 			case SDL_KEYUP  : handleKeys(&event.key.keysym, false);    break;
+			case SDL_MOUSEMOTION: handleMouse(event.motion); break;
 			case SDL_QUIT   : endProgram(0); break;
 		}
 	}
@@ -164,7 +185,7 @@ void setupOpengl() {
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
 	glLightfv(GL_LIGHT0, GL_POSITION, pos);
-	GLfloat ambientLight[]  = {0., 0, 0, 1};
+	GLfloat ambientLight[]  = {1, 1, 1, 1};
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT,ambientLight);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_COLOR_MATERIAL);	
@@ -181,6 +202,8 @@ void setupOpengl() {
 int main(int argc, char* argv[]) {
 	SDL_Init(SDL_INIT_VIDEO);
 	SDL_SetVideoMode(width, height, 24, SDL_OPENGL | SDL_GL_DOUBLEBUFFER);
+	SDL_WM_GrabInput(SDL_GRAB_ON);
+	SDL_ShowCursor(0);
 	setupOpengl();
 
 	model = new MS3DModel((char*)"data/beast.ms3d");
